@@ -11,6 +11,7 @@ import { loginPage, setupWizardPage } from './views/setup.js';
 import { statusPage } from './views/status.js';
 import { channelsPage } from './views/channels.js';
 import { toolsPage } from './views/tools.js';
+import { profilePage } from './views/profile.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -85,18 +86,19 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.get('/', (req, res) => {
-  res.send(landingPage());
+app.get('/', async (req, res) => {
+  const profile = await openclaw.getProfile();
+  res.send(landingPage(profile));
 });
 
 app.get('/setup', (req, res) => {
   if (isAuthenticated(req)) {
-    Promise.all([openclaw.isConfigured(), Promise.resolve(openclaw.isGatewayRunning())])
-      .then(([configured, running]) => {
-        res.send(setupWizardPage(configured, running));
+    Promise.all([openclaw.isConfigured(), Promise.resolve(openclaw.isGatewayRunning()), openclaw.getProfile()])
+      .then(([configured, running, profile]) => {
+        res.send(setupWizardPage(configured, running, profile));
       })
       .catch(() => {
-        res.send(setupWizardPage(false, false));
+        res.send(setupWizardPage(false, false, null));
       });
   } else {
     res.send(loginPage());
@@ -143,12 +145,18 @@ app.post('/setup/run', setupLimiter, requireAuth, async (req, res) => {
 
 app.get('/status', async (req, res) => {
   try {
-    const [version, configured, logs, channels] = await Promise.all([
+    const [version, configured, logs, channels, profile] = await Promise.all([
       openclaw.getVersion(),
       openclaw.isConfigured(),
       openclaw.getLogs(200),
-      openclaw.getChannelStatus()
+      openclaw.getChannelStatus(),
+      openclaw.getProfile()
     ]);
+    
+    let infoMessage = null;
+    if (req.query.info === 'channels_disabled') {
+      infoMessage = '<strong>Safe Mode:</strong> Channels are disabled. Switch to Power Mode to connect messaging platforms.';
+    }
     
     res.send(statusPage({
       version,
@@ -156,7 +164,9 @@ app.get('/status', async (req, res) => {
       gatewayRunning: openclaw.isGatewayRunning(),
       logs,
       health: null,
-      channels
+      channels,
+      profile,
+      infoMessage
     }));
   } catch (err) {
     res.send(statusPage({
@@ -164,7 +174,9 @@ app.get('/status', async (req, res) => {
       isConfigured: false,
       gatewayRunning: false,
       logs: 'Error loading logs: ' + err.message,
-      health: null
+      health: null,
+      profile: null,
+      infoMessage: null
     }));
   }
 });
@@ -243,8 +255,12 @@ app.post('/api/wipe', apiLimiter, requireAuth, async (req, res) => {
 
 app.get('/channels', requireAuth, async (req, res) => {
   try {
+    const profile = await openclaw.getProfile();
+    if (!profile || profile === 'safe') {
+      return res.redirect('/status?info=channels_disabled');
+    }
     const channelStatus = await openclaw.getChannelStatus();
-    res.send(channelsPage(channelStatus));
+    res.send(channelsPage(channelStatus, profile));
   } catch (err) {
     res.status(500).send('Error loading channels page');
   }
@@ -252,10 +268,53 @@ app.get('/channels', requireAuth, async (req, res) => {
 
 app.get('/tools', requireAuth, async (req, res) => {
   try {
-    const toolsStatus = await openclaw.getWebToolsStatus();
-    res.send(toolsPage(toolsStatus));
+    const [toolsStatus, profile] = await Promise.all([
+      openclaw.getWebToolsStatus(),
+      openclaw.getProfile()
+    ]);
+    res.send(toolsPage(toolsStatus, profile));
   } catch (err) {
     res.status(500).send('Error loading tools page');
+  }
+});
+
+app.get('/profile', requireAuth, async (req, res) => {
+  try {
+    const currentProfile = await openclaw.getProfile();
+    res.send(profilePage(currentProfile));
+  } catch (err) {
+    res.status(500).send('Error loading profile page');
+  }
+});
+
+app.post('/api/profile', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const { profile } = req.body;
+    if (!profile || !['safe', 'power'].includes(profile)) {
+      return res.status(400).json({ success: false, error: 'Invalid profile' });
+    }
+    const result = await openclaw.setProfile(profile);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/profile', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const profile = await openclaw.getProfile();
+    res.json({ profile });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/wipe-all', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const result = await openclaw.wipeEverything();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

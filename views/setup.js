@@ -33,7 +33,7 @@ export function loginPage(error = null) {
   return layout('Login', content);
 }
 
-export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
+export function setupWizardPage(isConfigured = false, gatewayRunning = false, profile = null) {
   const content = `
   <div class="min-h-screen py-8 px-4">
     <div class="max-w-2xl mx-auto">
@@ -48,6 +48,52 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
           <span class="text-lg">⚠️</span>
           <span><strong>Safety first:</strong> Start with a sandbox mindset. Do not connect your main accounts on day 1.</span>
         </p>
+      </div>
+      
+      <!-- Sandbox Identity Playbook -->
+      <div class="card p-6 mb-6">
+        <h2 class="font-display font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <span class="text-xl">📋</span> Sandbox Identity Playbook
+        </h2>
+        <p class="text-sm text-gray-600 mb-4">Use separate accounts to keep your sandbox isolated from your real life.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Email Card -->
+          <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+            <div class="text-2xl mb-2">📧</div>
+            <h3 class="font-semibold text-gray-800 mb-2">Email Separation</h3>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>• Use a secondary inbox you control</li>
+              <li>• Or create a new inbox manually</li>
+              <li>• Or use a workspace domain</li>
+            </ul>
+            <p class="text-xs text-blue-700 mt-2 font-medium">Do NOT connect your main inbox on day 1</p>
+          </div>
+          
+          <!-- Phone Card -->
+          <div class="bg-green-50 border border-green-100 rounded-xl p-4">
+            <div class="text-2xl mb-2">📱</div>
+            <h3 class="font-semibold text-gray-800 mb-2">Phone Separation</h3>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>• Spare number via eSIM or 2nd device</li>
+              <li>• WhatsApp Business with separate #</li>
+              <li>• Keep it isolated from personal contacts</li>
+            </ul>
+            <p class="text-xs text-green-700 mt-2 font-medium">Never use your main phone number</p>
+          </div>
+          
+          <!-- Billing Card -->
+          <div class="bg-purple-50 border border-purple-100 rounded-xl p-4">
+            <div class="text-2xl mb-2">💳</div>
+            <h3 class="font-semibold text-gray-800 mb-2">Billing Separation</h3>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>• Use a separate card with low limit</li>
+              <li>• Start with a small monthly budget</li>
+              <li>• Use the Kill Switch if anything looks off</li>
+            </ul>
+            <p class="text-xs text-purple-700 mt-2 font-medium">Set spending limits from day 1</p>
+          </div>
+        </div>
       </div>
       
       <div class="card p-6 mb-6">
@@ -434,5 +480,5 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
   </script>
   `;
   
-  return layout('Setup', content, { includeTopBar: true });
+  return layout('Setup', content, { includeTopBar: true, profile });
 }

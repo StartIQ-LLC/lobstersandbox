@@ -1,6 +1,6 @@
 import { layout } from './layout.js';
 
-export function channelsPage(channelStatus = {}) {
+export function channelsPage(channelStatus = {}, profile = null) {
   const { whatsapp = {}, telegram = {}, discord = {} } = channelStatus;
   
   const content = `
@@ -396,5 +396,5 @@ export function channelsPage(channelStatus = {}) {
   </script>
   `;
   
-  return layout('Channels', content, { includeTopBar: true });
+  return layout('Channels', content, { includeTopBar: true, profile });
 }

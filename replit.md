@@ -12,9 +12,10 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 │   └── assistant.js    # Larry the Lobster AI assistant (Anthropic)
 ├── views/
 │   ├── layout.js       # Base HTML layout template with top bar navigation and chat assistant
-│   ├── landing.js      # Landing page view
-│   ├── setup.js        # Setup wizard views (login + wizard)
-│   ├── status.js       # Status page view with channel indicators
+│   ├── landing.js      # Landing page view with Safety Checklist
+│   ├── setup.js        # Setup wizard views (login + wizard) with Sandbox Identity Playbook
+│   ├── status.js       # Status page view with Safe Mode/Power Mode awareness
+│   ├── profile.js      # Safety Profile selector (Safe Mode vs Power Mode)
 │   ├── channels.js     # Channel setup (WhatsApp, Telegram, Discord, pairing)
 │   └── tools.js        # Web tools setup (Brave Search, Perplexity)
 ├── public/
@@ -61,7 +62,9 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - `POST /setup/login` - Password login
 - `POST /setup/run` - Run OpenClaw onboarding
 - `GET /status` - System status and logs
-- `GET /channels` - Channel setup (WhatsApp, Telegram, Discord, pairing)
+- `GET /profile` - Safety Profile selector (Safe Mode vs Power Mode)
+- `POST /api/profile` - Set safety profile
+- `GET /channels` - Channel setup (WhatsApp, Telegram, Discord, pairing) - blocked in Safe Mode
 - `GET /tools` - Web tools setup (Brave Search, Perplexity)
 - `GET /openclaw/*` - Reverse proxy to OpenClaw Control UI
 - `POST /api/gateway/start` - Start gateway
@@ -93,6 +96,14 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Secure session cookies
 
 ## Recent Changes
+- v1.1 Strategic Pivot - Safety Sandbox Playbook (February 2026):
+  - Epic A: Safety Profile Selector with Safe Mode (default) vs Power Mode
+  - Epic B: Sandbox Identity Playbook cards (Email, Phone, Billing separation) on setup and status pages
+  - Epic C: Redesigned landing page with Safety Checklist (loopback, token, kill switch, wipe)
+  - Epic D: Persistent top bar with Kill Switch and Wipe buttons always visible
+  - Epic E: Remote Access Hardening section with Tailscale and Cloudflare Tunnel guidance
+  - Epic F: Safe Mode enforcement - channels hidden until user switches to Power Mode
+  - Profile stored in profile.json, wipe resets profile and redirects to fresh start
 - Phase 3: Added Web Tools page for Brave Search and Perplexity configuration; added Discord channel support with bot token input and DM policy; added web search enable/disable functionality (February 2026)
 - Enhanced Larry's knowledge base with official OpenClaw documentation (docs.openclaw.ai), comprehensive channel guides, pairing system details. Optimized response format for chat bubbles with plain text, numbered steps, and emoji separators (February 2026)
 - Phase 2: Added Channels page with WhatsApp QR login, Telegram bot token setup, and pairing approval interface (February 2026)

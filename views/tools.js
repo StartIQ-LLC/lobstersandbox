@@ -1,6 +1,6 @@
 import { layout } from './layout.js';
 
-export function toolsPage(toolsStatus = {}) {
+export function toolsPage(toolsStatus = {}, profile = null) {
   const { webSearch = {} } = toolsStatus;
   
   const content = `
@@ -196,5 +196,5 @@ export function toolsPage(toolsStatus = {}) {
   </script>
   `;
   
-  return layout('Web Tools', content, { includeTopBar: true });
+  return layout('Web Tools', content, { includeTopBar: true, profile });
 }

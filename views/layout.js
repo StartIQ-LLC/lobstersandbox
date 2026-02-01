@@ -1,5 +1,5 @@
 export function layout(title, content, options = {}) {
-  const { includeTopBar = false, backLink = null, showAssistant = true } = options;
+  const { includeTopBar = false, backLink = null, showAssistant = true, profile = null, showSafetyBar = false } = options;
   
   return `<!DOCTYPE html>
 <html lang="en">
@@ -272,22 +272,79 @@ export function layout(title, content, options = {}) {
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen font-body">
-  ${includeTopBar ? `
-  <div class="bg-gray-900 text-white py-3 px-4 flex items-center justify-between">
+  <!-- Safety Bar - Always visible -->
+  <div class="bg-gray-900 text-white py-2 px-4 flex items-center justify-between sticky top-0 z-50">
     <div class="flex items-center gap-3">
-      <span class="text-2xl">🦞</span>
-      <span class="logo-text text-lg">LobsterSandbox</span>
+      <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <span class="text-xl">🦞</span>
+        <span class="logo-text text-base hidden sm:inline">LobsterSandbox</span>
+      </a>
+      <div class="hidden md:flex items-center gap-3 ml-4 text-sm">
+        <a href="/status" class="text-gray-300 hover:text-white font-medium">Status</a>
+        <a href="/setup" class="text-gray-300 hover:text-white font-medium">Setup</a>
+        <a href="/profile" class="text-gray-300 hover:text-white font-medium">Profile</a>
+      </div>
     </div>
-    <div class="flex gap-4">
-      ${backLink ? `<a href="${backLink}" class="text-gray-300 hover:text-white text-sm font-medium">&larr; Back</a>` : ''}
-      <a href="/status" class="text-gray-300 hover:text-white text-sm font-medium">Status</a>
-      <a href="/channels" class="text-gray-300 hover:text-white text-sm font-medium">Channels</a>
-      <a href="/tools" class="text-gray-300 hover:text-white text-sm font-medium">Tools</a>
-      <a href="/setup" class="text-gray-300 hover:text-white text-sm font-medium">Setup</a>
+    <div class="flex items-center gap-2">
+      <button onclick="killSwitch()" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
+        <span>⚡</span><span class="hidden sm:inline">Kill Switch</span>
+      </button>
+      <button onclick="wipeAll()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
+        <span>🗑</span><span class="hidden sm:inline">Wipe</span>
+      </button>
     </div>
+  </div>
+  
+  ${includeTopBar ? `
+  <div class="bg-gray-800 text-white py-2 px-4 flex items-center justify-center gap-4 text-sm">
+    ${backLink ? `<a href="${backLink}" class="text-gray-300 hover:text-white font-medium">&larr; Back</a>` : ''}
+    ${profile && profile !== 'safe' ? `<a href="/channels" class="text-gray-300 hover:text-white font-medium">Channels</a>` : ''}
+    <a href="/tools" class="text-gray-300 hover:text-white font-medium">Tools</a>
+    <a href="/openclaw" class="text-gray-300 hover:text-white font-medium">Control UI</a>
   </div>
   ` : ''}
   ${content}
+  
+  <!-- Global Safety Scripts -->
+  <script>
+    async function killSwitch() {
+      if (!confirm('⚡ KILL SWITCH\\n\\nThis will immediately stop the OpenClaw gateway.\\n\\nContinue?')) return;
+      
+      try {
+        const res = await fetch('/api/gateway/stop', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          alert('✅ Gateway stopped. Your sandbox is now safe.');
+          location.reload();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to stop gateway'));
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+    
+    async function wipeAll() {
+      const confirmed = confirm('🗑 WIPE EVERYTHING\\n\\nThis will:\\n• Stop the gateway\\n• Delete all configuration\\n• Reset your sandbox completely\\n\\nThis cannot be undone. Continue?');
+      if (!confirmed) return;
+      
+      const doubleConfirm = confirm('Are you absolutely sure? All data will be lost.');
+      if (!doubleConfirm) return;
+      
+      try {
+        const res = await fetch('/api/wipe-all', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          alert('✅ Everything wiped. Returning to fresh start.');
+          window.location.href = '/';
+        } else {
+          alert('Error: ' + (data.error || 'Failed to wipe'));
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+  </script>
   
   ${showAssistant ? `
   <!-- Lobster Assistant -->
