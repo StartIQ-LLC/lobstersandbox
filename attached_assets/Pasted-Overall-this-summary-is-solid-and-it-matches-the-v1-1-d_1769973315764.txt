@@ -1,0 +1,81 @@
+Overall, this summary is solid and it matches the v1.1 direction we discussed: safe sandbox playbook first, channels second. If I were grading it as a product spec: it’s coherent, shippable, and it has the right primitives (Safe Mode, kill switch, wipe, loopback, token).
+
+Here’s my review, with the few things I’d tighten before you show this publicly or start pushing for virality.
+
+What looks strong
+	•	Clear promise and positioning: “Try it safely without getting wrecked” is exactly what the market is asking for right now.
+	•	Safe Mode enforcement is real: blocking /channels in Safe Mode is the correct call.
+	•	Loopback + token + proxy is a good baseline. The gateway is not directly exposed.
+	•	Kill switch + wipe being global is great. This is the emotional safety people want.
+	•	The Sandbox Identity Playbook is the right approach. Guides, not auto creating accounts.
+
+The biggest mismatch
+
+“Autoscale (stateless)” conflicts with how the app actually works
+
+Your app stores state in ./data and uses sessions. That is not stateless. If this ever runs across multiple instances, users will see weird behavior and data loss.
+
+Fix: Pick one
+	•	Single instance, persistent disk, simplest for now
+	•	Or true stateless: move profile, logs, and session store to external storage (overkill for now)
+
+Security gaps to fix before going viral
+
+These are easy changes that reduce “getting wrecked” risk.
+	1.	Protect logs and status
+Right now /status and /api/logs are listed as public. Even with masking, logs are high risk.
+
+Recommendation:
+	•	Require auth for /status and /api/logs
+	•	Or at minimum, show no logs unless logged in
+
+	2.	Add CSRF protection on all POST routes
+You have destructive endpoints like wipe and kill. Without CSRF protection, a malicious page could trigger them in a user’s browser.
+
+Recommendation:
+	•	Add CSRF tokens for POST actions
+	•	Extra safety: require re entering SETUP_PASSWORD for “Wipe Everything”
+
+	3.	Proxy boundary clarity
+Even though the gateway binds to loopback, /openclaw/* is still publicly reachable through your Express app unless you enforce session auth for that route.
+
+Recommendation:
+	•	Require auth for /openclaw/*
+	•	Do not pass tokens via URL
+	•	Prefer server side injection of the token to the proxied UI if needed
+
+	4.	“Tools” page is an attack surface
+Web search tools can become a prompt injection highway. It is fine to have them, but they should be Power Mode only.
+
+Recommendation:
+	•	Hide /tools behind Power Mode
+	•	Make it explicit: “Web tools increase risk”
+
+	5.	Larry assistant risk
+An embedded assistant is great for UX, but make sure it cannot leak secrets by accident.
+
+Recommendation:
+	•	Larry should never read env vars or raw logs
+	•	If Larry references logs, only feed masked, minimal snippets
+
+Minor spec cleanup
+	•	Your “OpenClaw config paths” mention ~/.openclaw/... but you also define OPENCLAW_HOME=./data/home. Make sure the summary reflects what actually happens in this environment, otherwise people will be confused.
+	•	The “Supported AI Providers” list is long and looks impressive, but it also adds cognitive load. For non technical users, I’d show only 3 options in the UI and keep the rest as “advanced.”
+
+What I’d change in the summary itself
+
+If you want this to read like a real product and not a dev report:
+	•	Add a short “Who it’s for” section
+	•	Add a “What we do not do” section:
+	•	we do not create emails
+	•	we do not create phone numbers
+	•	we do not ask for your main accounts on day 1
+	•	Move channels down as “Optional add on in Power Mode”
+
+One sentence verdict
+
+You’re on the right route. This spec is already the correct wedge. Fix the public logs, CSRF, and auth on /openclaw/*, and you’ll have something you can confidently push as “the safe on ramp.”
+
+If you paste your current server.js auth logic and which routes are currently public, I’ll give you a tight checklist of exact changes to lock down the 3 risky areas: /status, /api/logs, and /openclaw/*.
+
+(Referenced products in your summary: Replit, OpenClaw, Anthropic, OpenAI, Google, OpenRouter, Vercel, Cloudflare, Tailscale, WhatsApp, Telegram, Discord, Brave, Perplexity.)
