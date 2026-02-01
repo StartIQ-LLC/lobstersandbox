@@ -34,12 +34,13 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 
 ## Key Features
 1. Password-protected setup wizard with 3-step flow
-2. OpenClaw gateway management (start/stop/kill)
-3. Reverse proxy to OpenClaw Control UI with WebSocket support
-4. Secret masking in all logs and UI output
-5. Security tools (audit, verify, fix)
-6. Wipe and reset functionality
-7. Larry the Lobster - AI-powered assistant to guide users through setup
+2. Support for 9 AI providers: OpenAI, Anthropic, Google Gemini, OpenRouter, Moonshot AI, MiniMax, OpenCode Zen, Vercel AI, Synthetic
+3. OpenClaw gateway management (start/stop/kill)
+4. Reverse proxy to OpenClaw Control UI with WebSocket support
+5. Secret masking in all logs and UI output
+6. Security tools (audit, verify, fix)
+7. Wipe and reset functionality
+8. Larry the Lobster - AI-powered assistant with knowledge of all providers, channels (WhatsApp, Telegram, etc.), and setup
 
 ## Environment Variables
 - `PORT` - Server port (default: 5000, provided by Replit)
@@ -75,7 +76,15 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Secure session cookies
 
 ## Recent Changes
+- Phase 1 improvements: Added 6 new AI providers (Gemini, Moonshot, MiniMax, OpenCode Zen, Vercel, Synthetic), updated model names to current versions, fixed config path detection (February 2026)
+- Enhanced Larry's knowledge base with detailed info on channels (WhatsApp, Telegram), pairing system, web tools, and all provider options (February 2026)
 - Added Larry the Lobster AI assistant powered by Anthropic Claude (February 2026)
 - Modernized UI with Space Grotesk and Inter fonts (February 2026)
 - Configured autoscale deployment (February 2026)
 - Initial project setup (February 2026)
+
+## OpenClaw Config Notes
+- Config file path: `~/.openclaw/openclaw.json` (not config.json)
+- Credentials: `~/.openclaw/credentials/`
+- Workspace: `~/.openclaw/workspace/` (contains AGENTS.md, SOUL.md, USER.md, etc.)
+- Channel pairing data: `~/.openclaw/credentials/<channel>-pairing.json`

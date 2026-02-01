@@ -77,18 +77,46 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
               <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 1 of 3</span>
               <h3 class="text-lg font-medium text-gray-800 mt-1">Choose AI Provider</h3>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
               <button onclick="selectProvider('openai')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="openai">
                 <div class="font-display font-semibold text-gray-800">OpenAI</div>
-                <div class="text-xs text-gray-500 mt-1">GPT models</div>
+                <div class="text-xs text-gray-500 mt-1">GPT-4o, o1, o3</div>
               </button>
               <button onclick="selectProvider('anthropic')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="anthropic">
                 <div class="font-display font-semibold text-gray-800">Anthropic</div>
-                <div class="text-xs text-gray-500 mt-1">Claude models</div>
+                <div class="text-xs text-gray-500 mt-1">Claude 4, Opus, Sonnet</div>
               </button>
+              <button onclick="selectProvider('gemini')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="gemini">
+                <div class="font-display font-semibold text-gray-800">Google Gemini</div>
+                <div class="text-xs text-gray-500 mt-1">Gemini 2.5 Pro/Flash</div>
+              </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
               <button onclick="selectProvider('openrouter')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="openrouter">
                 <div class="font-display font-semibold text-gray-800">OpenRouter</div>
-                <div class="text-xs text-gray-500 mt-1">Multiple providers</div>
+                <div class="text-xs text-gray-500 mt-1">Any model, one API</div>
+              </button>
+              <button onclick="selectProvider('opencode-zen')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="opencode-zen">
+                <div class="font-display font-semibold text-gray-800">OpenCode Zen</div>
+                <div class="text-xs text-gray-500 mt-1">Zen billing</div>
+              </button>
+              <button onclick="selectProvider('vercel')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="vercel">
+                <div class="font-display font-semibold text-gray-800">Vercel AI</div>
+                <div class="text-xs text-gray-500 mt-1">AI Gateway</div>
+              </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button onclick="selectProvider('synthetic')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="synthetic">
+                <div class="font-display font-semibold text-gray-800">Synthetic</div>
+                <div class="text-xs text-gray-500 mt-1">Free hosted models</div>
+              </button>
+              <button onclick="selectProvider('minimax')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="minimax">
+                <div class="font-display font-semibold text-gray-800">MiniMax</div>
+                <div class="text-xs text-gray-500 mt-1">M2.1 models</div>
+              </button>
+              <button onclick="selectProvider('moonshot')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="moonshot">
+                <div class="font-display font-semibold text-gray-800">Moonshot AI</div>
+                <div class="text-xs text-gray-500 mt-1">Kimi models</div>
               </button>
             </div>
           </div>
@@ -181,19 +209,61 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
     
     const modelPresets = {
       openai: [
-        { value: 'openai/gpt-5.2', label: 'GPT-5.2 (Recommended)' },
-        { value: 'openai/gpt-5.1', label: 'GPT-5.1' },
-        { value: 'openai/gpt-5', label: 'GPT-5' },
+        { value: 'openai/gpt-4o', label: 'GPT-4o (Recommended)' },
+        { value: 'openai/gpt-4o-mini', label: 'GPT-4o Mini (Fast & Cheap)' },
+        { value: 'openai/o1', label: 'o1 (Reasoning)' },
+        { value: 'openai/o3-mini', label: 'o3 Mini (Latest Reasoning)' },
+        { value: 'openai/gpt-5.2', label: 'GPT-5.2' },
         { value: 'custom', label: 'Custom...' }
       ],
       anthropic: [
-        { value: 'anthropic/claude-opus-4-5', label: 'Claude Opus 4.5 (Recommended)' },
-        { value: 'anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
-        { value: 'anthropic/claude-haiku-4-5', label: 'Claude Haiku 4.5' },
+        { value: 'anthropic/claude-opus-4-5', label: 'Claude Opus 4.5 (Most Capable)' },
+        { value: 'anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5 (Recommended)' },
+        { value: 'anthropic/claude-sonnet-4', label: 'Claude Sonnet 4' },
+        { value: 'anthropic/claude-3-5-haiku', label: 'Claude 3.5 Haiku (Fast)' },
+        { value: 'custom', label: 'Custom...' }
+      ],
+      gemini: [
+        { value: 'gemini/gemini-2.5-pro', label: 'Gemini 2.5 Pro (Recommended)' },
+        { value: 'gemini/gemini-2.5-flash', label: 'Gemini 2.5 Flash (Fast)' },
+        { value: 'gemini/gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
+        { value: 'gemini/gemini-1.5-pro', label: 'Gemini 1.5 Pro' },
         { value: 'custom', label: 'Custom...' }
       ],
       openrouter: [
         { value: 'openrouter/auto', label: 'Auto (Recommended)' },
+        { value: 'openrouter/anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
+        { value: 'openrouter/openai/gpt-4o', label: 'GPT-4o' },
+        { value: 'openrouter/google/gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
+        { value: 'openrouter/perplexity/sonar-pro', label: 'Perplexity Sonar Pro' },
+        { value: 'custom', label: 'Custom...' }
+      ],
+      moonshot: [
+        { value: 'moonshot/kimi-k2', label: 'Kimi K2 (Recommended)' },
+        { value: 'moonshot/kimi-k1.5', label: 'Kimi K1.5' },
+        { value: 'moonshot/moonshot-v1-128k', label: 'Moonshot v1 128K' },
+        { value: 'custom', label: 'Custom...' }
+      ],
+      minimax: [
+        { value: 'minimax/MiniMax-M2.1', label: 'MiniMax M2.1 (Recommended)' },
+        { value: 'minimax/MiniMax-M2.1-lightning', label: 'MiniMax M2.1 Lightning (Fast)' },
+        { value: 'custom', label: 'Custom...' }
+      ],
+      'opencode-zen': [
+        { value: 'opencode/claude-opus-4-5', label: 'Claude Opus 4.5 (via Zen)' },
+        { value: 'opencode/claude-sonnet-4-5', label: 'Claude Sonnet 4.5 (via Zen)' },
+        { value: 'custom', label: 'Custom...' }
+      ],
+      vercel: [
+        { value: 'vercel-ai-gateway/anthropic/claude-opus-4.5', label: 'Claude Opus 4.5' },
+        { value: 'vercel-ai-gateway/anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
+        { value: 'vercel-ai-gateway/openai/gpt-4o', label: 'GPT-4o' },
+        { value: 'custom', label: 'Custom...' }
+      ],
+      synthetic: [
+        { value: 'synthetic/hf:MiniMaxAI/MiniMax-M2.1', label: 'MiniMax M2.1 (Recommended)' },
+        { value: 'synthetic/hf:moonshotai/Kimi-K2-Thinking', label: 'Kimi K2 Thinking' },
+        { value: 'synthetic/hf:deepseek-ai/DeepSeek-V3.2', label: 'DeepSeek V3.2' },
         { value: 'custom', label: 'Custom...' }
       ]
     };
@@ -214,7 +284,17 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
       document.getElementById('step-' + step).classList.remove('hidden');
       
       if (step === 2) {
-        const labels = { openai: 'OpenAI', anthropic: 'Anthropic', openrouter: 'OpenRouter' };
+        const labels = { 
+          openai: 'OpenAI', 
+          anthropic: 'Anthropic', 
+          gemini: 'Google Gemini',
+          openrouter: 'OpenRouter',
+          moonshot: 'Moonshot AI',
+          minimax: 'MiniMax',
+          'opencode-zen': 'OpenCode Zen',
+          vercel: 'Vercel AI',
+          synthetic: 'Synthetic'
+        };
         document.getElementById('provider-label').textContent = labels[selectedProvider] || 'Provider';
       }
       
