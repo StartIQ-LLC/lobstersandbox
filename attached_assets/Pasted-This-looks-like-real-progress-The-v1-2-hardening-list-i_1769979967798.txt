@@ -1,0 +1,108 @@
+This looks like real progress. The v1.2 hardening list is the right set of fixes, and the implementation choices you noted line up with what matters most for a “safe sandbox” product.
+
+Here’s my quick review of what you wrote, plus the last checks I would run before you say “ready for public exposure.”
+
+The “latest” check on your claims
+
+Deployment change to VM
+
+Switching from Autoscale to a Reserved VM style deployment is correct for an app that needs persistence and an always on gateway process. Replit explicitly positions Reserved VM deployments as always on and suitable for bots and always on servers.  ￼
+
+Auth gates on /status, /api/logs, /api/health, /openclaw/*
+
+That is a critical fix. Those pages leak operational details and in the worst case can become a control surface.
+
+Blocking /tools in Safe Mode
+
+Yes, same posture as /channels. Web tools increase risk and should be Power Mode only.
+
+CSRF for destructive actions plus password re confirmation on wipe
+
+That is the right combo. CSRF protects the browser session, password re confirm protects against “already logged in but tricked into clicking” scenarios.
+
+Two things to verify because they are easy to miss
+
+1) Make sure every state changing POST is protected, not just wipe and kill
+
+You have a lot of POST routes: pairing approve, channel configure, tools configure, gateway start, security fix, etc.
+
+Minimum bar:
+	•	All POST routes require login
+	•	All POST routes require CSRF, not only wipe and kill
+
+If you intentionally skipped CSRF on some, do it only when the request is not cookie authenticated, like pure token auth, but your app is session based so CSRF should be broad.
+
+Also, your CSRF token endpoint itself must require login.
+
+2) Make sure /openclaw is not just “logged in,” but also not cached or embedded
+
+Add these headers on /openclaw and other authenticated pages:
+	•	Cache Control: no store
+	•	X Frame Options: DENY or frame ancestors none via CSP
+	•	Content Security Policy that at least blocks framing
+
+This prevents weird browser caching and clickjacking style attacks.
+
+One important note on CSRF implementation
+
+If you used the csurf package, be aware the Express team has called csurf a legacy middleware that is hard to maintain and better handled through custom implementations aligned to your architecture.  ￼
+
+If you implemented your own CSRF token in session and validated it server side, that is totally fine and often cleaner for this kind of app.
+
+Either way, what matters is: token tied to session, rotated on login, validated on every POST, and required for destructive actions.
+
+Final punch list before you ship
+	1.	Session cookie settings
+
+	•	httpOnly true
+	•	sameSite Lax or Strict
+	•	secure true in deployment
+	•	short session TTL and idle timeout
+
+	2.	Rate limiting
+
+	•	setup login
+	•	csrf token endpoint
+	•	assistant chat endpoint
+	•	pairing approve endpoints
+
+	3.	Origin checks for POST
+Even with CSRF, add a strict Origin or Referer check for same origin on POST. It is a cheap extra layer.
+	4.	Secrets never in logs
+You said masking is in place. Confirm the masking runs on:
+
+	•	OpenClaw command strings
+	•	OpenClaw stdout and stderr
+	•	Any debug logs in server.js
+
+	5.	Remove “public” wording from docs
+Make it explicit: Control UI is behind login, and should be used locally unless the user implements a zero trust tunnel.
+
+Quick manual test plan
+
+Do these in a private browser window:
+
+A. Auth
+	•	Visit /status while logged out, confirm redirect to login
+	•	Visit /openclaw while logged out, confirm redirect to login
+	•	Visit /api/logs while logged out, confirm redirect or 401
+
+B. Safe Mode enforcement
+	•	Set profile safe
+	•	Try /channels and /tools, confirm redirect with info message
+	•	Confirm UI hides those links
+
+C. CSRF
+	•	Open devtools, try POST /api/wipe-all without csrf header, confirm 403
+	•	With csrf header but wrong password, confirm deny
+	•	With csrf header and correct password, confirm wipe succeeds
+
+D. No stray endpoints
+	•	Search codebase for /api/wipe and confirm it is gone or blocked
+	•	Confirm only /api/wipe-all remains
+
+Overall verdict
+
+Your v1.2 summary is credible and the fixes are the right ones. The only reason I’m not saying “done” blindly is that CSRF and auth often miss one or two POST endpoints. If you confirm CSRF is enforced across all POST routes and the CSRF token endpoint is auth protected, you’re in good shape to share publicly.
+
+If you paste the route middleware patterns you used, like how you check “requiresAuth” and “requiresCsrf,” I can spot the missing routes in one pass.
