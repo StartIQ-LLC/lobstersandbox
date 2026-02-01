@@ -299,7 +299,7 @@ export function layout(title, content, options = {}) {
   <div class="bg-gray-800 text-white py-2 px-4 flex items-center justify-center gap-4 text-sm">
     ${backLink ? `<a href="${backLink}" class="text-gray-300 hover:text-white font-medium">&larr; Back</a>` : ''}
     ${profile && profile !== 'safe' ? `<a href="/channels" class="text-gray-300 hover:text-white font-medium">Channels</a>` : ''}
-    <a href="/tools" class="text-gray-300 hover:text-white font-medium">Tools</a>
+    ${profile && profile !== 'safe' ? `<a href="/tools" class="text-gray-300 hover:text-white font-medium">Tools</a>` : ''}
     <a href="/openclaw" class="text-gray-300 hover:text-white font-medium">Control UI</a>
   </div>
   ` : ''}
@@ -307,11 +307,33 @@ export function layout(title, content, options = {}) {
   
   <!-- Global Safety Scripts -->
   <script>
+    async function getCsrfToken() {
+      try {
+        const res = await fetch('/api/csrf-token');
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.token;
+      } catch {
+        return null;
+      }
+    }
+    
     async function killSwitch() {
       if (!confirm('⚡ KILL SWITCH\\n\\nThis will immediately stop the OpenClaw gateway.\\n\\nContinue?')) return;
       
       try {
-        const res = await fetch('/api/gateway/stop', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+          alert('Session expired. Please log in again.');
+          window.location.href = '/setup';
+          return;
+        }
+        
+        const res = await fetch('/api/gateway/stop', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         if (data.success) {
           alert('✅ Gateway stopped. Your sandbox is now safe.');
@@ -328,11 +350,22 @@ export function layout(title, content, options = {}) {
       const confirmed = confirm('🗑 WIPE EVERYTHING\\n\\nThis will:\\n• Stop the gateway\\n• Delete all configuration\\n• Reset your sandbox completely\\n\\nThis cannot be undone. Continue?');
       if (!confirmed) return;
       
-      const doubleConfirm = confirm('Are you absolutely sure? All data will be lost.');
-      if (!doubleConfirm) return;
+      const password = prompt('Enter your setup password to confirm wipe:');
+      if (!password) return;
       
       try {
-        const res = await fetch('/api/wipe-all', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+          alert('Session expired. Please log in again.');
+          window.location.href = '/setup';
+          return;
+        }
+        
+        const res = await fetch('/api/wipe-all', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken, password })
+        });
         const data = await res.json();
         if (data.success) {
           alert('✅ Everything wiped. Returning to fresh start.');

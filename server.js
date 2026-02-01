@@ -31,9 +31,31 @@ if (!OPENCLAW_GATEWAY_TOKEN) {
 }
 
 const sessionTokens = new Map();
+const csrfTokens = new Map();
 
 function generateSessionToken() {
   return crypto.randomBytes(32).toString('hex');
+}
+
+function generateCsrfToken(sessionToken) {
+  const csrfToken = crypto.randomBytes(32).toString('hex');
+  csrfTokens.set(sessionToken, csrfToken);
+  return csrfToken;
+}
+
+function validateCsrf(req, res, next) {
+  const sessionToken = req.cookies?.session_token;
+  const csrfToken = req.body?.csrf_token || req.headers['x-csrf-token'];
+  
+  if (!sessionToken || !csrfTokens.has(sessionToken)) {
+    return res.status(403).json({ success: false, error: 'Invalid session' });
+  }
+  
+  if (csrfTokens.get(sessionToken) !== csrfToken) {
+    return res.status(403).json({ success: false, error: 'Invalid CSRF token' });
+  }
+  
+  next();
 }
 
 function isAuthenticated(req) {
@@ -111,6 +133,7 @@ app.post('/setup/login', setupLimiter, (req, res) => {
   if (password === SETUP_PASSWORD) {
     const token = generateSessionToken();
     sessionTokens.set(token, { created: Date.now() });
+    generateCsrfToken(token);
     res.cookie('session_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -143,7 +166,7 @@ app.post('/setup/run', setupLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.get('/status', async (req, res) => {
+app.get('/status', requireAuth, async (req, res) => {
   try {
     const [version, configured, logs, channels, profile] = await Promise.all([
       openclaw.getVersion(),
@@ -156,6 +179,8 @@ app.get('/status', async (req, res) => {
     let infoMessage = null;
     if (req.query.info === 'channels_disabled') {
       infoMessage = '<strong>Safe Mode:</strong> Channels are disabled. Switch to Power Mode to connect messaging platforms.';
+    } else if (req.query.info === 'tools_disabled') {
+      infoMessage = '<strong>Safe Mode:</strong> Web tools are disabled. Switch to Power Mode to enable search tools (they increase risk).';
     }
     
     res.send(statusPage({
@@ -190,7 +215,7 @@ app.post('/api/gateway/start', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/gateway/stop', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/gateway/stop', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.stopGateway();
     res.json(result);
@@ -199,7 +224,15 @@ app.post('/api/gateway/stop', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.get('/api/health', apiLimiter, async (req, res) => {
+app.get('/api/csrf-token', apiLimiter, requireAuth, (req, res) => {
+  const sessionToken = req.cookies?.session_token;
+  if (!sessionToken || !csrfTokens.has(sessionToken)) {
+    return res.status(403).json({ error: 'No valid session' });
+  }
+  res.json({ token: csrfTokens.get(sessionToken) });
+});
+
+app.get('/api/health', apiLimiter, requireAuth, async (req, res) => {
   try {
     const result = await openclaw.runHealth();
     res.json(result);
@@ -208,7 +241,7 @@ app.get('/api/health', apiLimiter, async (req, res) => {
   }
 });
 
-app.get('/api/logs', apiLimiter, async (req, res) => {
+app.get('/api/logs', apiLimiter, requireAuth, async (req, res) => {
   try {
     const logs = await openclaw.getLogs(200);
     res.json({ logs });
@@ -244,14 +277,6 @@ app.post('/api/security/fix', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/wipe', apiLimiter, requireAuth, async (req, res) => {
-  try {
-    const result = await openclaw.wipeEverything();
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
 
 app.get('/channels', requireAuth, async (req, res) => {
   try {
@@ -268,10 +293,11 @@ app.get('/channels', requireAuth, async (req, res) => {
 
 app.get('/tools', requireAuth, async (req, res) => {
   try {
-    const [toolsStatus, profile] = await Promise.all([
-      openclaw.getWebToolsStatus(),
-      openclaw.getProfile()
-    ]);
+    const profile = await openclaw.getProfile();
+    if (!profile || profile === 'safe') {
+      return res.redirect('/status?info=tools_disabled');
+    }
+    const toolsStatus = await openclaw.getWebToolsStatus();
     res.send(toolsPage(toolsStatus, profile));
   } catch (err) {
     res.status(500).send('Error loading tools page');
@@ -309,8 +335,12 @@ app.get('/api/profile', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/wipe-all', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/wipe-all', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
+    const { password } = req.body;
+    if (password !== SETUP_PASSWORD) {
+      return res.status(403).json({ success: false, error: 'Invalid password. Wipe requires password confirmation.' });
+    }
     const result = await openclaw.wipeEverything();
     res.json(result);
   } catch (err) {
@@ -490,7 +520,7 @@ const gatewayProxy = createProxyMiddleware({
   }
 });
 
-app.use('/openclaw', (req, res, next) => {
+app.use('/openclaw', requireAuth, (req, res, next) => {
   if (!openclaw.isGatewayRunning()) {
     return res.send(`
       <!DOCTYPE html>

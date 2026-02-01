@@ -3,6 +3,20 @@
 ## Overview
 LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based setup wizard and management interface for running OpenClaw in a secure, isolated environment within Replit.
 
+**Core Promise:** "Try OpenClaw safely without getting wrecked."
+
+## Who It's For
+- Non-technical users who want to try AI agents without risking their accounts
+- Developers testing OpenClaw integrations in an isolated environment
+- Anyone who wants a safety-first on-ramp to AI agent technology
+
+## What We Do NOT Do
+- We do not create email accounts for you
+- We do not create phone numbers for you
+- We do not ask for your main accounts on day 1
+- We do not auto-connect to your real WhatsApp or Telegram
+- We do not store your API keys outside your sandbox
+
 ## Project Structure
 
 ```
@@ -16,13 +30,14 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 │   ├── setup.js        # Setup wizard views (login + wizard) with Sandbox Identity Playbook
 │   ├── status.js       # Status page view with Safe Mode/Power Mode awareness
 │   ├── profile.js      # Safety Profile selector (Safe Mode vs Power Mode)
-│   ├── channels.js     # Channel setup (WhatsApp, Telegram, Discord, pairing)
-│   └── tools.js        # Web tools setup (Brave Search, Perplexity)
+│   ├── channels.js     # Channel setup (WhatsApp, Telegram, Discord, pairing) - Power Mode only
+│   └── tools.js        # Web tools setup (Brave Search, Perplexity) - Power Mode only
 ├── public/
 │   └── favicon.png     # Lobster favicon
 ├── data/
 │   ├── home/           # OpenClaw configuration directory (OPENCLAW_HOME)
-│   └── logs/           # OpenClaw log files
+│   ├── logs/           # OpenClaw log files
+│   └── profile.json    # Safety profile storage
 ├── package.json        # Node.js dependencies
 └── README.md           # User documentation
 ```
@@ -44,12 +59,13 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 4. Reverse proxy to OpenClaw Control UI with WebSocket support
 5. Secret masking in all logs and UI output
 6. Security tools (audit, verify, fix)
-7. Wipe and reset functionality
-8. Larry the Lobster - AI-powered assistant with knowledge of all providers, channels (WhatsApp, Telegram, etc.), and setup
+7. Wipe and reset functionality (requires password confirmation)
+8. Larry the Lobster - AI-powered assistant with knowledge of all providers, channels, and setup
 
 ## Environment Variables
 - `PORT` - Server port (default: 5000, provided by Replit)
 - `SETUP_PASSWORD` - Required password for setup access
+- `SESSION_SECRET` - Required for session management
 - `OPENCLAW_GATEWAY_TOKEN` - Required token for gateway authentication
 - `OPENCLAW_PORT` - Gateway port (default: 18789)
 - `OPENCLAW_BIND` - Gateway bind address (default: loopback)
@@ -57,64 +73,112 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - `OPENCLAW_LOG` - Log file path (default: ./data/logs/openclaw.log)
 
 ## Routes
-- `GET /` - Landing page
-- `GET /setup` - Setup wizard (password protected)
+
+### Public Routes
+- `GET /` - Landing page (no auth required)
+
+### Protected Routes (require login)
+- `GET /setup` - Setup wizard
 - `POST /setup/login` - Password login
 - `POST /setup/run` - Run OpenClaw onboarding
 - `GET /status` - System status and logs
 - `GET /profile` - Safety Profile selector (Safe Mode vs Power Mode)
 - `POST /api/profile` - Set safety profile
-- `GET /channels` - Channel setup (WhatsApp, Telegram, Discord, pairing) - blocked in Safe Mode
-- `GET /tools` - Web tools setup (Brave Search, Perplexity)
+- `GET /channels` - Channel setup - **blocked in Safe Mode**
+- `GET /tools` - Web tools setup - **blocked in Safe Mode**
 - `GET /openclaw/*` - Reverse proxy to OpenClaw Control UI
 - `POST /api/gateway/start` - Start gateway
-- `POST /api/gateway/stop` - Stop gateway
+- `POST /api/gateway/stop` - Stop gateway (CSRF protected)
 - `GET /api/health` - Get health status
 - `GET /api/logs` - Get last 200 log lines
+- `GET /api/csrf-token` - Get CSRF token for destructive actions
 - `POST /api/verify` - Run quick verify
 - `POST /api/security/audit` - Run security audit
 - `POST /api/security/fix` - Run security fix
-- `POST /api/wipe` - Wipe everything
+- `POST /api/wipe-all` - Wipe everything (CSRF + password confirmation required)
 - `POST /api/assistant/chat` - Chat with Larry the Lobster assistant
+
+### Channel APIs (Power Mode only)
 - `GET /api/channels/status` - Get channel connection status
 - `POST /api/channels/whatsapp/login` - Start WhatsApp QR login
 - `POST /api/channels/telegram/configure` - Configure Telegram bot
-- `POST /api/channels/:channel/disconnect` - Disconnect a channel
 - `POST /api/channels/discord/configure` - Configure Discord bot
-- `GET /api/tools/status` - Get web tools status
-- `POST /api/tools/web-search/configure` - Configure web search (Brave/Perplexity)
-- `POST /api/tools/web-search/disable` - Disable web search
+- `POST /api/channels/:channel/disconnect` - Disconnect a channel
 - `GET /api/pairing/list` - List pending pairing requests
 - `POST /api/pairing/approve` - Approve a pairing request
 - `POST /api/pairing/deny` - Deny a pairing request
 
+### Tools APIs (Power Mode only)
+- `GET /api/tools/status` - Get web tools status
+- `POST /api/tools/web-search/configure` - Configure web search (Brave/Perplexity)
+- `POST /api/tools/web-search/disable` - Disable web search
+
 ## Security
-- Gateway binds to loopback only
-- Token authentication on gateway
-- API keys masked in logs and UI
+
+### Authentication & Authorization
+- All routes except landing page require login
+- Session-based authentication with secure cookies
 - Rate limiting on login and API endpoints
-- Secure session cookies
+
+### CSRF Protection
+- CSRF tokens required for destructive actions (Kill Switch, Wipe)
+- Tokens generated per session, validated server-side
+
+### Wipe Protection
+- Password re-confirmation required to wipe
+- Double-layer protection against accidental data loss
+
+### Gateway Security
+- Gateway binds to loopback only (127.0.0.1)
+- Token authentication on all gateway requests
+- Token injected server-side, never exposed to client
+
+### Secret Safety
+- API keys masked in logs and UI (shows last 8 chars only)
+- Larry assistant never receives raw env vars or unmasked logs
+- No secrets stored outside the sandbox
+
+## Deployment
+- **Type**: VM (persistent instance)
+- **Reason**: App stores state in ./data (profile, logs, config)
+- **Command**: `node server.js`
+- **Port**: 5000
+
+## OpenClaw Config Paths
+**In this Replit environment:**
+- Config directory: `./data/home/` (set via OPENCLAW_HOME)
+- Config file: `./data/home/openclaw.json`
+- Credentials: `./data/home/credentials/`
+- Workspace: `./data/home/workspace/`
+- Logs: `./data/logs/openclaw.log`
+
+**Default OpenClaw paths (outside Replit):**
+- Config: `~/.openclaw/openclaw.json`
+- Credentials: `~/.openclaw/credentials/`
+- Workspace: `~/.openclaw/workspace/`
 
 ## Recent Changes
-- v1.1 Strategic Pivot - Safety Sandbox Playbook (February 2026):
-  - Epic A: Safety Profile Selector with Safe Mode (default) vs Power Mode
-  - Epic B: Sandbox Identity Playbook cards (Email, Phone, Billing separation) on setup and status pages
-  - Epic C: Redesigned landing page with Safety Checklist (loopback, token, kill switch, wipe)
-  - Epic D: Persistent top bar with Kill Switch and Wipe buttons always visible
-  - Epic E: Remote Access Hardening section with Tailscale and Cloudflare Tunnel guidance
-  - Epic F: Safe Mode enforcement - channels hidden until user switches to Power Mode
-  - Profile stored in profile.json, wipe resets profile and redirects to fresh start
-- Phase 3: Added Web Tools page for Brave Search and Perplexity configuration; added Discord channel support with bot token input and DM policy; added web search enable/disable functionality (February 2026)
-- Enhanced Larry's knowledge base with official OpenClaw documentation (docs.openclaw.ai), comprehensive channel guides, pairing system details. Optimized response format for chat bubbles with plain text, numbered steps, and emoji separators (February 2026)
-- Phase 2: Added Channels page with WhatsApp QR login, Telegram bot token setup, and pairing approval interface (February 2026)
-- Added lobster favicon, switched to Nunito font for friendlier UI (February 2026)
-- Phase 1 improvements: Added 6 new AI providers (Gemini, Moonshot, MiniMax, OpenCode Zen, Vercel, Synthetic), updated model names to current versions, fixed config path detection (February 2026)
-- Added Larry the Lobster AI assistant powered by Anthropic Claude Haiku (February 2026)
-- Configured autoscale deployment (February 2026)
-- Initial project setup (February 2026)
 
-## OpenClaw Config Notes
-- Config file path: `~/.openclaw/openclaw.json` (not config.json)
-- Credentials: `~/.openclaw/credentials/`
-- Workspace: `~/.openclaw/workspace/` (contains AGENTS.md, SOUL.md, USER.md, etc.)
-- Channel pairing data: `~/.openclaw/credentials/<channel>-pairing.json`
+### v1.2 Security Hardening (February 2026)
+- All routes except landing now require authentication
+- CSRF protection added to Kill Switch and Wipe actions
+- Password re-confirmation required for Wipe Everything
+- /tools blocked in Safe Mode (like /channels)
+- Deployment changed from autoscale to VM for stateful persistence
+- Added /api/csrf-token endpoint for client-side CSRF handling
+
+### v1.1 Strategic Pivot - Safety Sandbox Playbook (February 2026)
+- Epic A: Safety Profile Selector with Safe Mode (default) vs Power Mode
+- Epic B: Sandbox Identity Playbook cards (Email, Phone, Billing separation)
+- Epic C: Redesigned landing page with Safety Checklist
+- Epic D: Persistent top bar with Kill Switch and Wipe buttons
+- Epic E: Remote Access Hardening section (Tailscale, Cloudflare Tunnel)
+- Epic F: Safe Mode enforcement - channels hidden until Power Mode
+- Profile stored in profile.json, wipe resets profile
+
+### v1.0 Initial Features (February 2026)
+- 9 AI provider support
+- Larry the Lobster AI assistant
+- WhatsApp, Telegram, Discord channel setup
+- Brave Search and Perplexity web tools
+- Gateway management with reverse proxy
