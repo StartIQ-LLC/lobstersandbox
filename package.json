@@ -1,0 +1,27 @@
+{
+  "name": "lobstersandbox",
+  "version": "1.0.0",
+  "description": "Safe sandbox launcher for OpenClaw - try OpenClaw without touching your real accounts",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.22.1",
+    "express-rate-limit": "^7.5.1",
+    "http-proxy-middleware": "^3.0.5"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "openclaw",
+    "sandbox",
+    "ai",
+    "gateway"
+  ],
+  "license": "MIT"
+}
