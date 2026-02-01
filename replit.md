@@ -11,10 +11,14 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 │   ├── openclaw.js     # OpenClaw CLI helpers and gateway management
 │   └── assistant.js    # Larry the Lobster AI assistant (Anthropic)
 ├── views/
-│   ├── layout.js       # Base HTML layout template with chat assistant
+│   ├── layout.js       # Base HTML layout template with top bar navigation and chat assistant
 │   ├── landing.js      # Landing page view
 │   ├── setup.js        # Setup wizard views (login + wizard)
-│   └── status.js       # Status page view
+│   ├── status.js       # Status page view with channel indicators
+│   ├── channels.js     # Channel setup (WhatsApp, Telegram, Discord, pairing)
+│   └── tools.js        # Web tools setup (Brave Search, Perplexity)
+├── public/
+│   └── favicon.png     # Lobster favicon
 ├── data/
 │   ├── home/           # OpenClaw configuration directory (OPENCLAW_HOME)
 │   └── logs/           # OpenClaw log files

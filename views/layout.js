@@ -282,6 +282,7 @@ export function layout(title, content, options = {}) {
       ${backLink ? `<a href="${backLink}" class="text-gray-300 hover:text-white text-sm font-medium">&larr; Back</a>` : ''}
       <a href="/status" class="text-gray-300 hover:text-white text-sm font-medium">Status</a>
       <a href="/channels" class="text-gray-300 hover:text-white text-sm font-medium">Channels</a>
+      <a href="/tools" class="text-gray-300 hover:text-white text-sm font-medium">Tools</a>
       <a href="/setup" class="text-gray-300 hover:text-white text-sm font-medium">Setup</a>
     </div>
   </div>

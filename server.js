@@ -13,6 +13,7 @@ import { channelsPage } from './views/channels.js';
 import { toolsPage } from './views/tools.js';
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5000;
 const SETUP_PASSWORD = process.env.SETUP_PASSWORD;
 const OPENCLAW_GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN;

@@ -2,7 +2,7 @@ import { layout } from './layout.js';
 
 export function statusPage(data) {
   const { version, isConfigured, gatewayRunning, logs, health, channels = {} } = data;
-  const { whatsapp = {}, telegram = {} } = channels;
+  const { whatsapp = {}, telegram = {}, discord = {} } = channels;
   
   const content = `
   <div class="min-h-screen py-8 px-4">
@@ -47,6 +47,10 @@ export function statusPage(data) {
           <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg ${telegram.connected ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-500'}">
             <span class="w-2 h-2 rounded-full ${telegram.connected ? 'bg-blue-500' : 'bg-gray-400'}"></span>
             <span class="text-sm font-medium">Telegram</span>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg ${discord.connected ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-500'}">
+            <span class="w-2 h-2 rounded-full ${discord.connected ? 'bg-indigo-500' : 'bg-gray-400'}"></span>
+            <span class="text-sm font-medium">Discord</span>
           </div>
         </div>
       </div>

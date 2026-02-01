@@ -188,6 +188,8 @@ export function channelsPage(channelStatus = {}) {
       
       <div class="text-center">
         <a href="/setup" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to Setup</a>
+        <span class="mx-2 text-gray-300">|</span>
+        <a href="/tools" class="text-sm text-gray-500 hover:text-gray-700">Web Tools &rarr;</a>
       </div>
     </div>
   </div>
