@@ -347,8 +347,11 @@ export function layout(title, content, options = {}) {
     }
     
     async function wipeAll() {
-      const confirmed = confirm('🗑 WIPE EVERYTHING\\n\\nThis will:\\n• Stop the gateway\\n• Delete all configuration\\n• Reset your sandbox completely\\n\\nThis cannot be undone. Continue?');
-      if (!confirmed) return;
+      const typedConfirm = prompt('🗑 WIPE EVERYTHING\\n\\nThis will:\\n• Stop the gateway\\n• Delete all configuration\\n• Reset your sandbox completely\\n\\nType WIPE to confirm:');
+      if (typedConfirm !== 'WIPE') {
+        if (typedConfirm !== null) alert('You must type WIPE exactly to confirm.');
+        return;
+      }
       
       const password = prompt('Enter your setup password to confirm wipe:');
       if (!password) return;

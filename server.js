@@ -186,6 +186,9 @@ app.get('/setup', (req, res) => {
   if (isAuthenticated(req)) {
     Promise.all([openclaw.isConfigured(), Promise.resolve(openclaw.isGatewayRunning()), openclaw.getProfile()])
       .then(([configured, running, profile]) => {
+        if (configured && !profile) {
+          return res.redirect('/profile?from=setup');
+        }
         res.send(setupWizardPage(configured, running, profile));
       })
       .catch(() => {
@@ -250,6 +253,10 @@ app.get('/status', requireAuth, async (req, res) => {
       openclaw.getChannelStatus(),
       openclaw.getProfile()
     ]);
+    
+    if (configured && !profile) {
+      return res.redirect('/profile?from=status');
+    }
     
     let infoMessage = null;
     if (req.query.info === 'channels_disabled') {
@@ -595,7 +602,12 @@ const gatewayProxy = createProxyMiddleware({
   }
 });
 
-app.use('/openclaw', requireAuth, (req, res, next) => {
+app.use('/openclaw', requireAuth, async (req, res, next) => {
+  const [configured, profile] = await Promise.all([openclaw.isConfigured(), openclaw.getProfile()]);
+  if (configured && !profile) {
+    return res.redirect('/profile?from=openclaw');
+  }
+  
   if (!openclaw.isGatewayRunning()) {
     return res.send(`
       <!DOCTYPE html>
