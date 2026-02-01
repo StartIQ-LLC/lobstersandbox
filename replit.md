@@ -57,6 +57,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - `POST /setup/login` - Password login
 - `POST /setup/run` - Run OpenClaw onboarding
 - `GET /status` - System status and logs
+- `GET /channels` - Channel setup (WhatsApp, Telegram, pairing)
 - `GET /openclaw/*` - Reverse proxy to OpenClaw Control UI
 - `POST /api/gateway/start` - Start gateway
 - `POST /api/gateway/stop` - Stop gateway
@@ -67,6 +68,13 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - `POST /api/security/fix` - Run security fix
 - `POST /api/wipe` - Wipe everything
 - `POST /api/assistant/chat` - Chat with Larry the Lobster assistant
+- `GET /api/channels/status` - Get channel connection status
+- `POST /api/channels/whatsapp/login` - Start WhatsApp QR login
+- `POST /api/channels/telegram/configure` - Configure Telegram bot
+- `POST /api/channels/:channel/disconnect` - Disconnect a channel
+- `GET /api/pairing/list` - List pending pairing requests
+- `POST /api/pairing/approve` - Approve a pairing request
+- `POST /api/pairing/deny` - Deny a pairing request
 
 ## Security
 - Gateway binds to loopback only
@@ -76,6 +84,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Secure session cookies
 
 ## Recent Changes
+- Phase 2: Added Channels page with WhatsApp QR login, Telegram bot token setup, and pairing approval interface (February 2026)
 - Added lobster favicon, switched to Nunito font for friendlier UI (February 2026)
 - Phase 1 improvements: Added 6 new AI providers (Gemini, Moonshot, MiniMax, OpenCode Zen, Vercel, Synthetic), updated model names to current versions, fixed config path detection (February 2026)
 - Enhanced Larry's knowledge base with detailed info on channels (WhatsApp, Telegram), pairing system, web tools, and all provider options (February 2026)

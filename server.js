@@ -9,6 +9,7 @@ import * as assistant from './lib/assistant.js';
 import { landingPage } from './views/landing.js';
 import { loginPage, setupWizardPage } from './views/setup.js';
 import { statusPage } from './views/status.js';
+import { channelsPage } from './views/channels.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -140,10 +141,11 @@ app.post('/setup/run', setupLimiter, requireAuth, async (req, res) => {
 
 app.get('/status', async (req, res) => {
   try {
-    const [version, configured, logs] = await Promise.all([
+    const [version, configured, logs, channels] = await Promise.all([
       openclaw.getVersion(),
       openclaw.isConfigured(),
-      openclaw.getLogs(200)
+      openclaw.getLogs(200),
+      openclaw.getChannelStatus()
     ]);
     
     res.send(statusPage({
@@ -151,7 +153,8 @@ app.get('/status', async (req, res) => {
       isConfigured: configured,
       gatewayRunning: openclaw.isGatewayRunning(),
       logs,
-      health: null
+      health: null,
+      channels
     }));
   } catch (err) {
     res.send(statusPage({
@@ -230,6 +233,92 @@ app.post('/api/security/fix', apiLimiter, requireAuth, async (req, res) => {
 app.post('/api/wipe', apiLimiter, requireAuth, async (req, res) => {
   try {
     const result = await openclaw.wipeEverything();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/channels', requireAuth, async (req, res) => {
+  try {
+    const channelStatus = await openclaw.getChannelStatus();
+    res.send(channelsPage(channelStatus));
+  } catch (err) {
+    res.status(500).send('Error loading channels page');
+  }
+});
+
+app.get('/api/channels/status', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const status = await openclaw.getChannelStatus();
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/channels/whatsapp/login', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const result = await openclaw.startWhatsAppLogin();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const { botToken, dmPolicy } = req.body;
+    const currentStatus = await openclaw.getChannelStatus();
+    
+    if (!botToken && !currentStatus.telegram?.connected) {
+      return res.status(400).json({ success: false, error: 'Bot token is required' });
+    }
+    const result = await openclaw.configureChannel('telegram', { botToken, dmPolicy, keepExistingToken: !botToken });
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/channels/:channel/disconnect', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const result = await openclaw.disconnectChannel(req.params.channel);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/pairing/list', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const result = await openclaw.getPairingRequests();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/pairing/approve', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const { channel, code } = req.body;
+    if (!channel || !code) {
+      return res.status(400).json({ success: false, error: 'Channel and code are required' });
+    }
+    const result = await openclaw.approvePairing(channel, code);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/pairing/deny', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const { channel, code } = req.body;
+    if (!channel || !code) {
+      return res.status(400).json({ success: false, error: 'Channel and code are required' });
+    }
+    const result = await openclaw.denyPairing(channel, code);
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

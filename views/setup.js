@@ -169,7 +169,10 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
       </div>
       
       <div class="card p-6 mb-6">
-        <h2 class="font-display font-semibold text-gray-800 mb-4">Gateway Control</h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display font-semibold text-gray-800">Gateway Control</h2>
+          <a href="/channels" class="text-sm text-lobster-600 hover:text-lobster-700 font-medium">Connect Channels &rarr;</a>
+        </div>
         <div class="flex flex-wrap gap-3 mb-4">
           <button onclick="startGateway()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium shadow-md transition-all">
             ▶ Start Gateway
