@@ -67,6 +67,14 @@ export function profilePage(currentProfile = null) {
   
   <script>
     async function selectProfile(profile) {
+      if (profile === 'power') {
+        const confirmed = prompt('⚡ Enable Power Mode?\\n\\nThis unlocks:\\n• WhatsApp, Telegram, Discord channels\\n• Web tools (Brave Search, Perplexity)\\n\\nOnly enable if you understand the risks.\\n\\nType POWER to confirm:');
+        if (confirmed !== 'POWER') {
+          if (confirmed !== null) alert('You must type POWER exactly to enable channels.');
+          return;
+        }
+      }
+      
       document.querySelectorAll('.profile-card').forEach(card => {
         card.classList.remove('ring-2', 'ring-green-500', 'ring-purple-500', 'bg-green-50', 'bg-purple-50');
       });

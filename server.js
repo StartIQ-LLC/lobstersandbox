@@ -137,6 +137,18 @@ function requireAuth(req, res, next) {
   }
 }
 
+async function requirePowerMode(req, res, next) {
+  try {
+    const profile = await openclaw.getProfile();
+    if (!profile || profile === 'safe') {
+      return res.status(403).json({ success: false, error: 'Channels require Power Mode. Switch profile first.' });
+    }
+    next();
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Error checking profile' });
+  }
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -430,7 +442,7 @@ app.post('/api/wipe-all', apiLimiter, requireAuth, validateCsrf, async (req, res
   }
 });
 
-app.get('/api/channels/status', apiLimiter, requireAuth, async (req, res) => {
+app.get('/api/channels/status', apiLimiter, requireAuth, requirePowerMode, async (req, res) => {
   try {
     const status = await openclaw.getChannelStatus();
     res.json(status);
@@ -439,7 +451,7 @@ app.get('/api/channels/status', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/channels/whatsapp/login', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+app.post('/api/channels/whatsapp/login', apiLimiter, requireAuth, requirePowerMode, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.startWhatsAppLogin();
     res.json(result);
@@ -448,7 +460,7 @@ app.post('/api/channels/whatsapp/login', apiLimiter, requireAuth, validateCsrf, 
   }
 });
 
-app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, requirePowerMode, validateCsrf, async (req, res) => {
   try {
     const { botToken, dmPolicy } = req.body;
     const currentStatus = await openclaw.getChannelStatus();
@@ -463,7 +475,7 @@ app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, validateCs
   }
 });
 
-app.post('/api/channels/discord/configure', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+app.post('/api/channels/discord/configure', apiLimiter, requireAuth, requirePowerMode, validateCsrf, async (req, res) => {
   try {
     const { botToken, dmPolicy } = req.body;
     const currentStatus = await openclaw.getChannelStatus();
@@ -478,7 +490,7 @@ app.post('/api/channels/discord/configure', apiLimiter, requireAuth, validateCsr
   }
 });
 
-app.post('/api/tools/web-search/configure', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+app.post('/api/tools/web-search/configure', apiLimiter, requireAuth, requirePowerMode, validateCsrf, async (req, res) => {
   try {
     const { provider, apiKey, model } = req.body;
     const currentStatus = await openclaw.getWebToolsStatus();
@@ -493,7 +505,7 @@ app.post('/api/tools/web-search/configure', apiLimiter, requireAuth, validateCsr
   }
 });
 
-app.post('/api/tools/web-search/disable', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+app.post('/api/tools/web-search/disable', apiLimiter, requireAuth, requirePowerMode, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.disableWebSearch();
     res.json(result);
@@ -502,7 +514,7 @@ app.post('/api/tools/web-search/disable', apiLimiter, requireAuth, validateCsrf,
   }
 });
 
-app.get('/api/tools/status', apiLimiter, requireAuth, async (req, res) => {
+app.get('/api/tools/status', apiLimiter, requireAuth, requirePowerMode, async (req, res) => {
   try {
     const status = await openclaw.getWebToolsStatus();
     res.json(status);
@@ -511,7 +523,7 @@ app.get('/api/tools/status', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/channels/:channel/disconnect', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+app.post('/api/channels/:channel/disconnect', apiLimiter, requireAuth, requirePowerMode, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.disconnectChannel(req.params.channel);
     res.json(result);
