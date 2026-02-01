@@ -1,0 +1,91 @@
+Context
+LobsterSandbox v1.1 is complete with a ship safe baseline:
+- Hash based constant time password compare
+- Sessions: 30 minute idle timeout plus 12 hour absolute lifetime, server session deletion on timeout
+- Session ID regenerated on login
+- Login rate limiting (10 per 15 minutes)
+- CSRF on all POST routes except login
+- Origin and Referer validation on POST
+- Secure cookies, trust proxy set
+- WebSocket upgrade auth enforced at HTTP server level for /openclaw before proxying
+- Gateway bound to loopback only and reachable only through reverse proxy
+- Typed WIPE confirmation plus password
+- Typed POWER confirmation to unlock channels and tools
+Do not regress any of this.
+
+Goal
+Ship a small v1.1.1 polish release that improves clarity, trust, and shareability:
+1) Add a Safety Score card on /status with a copyable summary
+2) Add optional playbook progress checkboxes (Email, Phone, Billing)
+3) Make Safe Mode vs Power Mode behavior feel consistent in UI, not only in APIs
+4) Ensure profile gating and Power Mode gating covers every relevant route
+5) Keep docs and version labeling consistent
+
+Work items
+
+A) Safety Score card on /status
+- Add a new section at top of /status: “Safety Score”
+- Show a checklist with PASS or WARN for:
+  - Auth required for protected routes
+  - CSRF enforced on POST routes
+  - Origin and Referer validation enabled
+  - WebSocket upgrades require valid session
+  - Gateway loopback only
+  - Reverse proxy only, no direct port exposure
+  - Safe Mode active or Power Mode active
+  - Kill switch available
+  - Wipe requires typed WIPE plus password
+  - Power Mode requires typed POWER
+  - Login rate limiting enabled
+- Show a simple badge:
+  - Safe Mode: “Locked down”
+  - Power Mode: “Controlled risk”
+- Add “Copy Safety Summary” button that copies a short text summary to clipboard
+  Example:
+  LobsterSandbox Safety Summary
+  Mode: Safe Mode
+  Auth: on
+  CSRF: on
+  WS gated: on
+  Gateway: loopback only
+  Kill switch: ready
+  Wipe: typed confirmation
+
+B) Playbook progress checkboxes
+- On the Sandbox Playbook cards (Email, Phone, Billing) add a small checkbox “Done”
+- Store these in session only (no user accounts). Persist for the session across reloads.
+- Optional: add “Reset playbook progress” button on /status
+
+C) UI consistency for Safe Mode
+- In Safe Mode, hide channel and tools navigation links and disable buttons that would call channel or tools APIs
+- If user tries anyway and gets 403 “Channels require Power Mode”, show a friendly inline message:
+  “This requires Power Mode. Go to Profile to unlock.”
+  Include a button linking to /profile
+
+D) Route gating audit
+- Ensure requirePowerMode applies to all channel and tool routes, not only a subset.
+- Preferred pattern:
+  - Apply middleware at the router prefix level:
+    app.use('/api/channels', requireAuth, requirePowerMode)
+    app.use('/api/tools', requireAuth, requirePowerMode)
+  - Then explicitly allow any exceptions if needed (probably none for v1.1.1).
+- Confirm any non API pages related to channels or tools are also blocked or hidden in Safe Mode.
+
+E) Version consistency
+- Pick one version label: v1.1.1
+- Update README, replit.md, and any UI footer or About text to match
+- Do not add a “v1.3 changelog” unless you also bump the app version
+
+F) Tests
+- Add a small npm test script using supertest for:
+  - Auth redirect for /openclaw when not logged in
+  - CSRF 403 for POST without token when logged in
+  - Power Mode gating: /api/channels/status returns 403 in Safe Mode
+- WebSocket test is optional if hard, but add a manual test note in README:
+  “Incognito should never get 101 Switching Protocols on /openclaw”
+
+Deliverables
+- Implement the above changes
+- List changed files
+- Confirm all existing security acceptance tests still pass
+- Confirm the new Safety Score card renders and Copy Safety Summary works
