@@ -79,10 +79,12 @@ export function profilePage(currentProfile = null) {
       }
       
       try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showError('Session expired. Please log in again.'); return; }
         const res = await fetch('/api/profile', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ profile })
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ profile, csrf_token: csrfToken })
         });
         const data = await res.json();
         

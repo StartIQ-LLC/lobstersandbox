@@ -58,6 +58,46 @@ function validateCsrf(req, res, next) {
   next();
 }
 
+function validateOrigin(req, res, next) {
+  if (req.method !== 'POST') {
+    return next();
+  }
+  
+  const origin = req.headers.origin;
+  const referer = req.headers.referer;
+  const host = req.headers.host;
+  
+  if (!origin && !referer) {
+    return next();
+  }
+  
+  const allowedHost = host?.split(':')[0];
+  
+  if (origin) {
+    try {
+      const originHost = new URL(origin).hostname;
+      if (originHost !== allowedHost && originHost !== 'localhost' && originHost !== '127.0.0.1') {
+        return res.status(403).json({ success: false, error: 'Invalid origin' });
+      }
+    } catch {
+      return res.status(403).json({ success: false, error: 'Invalid origin' });
+    }
+  }
+  
+  if (referer && !origin) {
+    try {
+      const refererHost = new URL(referer).hostname;
+      if (refererHost !== allowedHost && refererHost !== 'localhost' && refererHost !== '127.0.0.1') {
+        return res.status(403).json({ success: false, error: 'Invalid referer' });
+      }
+    } catch {
+      return res.status(403).json({ success: false, error: 'Invalid referer' });
+    }
+  }
+  
+  next();
+}
+
 function isAuthenticated(req) {
   const token = req.cookies?.session_token;
   return token && sessionTokens.has(token);
@@ -85,12 +125,15 @@ app.get('/favicon.png', (req, res) => {
 
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
   next();
 });
+
+app.use(validateOrigin);
 
 const setupLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -146,7 +189,7 @@ app.post('/setup/login', setupLimiter, (req, res) => {
   }
 });
 
-app.post('/setup/run', setupLimiter, requireAuth, async (req, res) => {
+app.post('/setup/run', setupLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { provider, apiKey, model } = req.body;
     
@@ -206,7 +249,7 @@ app.get('/status', requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/gateway/start', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/gateway/start', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.startGateway();
     res.json(result);
@@ -250,7 +293,7 @@ app.get('/api/logs', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/verify', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/verify', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const results = await openclaw.runQuickVerify();
     res.json({ results });
@@ -259,7 +302,7 @@ app.post('/api/verify', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/security/audit', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/security/audit', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.runSecurityAudit();
     res.json(result);
@@ -268,7 +311,7 @@ app.post('/api/security/audit', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/security/fix', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/security/fix', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.runSecurityFix();
     res.json(result);
@@ -313,7 +356,7 @@ app.get('/profile', requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/profile', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/profile', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { profile } = req.body;
     if (!profile || !['safe', 'power'].includes(profile)) {
@@ -357,7 +400,7 @@ app.get('/api/channels/status', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/channels/whatsapp/login', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/channels/whatsapp/login', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.startWhatsAppLogin();
     res.json(result);
@@ -366,7 +409,7 @@ app.post('/api/channels/whatsapp/login', apiLimiter, requireAuth, async (req, re
   }
 });
 
-app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { botToken, dmPolicy } = req.body;
     const currentStatus = await openclaw.getChannelStatus();
@@ -381,7 +424,7 @@ app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, async (req
   }
 });
 
-app.post('/api/channels/discord/configure', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/channels/discord/configure', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { botToken, dmPolicy } = req.body;
     const currentStatus = await openclaw.getChannelStatus();
@@ -396,7 +439,7 @@ app.post('/api/channels/discord/configure', apiLimiter, requireAuth, async (req,
   }
 });
 
-app.post('/api/tools/web-search/configure', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/tools/web-search/configure', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { provider, apiKey, model } = req.body;
     const currentStatus = await openclaw.getWebToolsStatus();
@@ -411,7 +454,7 @@ app.post('/api/tools/web-search/configure', apiLimiter, requireAuth, async (req,
   }
 });
 
-app.post('/api/tools/web-search/disable', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/tools/web-search/disable', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.disableWebSearch();
     res.json(result);
@@ -429,7 +472,7 @@ app.get('/api/tools/status', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/channels/:channel/disconnect', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/channels/:channel/disconnect', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.disconnectChannel(req.params.channel);
     res.json(result);
@@ -447,7 +490,7 @@ app.get('/api/pairing/list', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/pairing/approve', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/pairing/approve', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { channel, code } = req.body;
     if (!channel || !code) {
@@ -460,7 +503,7 @@ app.post('/api/pairing/approve', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/pairing/deny', apiLimiter, requireAuth, async (req, res) => {
+app.post('/api/pairing/deny', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { channel, code } = req.body;
     if (!channel || !code) {
@@ -473,7 +516,7 @@ app.post('/api/pairing/deny', apiLimiter, requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/assistant/chat', apiLimiter, async (req, res) => {
+app.post('/api/assistant/chat', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const { message } = req.body;
     if (!message || typeof message !== 'string') {

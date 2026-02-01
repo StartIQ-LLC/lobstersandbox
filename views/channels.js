@@ -206,7 +206,13 @@ export function channelsPage(channelStatus = {}, profile = null) {
       qrDiv.innerHTML = '<div class="text-gray-400">Generating QR code...</div>';
       
       try {
-        const res = await fetch('/api/channels/whatsapp/login', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('whatsapp-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const res = await fetch('/api/channels/whatsapp/login', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         
         if (data.success && data.qrCode) {
@@ -252,12 +258,14 @@ export function channelsPage(channelStatus = {}, profile = null) {
       }
       
       try {
-        const payload = { dmPolicy };
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('telegram-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const payload = { dmPolicy, csrf_token: csrfToken };
         if (token) payload.botToken = token;
         
         const res = await fetch('/api/channels/telegram/configure', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
           body: JSON.stringify(payload)
         });
         const data = await res.json();
@@ -283,12 +291,14 @@ export function channelsPage(channelStatus = {}, profile = null) {
       }
       
       try {
-        const payload = { dmPolicy };
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('discord-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const payload = { dmPolicy, csrf_token: csrfToken };
         if (token) payload.botToken = token;
         
         const res = await fetch('/api/channels/discord/configure', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
           body: JSON.stringify(payload)
         });
         const data = await res.json();
@@ -307,7 +317,13 @@ export function channelsPage(channelStatus = {}, profile = null) {
       if (!confirm('Disconnect ' + channel + '? You will need to reconfigure it.')) return;
       
       try {
-        const res = await fetch('/api/channels/' + channel + '/disconnect', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult(channel + '-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const res = await fetch('/api/channels/' + channel + '/disconnect', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         showResult(channel + '-result', data.message || 'Disconnected', data.success ? 'success' : 'error');
         if (data.success) setTimeout(() => location.reload(), 1500);
@@ -352,10 +368,12 @@ export function channelsPage(channelStatus = {}, profile = null) {
     
     async function approvePairing(channel, code) {
       try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { alert('Session expired. Please log in again.'); return; }
         const res = await fetch('/api/pairing/approve', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ channel, code })
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ channel, code, csrf_token: csrfToken })
         });
         const data = await res.json();
         alert(data.message || (data.success ? 'Approved!' : 'Failed'));
@@ -367,10 +385,12 @@ export function channelsPage(channelStatus = {}, profile = null) {
     
     async function denyPairing(channel, code) {
       try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { alert('Session expired. Please log in again.'); return; }
         const res = await fetch('/api/pairing/deny', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ channel, code })
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ channel, code, csrf_token: csrfToken })
         });
         const data = await res.json();
         alert(data.message || (data.success ? 'Denied!' : 'Failed'));

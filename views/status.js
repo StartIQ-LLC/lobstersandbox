@@ -214,7 +214,13 @@ export function statusPage(data) {
       container.classList.remove('hidden');
       container.textContent = '🔍 Running quick verify...';
       try {
-        const res = await fetch('/api/verify', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { container.textContent = '❌ Session expired. Please log in again.'; return; }
+        const res = await fetch('/api/verify', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         let output = '';
         for (const result of data.results) {
@@ -233,7 +239,13 @@ export function statusPage(data) {
       container.classList.remove('hidden');
       container.textContent = '🛡 Running security audit...';
       try {
-        const res = await fetch('/api/security/audit', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { container.textContent = '❌ Session expired. Please log in again.'; return; }
+        const res = await fetch('/api/security/audit', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         container.textContent = data.stdout || data.stderr || 'No output';
       } catch (err) {
@@ -246,7 +258,13 @@ export function statusPage(data) {
       container.classList.remove('hidden');
       container.textContent = '🔧 Running security fix...';
       try {
-        const res = await fetch('/api/security/fix', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { container.textContent = '❌ Session expired. Please log in again.'; return; }
+        const res = await fetch('/api/security/fix', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         container.textContent = data.stdout || data.stderr || 'No output';
       } catch (err) {

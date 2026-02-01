@@ -163,9 +163,12 @@ export function toolsPage(toolsStatus = {}, profile = null) {
       }
       
       try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('search-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        payload.csrf_token = csrfToken;
         const res = await fetch('/api/tools/web-search/configure', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
           body: JSON.stringify(payload)
         });
         const data = await res.json();
@@ -185,7 +188,13 @@ export function toolsPage(toolsStatus = {}, profile = null) {
       if (!confirm('Disable web search? Your AI will not be able to search the internet.')) return;
       
       try {
-        const res = await fetch('/api/tools/web-search/disable', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('search-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const res = await fetch('/api/tools/web-search/disable', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         showResult('search-result', data.message || 'Web search disabled', data.success ? 'success' : 'error');
         if (data.success) setTimeout(() => location.reload(), 1500);

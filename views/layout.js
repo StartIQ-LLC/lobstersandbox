@@ -507,10 +507,18 @@ export function layout(title, content, options = {}) {
       showTyping();
       
       try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+          hideTyping();
+          addMessage('Please log in first to chat with me!', 'assistant');
+          isTyping = false;
+          document.getElementById('lobster-send').disabled = false;
+          return;
+        }
         const response = await fetch('/api/assistant/chat', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message })
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ message, csrf_token: csrfToken })
         });
         const data = await response.json();
         hideTyping();

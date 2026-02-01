@@ -121,8 +121,9 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Rate limiting on login and API endpoints
 
 ### CSRF Protection
-- CSRF tokens required for destructive actions (Kill Switch, Wipe)
-- Tokens generated per session, validated server-side
+- CSRF tokens required for ALL POST routes (not just destructive actions)
+- Tokens generated per session, validated server-side via X-CSRF-Token header
+- Origin/Referer validation as additional defense layer
 
 ### Wipe Protection
 - Password re-confirmation required to wipe
@@ -161,11 +162,15 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 
 ### v1.2 Security Hardening (February 2026)
 - All routes except landing now require authentication
-- CSRF protection added to Kill Switch and Wipe actions
+- CSRF protection added to ALL POST routes (not just Kill Switch/Wipe)
 - Password re-confirmation required for Wipe Everything
 - /tools blocked in Safe Mode (like /channels)
 - Deployment changed from autoscale to VM for stateful persistence
 - Added /api/csrf-token endpoint for client-side CSRF handling
+- Added Origin/Referer validation middleware for POST requests
+- Security headers: X-Frame-Options: DENY, CSP frame-ancestors: 'none'
+- Session cookies: httpOnly, sameSite: lax, secure in production
+- Secret masking covers all command strings, stdout/stderr, and logs
 
 ### v1.1 Strategic Pivot - Safety Sandbox Playbook (February 2026)
 - Epic A: Safety Profile Selector with Safe Mode (default) vs Power Mode

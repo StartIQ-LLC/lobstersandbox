@@ -399,10 +399,12 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
       document.getElementById('run-setup-btn').textContent = '⏳ Running...';
       
       try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('setup-result', '❌ Session expired. Please log in again.', 'error'); return; }
         const res = await fetch('/setup/run', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ provider: selectedProvider, apiKey, model })
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ provider: selectedProvider, apiKey, model, csrf_token: csrfToken })
         });
         const data = await res.json();
         if (data.success) {
@@ -420,7 +422,13 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
     
     async function startGateway() {
       try {
-        const res = await fetch('/api/gateway/start', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('gateway-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const res = await fetch('/api/gateway/start', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         showResult('gateway-result', data.message, data.success ? 'success' : 'error');
         if (data.success) setTimeout(() => location.reload(), 1500);
@@ -431,7 +439,13 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
     
     async function stopGateway() {
       try {
-        const res = await fetch('/api/gateway/stop', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('gateway-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const res = await fetch('/api/gateway/stop', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         showResult('gateway-result', data.message, data.success ? 'success' : 'error');
         if (data.success) setTimeout(() => location.reload(), 1500);
@@ -443,24 +457,16 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
     async function killSwitch() {
       if (!confirm('⚡ This will immediately stop the gateway. Continue?')) return;
       try {
-        const res = await fetch('/api/gateway/stop', { method: 'POST' });
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) { showResult('danger-result', '❌ Session expired. Please log in again.', 'error'); return; }
+        const res = await fetch('/api/gateway/stop', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
         const data = await res.json();
         showResult('danger-result', '⚡ Gateway stopped', 'success');
         setTimeout(() => location.reload(), 1500);
-      } catch (err) {
-        showResult('danger-result', '❌ Error: ' + err.message, 'error');
-      }
-    }
-    
-    async function wipeEverything() {
-      if (!confirm('🗑 This will stop the gateway and delete ALL configuration and logs. This cannot be undone. Continue?')) return;
-      if (!confirm('⚠️ Are you absolutely sure? Everything will be deleted.')) return;
-      
-      try {
-        const res = await fetch('/api/wipe', { method: 'POST' });
-        const data = await res.json();
-        showResult('danger-result', '🗑 Everything has been wiped. Reloading...', 'success');
-        setTimeout(() => location.reload(), 2000);
       } catch (err) {
         showResult('danger-result', '❌ Error: ' + err.message, 'error');
       }
