@@ -138,6 +138,8 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Gateway binds to loopback only (127.0.0.1)
 - Token authentication on all gateway requests
 - Token injected server-side, never exposed to client
+- WebSocket upgrades explicitly authenticated at server level (not just Express middleware)
+- Unauthenticated WS upgrade requests receive 401 and socket is destroyed
 
 ### Secret Safety
 - API keys masked in logs and UI (shows last 8 chars only)

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
+    "cookie": "^1.1.1",
     "cookie-parser": "^1.4.7",
     "drizzle-zod": "^0.8.3",
     "express": "^4.22.1",

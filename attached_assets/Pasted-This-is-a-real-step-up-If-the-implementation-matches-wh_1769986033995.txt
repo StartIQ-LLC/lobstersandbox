@@ -1,0 +1,71 @@
+This is a real step up. If the implementation matches what you wrote, you’re now at a “ship safe baseline” that is defensible for a v1.
+
+## What you did right
+
+* Hash based constant time password comparison: good. Comparing hash to hash avoids timing leaks and avoids accidental plaintext handling.
+* Idle timeout plus absolute lifetime: that combo is exactly what you want for a stateful admin style app.
+* New session ID on login: good for session fixation.
+* Authenticated CSRF tests: this is the key missing piece in most “security hardening” writeups, and your results are what we want (403 on missing or wrong token, handler reached on correct token).
+* Rate limiting on login, origin and referer checks, hardened headers, secret masking: all good baseline controls.
+
+## One thing I would still double check carefully
+
+### WebSocket auth is often not protected by Express route middleware
+
+The statement “/openclaw has requireAuth so upgrades are protected” is sometimes true and sometimes false, depending on how the proxy is wired.
+
+Many WebSocket proxies hook into the HTTP server’s `upgrade` event. That can bypass Express routing unless you explicitly handle upgrade authentication, or unless your proxy library guarantees it is bound to a prior authenticated HTTP request. ([GitHub][1])
+
+In other words, a GET to /openclaw being protected does not always guarantee the WS upgrade is protected.
+
+What to verify (super practical):
+
+1. Open an incognito window, do not log in
+2. Open DevTools, Network, filter “WS”
+3. Load /openclaw and watch if any WS connection becomes “101 Switching Protocols”
+   It should not.
+
+Even better:
+
+* Use a WS client and try connecting directly without cookies. It should fail fast.
+* Then connect with the authenticated cookie. It should succeed.
+
+If you are using http-proxy-middleware, it relies on an initial HTTP request to listen for upgrade in the normal case, but “external” upgrade handling is a separate path and is where auth bypasses can sneak in. ([GitHub][1])
+
+If you want a bulletproof pattern, do this:
+
+* Add a server level upgrade handler that rejects upgrades unless the session cookie is valid, before passing the socket to the proxy.
+
+## Two small hardening tweaks that are worth it
+
+1. Make sure you set Express trust proxy correctly in Replit hosting
+
+* `app.set('trust proxy', 1)`
+  This matters so secure cookies behave correctly behind a reverse proxy.
+
+2. Ensure session deletion happens server side on timeout
+   Clearing the cookie is good, but also remove the server session record so it cannot be reused.
+
+## What I would call this today
+
+“Ship safe baseline” for a trend driven sandbox launcher, yes.
+
+It will not make agents “safe” in the abstract, but it meaningfully reduces the easy wins for attackers and prevents the most common web app mistakes.
+
+## Next best move
+
+Now you can go back to product v1.1:
+
+* Safety profile selector
+* Playbook cards
+* Hero reordering
+* Kill switch and wipe always visible
+
+If you paste the file that sets up the WebSocket proxy (the http server creation and the proxy ws config), I can tell you in 60 seconds whether your current setup truly enforces auth at upgrade time.
+
+Sources (plain links)
+
+* [https://github.com/chimurai/http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware)
+* [https://github.com/socketio/socket.io/issues/4899](https://github.com/socketio/socket.io/issues/4899)
+
+[1]: https://github.com/chimurai/http-proxy-middleware?utm_source=chatgpt.com "The one-liner node.js http-proxy middleware ..."

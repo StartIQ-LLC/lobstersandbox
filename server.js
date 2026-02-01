@@ -1,5 +1,7 @@
 import express from 'express';
+import http from 'http';
 import cookieParser from 'cookie-parser';
+import cookie from 'cookie';
 import rateLimit from 'express-rate-limit';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import crypto from 'crypto';
@@ -211,7 +213,7 @@ app.post('/setup/login', setupLimiter, (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: 12 * 60 * 60 * 1000
     });
     res.redirect('/setup');
   } else {
@@ -619,7 +621,49 @@ app.use('/openclaw', requireAuth, (req, res, next) => {
   next();
 }, gatewayProxy);
 
-app.listen(PORT, '0.0.0.0', async () => {
+const server = http.createServer(app);
+
+server.on('upgrade', (req, socket, head) => {
+  const cookies = cookie.parse(req.headers.cookie || '');
+  const sessionToken = cookies.session_token;
+  
+  if (!sessionToken || !sessionTokens.has(sessionToken)) {
+    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+  
+  const session = sessionTokens.get(sessionToken);
+  const now = Date.now();
+  
+  if ((now - session.created) > SESSION_MAX_LIFETIME_MS) {
+    sessionTokens.delete(sessionToken);
+    csrfTokens.delete(sessionToken);
+    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+  
+  if (session.lastActivity && (now - session.lastActivity) > SESSION_IDLE_TIMEOUT_MS) {
+    sessionTokens.delete(sessionToken);
+    csrfTokens.delete(sessionToken);
+    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+  
+  session.lastActivity = now;
+  
+  if (!req.url.startsWith('/openclaw')) {
+    socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+  
+  gatewayProxy.upgrade(req, socket, head);
+});
+
+server.listen(PORT, '0.0.0.0', async () => {
   console.log(`LobsterSandbox running on http://0.0.0.0:${PORT}`);
   console.log('');
   console.log('Routes:');
