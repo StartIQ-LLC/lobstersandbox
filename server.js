@@ -25,6 +25,8 @@ if (!SETUP_PASSWORD) {
   process.exit(1);
 }
 
+const SETUP_PASSWORD_HASH = crypto.createHash('sha256').update(SETUP_PASSWORD).digest();
+
 if (!OPENCLAW_GATEWAY_TOKEN) {
   console.error('ERROR: OPENCLAW_GATEWAY_TOKEN environment variable is required');
   process.exit(1);
@@ -98,7 +100,8 @@ function validateOrigin(req, res, next) {
   next();
 }
 
-const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
+const SESSION_MAX_LIFETIME_MS = 12 * 60 * 60 * 1000;
 
 function isAuthenticated(req) {
   const token = req.cookies?.session_token;
@@ -107,7 +110,13 @@ function isAuthenticated(req) {
   const session = sessionTokens.get(token);
   const now = Date.now();
   
-  if (session.lastActivity && (now - session.lastActivity) > SESSION_TIMEOUT_MS) {
+  if ((now - session.created) > SESSION_MAX_LIFETIME_MS) {
+    sessionTokens.delete(token);
+    csrfTokens.delete(token);
+    return false;
+  }
+  
+  if (session.lastActivity && (now - session.lastActivity) > SESSION_IDLE_TIMEOUT_MS) {
     sessionTokens.delete(token);
     csrfTokens.delete(token);
     return false;
@@ -185,21 +194,16 @@ app.get('/setup', (req, res) => {
   }
 });
 
-function constantTimeCompare(a, b) {
-  if (!a || !b) return false;
-  const bufA = Buffer.from(a);
-  const bufB = Buffer.from(b);
-  if (bufA.length !== bufB.length) {
-    crypto.timingSafeEqual(bufA, bufA);
-    return false;
-  }
-  return crypto.timingSafeEqual(bufA, bufB);
+function securePasswordCompare(inputPassword) {
+  if (!inputPassword) return false;
+  const inputHash = crypto.createHash('sha256').update(inputPassword).digest();
+  return crypto.timingSafeEqual(inputHash, SETUP_PASSWORD_HASH);
 }
 
 app.post('/setup/login', setupLimiter, (req, res) => {
   const { password } = req.body;
   
-  if (constantTimeCompare(password, SETUP_PASSWORD)) {
+  if (securePasswordCompare(password)) {
     const token = generateSessionToken();
     sessionTokens.set(token, { created: Date.now(), lastActivity: Date.now() });
     generateCsrfToken(token);
