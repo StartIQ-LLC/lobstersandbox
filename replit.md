@@ -84,7 +84,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Secure session cookies
 
 ## Recent Changes
-- Enhanced Larry's knowledge base with official OpenClaw documentation (docs.openclaw.ai), comprehensive channel guides, pairing system details, and well-formatted responses with bullets, headers, and step-by-step instructions (February 2026)
+- Enhanced Larry's knowledge base with official OpenClaw documentation (docs.openclaw.ai), comprehensive channel guides, pairing system details. Optimized response format for chat bubbles with plain text, numbered steps, and emoji separators (February 2026)
 - Phase 2: Added Channels page with WhatsApp QR login, Telegram bot token setup, and pairing approval interface (February 2026)
 - Added lobster favicon, switched to Nunito font for friendlier UI (February 2026)
 - Phase 1 improvements: Added 6 new AI providers (Gemini, Moonshot, MiniMax, OpenCode Zen, Vercel, Synthetic), updated model names to current versions, fixed config path detection (February 2026)

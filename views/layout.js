@@ -143,6 +143,65 @@ export function layout(title, content, options = {}) {
       background: #dc2626;
       color: white;
     }
+    
+    /* Markdown rendering styles */
+    .lobster-message-content h1,
+    .lobster-message-content h2,
+    .lobster-message-content h3 {
+      font-weight: 700;
+      margin: 8px 0 4px 0;
+      line-height: 1.3;
+    }
+    .lobster-message-content h1 { font-size: 16px; }
+    .lobster-message-content h2 { font-size: 14px; color: #374151; }
+    .lobster-message-content h3 { font-size: 13px; color: #4b5563; }
+    .lobster-message-content p {
+      margin: 6px 0;
+    }
+    .lobster-message-content ul,
+    .lobster-message-content ol {
+      margin: 6px 0;
+      padding-left: 16px;
+    }
+    .lobster-message-content li {
+      margin: 3px 0;
+    }
+    .lobster-message-content strong {
+      font-weight: 700;
+    }
+    .lobster-message-content em {
+      font-style: italic;
+    }
+    .lobster-message-content code {
+      background: #e5e7eb;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .lobster-message-content pre {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 8px 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 6px 0;
+      font-size: 11px;
+    }
+    .lobster-message-content pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+    .lobster-message-content hr {
+      border: none;
+      border-top: 1px solid #d1d5db;
+      margin: 8px 0;
+    }
+    .lobster-message-content a {
+      color: #dc2626;
+      text-decoration: underline;
+    }
     .lobster-chat-input {
       border-top: 1px solid #e5e7eb;
       padding: 12px;
@@ -270,11 +329,61 @@ export function layout(title, content, options = {}) {
       }
     }
     
+    function parseMarkdown(text) {
+      let html = text;
+      
+      // Code blocks
+      html = html.replace(/\\\`\\\`\\\`([\\s\\S]*?)\\\`\\\`\\\`/g, '<pre><code>$1</code></pre>');
+      html = html.replace(/\\\`([^\\\`]+)\\\`/g, '<code>$1</code>');
+      
+      // Headers
+      html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+      
+      // Bold and italic
+      html = html.replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>');
+      html = html.replace(/\\*([^*]+)\\*/g, '<em>$1</em>');
+      
+      // Horizontal rule
+      html = html.replace(/^---$/gm, '<hr>');
+      
+      // Lists - convert bullets and numbers to list items
+      html = html.replace(/^[•] (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/^\\* (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/^\\d+\\. (.+)$/gm, '<li>$1</li>');
+      
+      // URLs
+      html = html.replace(/(https?:\\/\\/[^\\s<)]+)/g, '<a href="$1" target="_blank">link</a>');
+      
+      // Paragraphs and line breaks
+      html = html.replace(/\\n\\n/g, '</p><p>');
+      html = html.replace(/\\n/g, '<br>');
+      html = '<p>' + html + '</p>';
+      
+      // Clean up paragraph wrapping around block elements
+      html = html.replace(/<p><h/g, '<h');
+      html = html.replace(/<\\/h(\\d)><\\/p>/g, '</h$1>');
+      html = html.replace(/<p><hr><\\/p>/g, '<hr>');
+      html = html.replace(/<p><pre>/g, '<pre>');
+      html = html.replace(/<\\/pre><\\/p>/g, '</pre>');
+      
+      // Wrap consecutive list items in ul
+      html = html.replace(/<br><li>/g, '<li>');
+      html = html.replace(/<\\/li><br>/g, '</li>');
+      html = html.replace(/(<li>[\\s\\S]*?<\\/li>)/g, '<ul>$1</ul>');
+      html = html.replace(/<\\/ul><ul>/g, '');
+      
+      return html;
+    }
+    
     function addMessage(content, role) {
       const messagesDiv = document.getElementById('lobster-messages');
       const messageDiv = document.createElement('div');
       messageDiv.className = 'lobster-message ' + role;
-      messageDiv.innerHTML = '<div class="lobster-message-content">' + content + '</div>';
+      const displayContent = role === 'assistant' ? parseMarkdown(content) : content;
+      messageDiv.innerHTML = '<div class="lobster-message-content">' + displayContent + '</div>';
       messagesDiv.appendChild(messageDiv);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
