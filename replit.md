@@ -26,7 +26,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - **Runtime**: Node.js 22
 - **Framework**: Express.js
 - **Templating**: Server-rendered HTML with Tailwind CSS (CDN)
-- **Fonts**: Space Grotesk (headings), Inter (body)
+- **Fonts**: Nunito (all text)
 - **Proxy**: http-proxy-middleware with WebSocket support
 - **Rate Limiting**: express-rate-limit
 - **AI Assistant**: Anthropic Claude Haiku via Replit AI Integrations
@@ -76,10 +76,10 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Secure session cookies
 
 ## Recent Changes
+- Added lobster favicon, switched to Nunito font for friendlier UI (February 2026)
 - Phase 1 improvements: Added 6 new AI providers (Gemini, Moonshot, MiniMax, OpenCode Zen, Vercel, Synthetic), updated model names to current versions, fixed config path detection (February 2026)
 - Enhanced Larry's knowledge base with detailed info on channels (WhatsApp, Telegram), pairing system, web tools, and all provider options (February 2026)
 - Added Larry the Lobster AI assistant powered by Anthropic Claude (February 2026)
-- Modernized UI with Space Grotesk and Inter fonts (February 2026)
 - Configured autoscale deployment (February 2026)
 - Initial project setup (February 2026)
 

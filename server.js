@@ -50,7 +50,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.get('/favicon.ico', (req, res) => {
-  res.status(204).end();
+  res.redirect('/favicon.png');
+});
+
+app.get('/favicon.png', (req, res) => {
+  res.sendFile('public/favicon.png', { root: '.' });
 });
 
 app.use((req, res, next) => {
