@@ -5,25 +5,25 @@ export function loginPage(error = null) {
   <div class="min-h-screen flex items-center justify-center px-4">
     <div class="card p-8 w-full max-w-md">
       <div class="text-center mb-6">
-        <div class="text-4xl mb-2">🦞</div>
-        <h1 class="text-2xl font-bold text-gray-900">Setup Access</h1>
-        <p class="text-gray-600 text-sm mt-1">Enter the setup password to continue</p>
+        <div class="text-5xl mb-3">🦞</div>
+        <h1 class="logo-text text-2xl text-gray-800">Setup Access</h1>
+        <p class="text-gray-500 text-sm mt-2">Enter the setup password to continue</p>
       </div>
       
-      ${error ? `<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">${error}</div>` : ''}
+      ${error ? `<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-sm">${error}</div>` : ''}
       
       <form method="POST" action="/setup/login">
         <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-          <input type="password" id="password" name="password" required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password"
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lobster-500 focus:border-transparent transition-all">
         </div>
-        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+        <button type="submit" class="w-full lobster-gradient hover:opacity-90 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-lg">
           Continue
         </button>
       </form>
       
-      <div class="mt-4 text-center">
+      <div class="mt-6 text-center">
         <a href="/" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to home</a>
       </div>
     </div>
@@ -38,56 +38,57 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
   <div class="min-h-screen py-8 px-4">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-8">
-        <div class="text-4xl mb-2">🦞</div>
-        <h1 class="text-3xl font-bold text-gray-900">LobsterSandbox Setup</h1>
-        <p class="text-gray-600 mt-2">Configure your OpenClaw sandbox environment</p>
+        <div class="text-5xl mb-3">🦞</div>
+        <h1 class="logo-text text-3xl text-gray-800">Lobster<span class="text-lobster-600">Sandbox</span> Setup</h1>
+        <p class="text-gray-500 mt-2">Configure your OpenClaw sandbox environment</p>
       </div>
       
-      <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-        <p class="text-amber-800 text-sm">
-          <strong>Safety first:</strong> Start with a sandbox mindset. Do not connect your main accounts on day 1.
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+        <p class="text-amber-800 text-sm flex items-start gap-2">
+          <span class="text-lg">⚠️</span>
+          <span><strong>Safety first:</strong> Start with a sandbox mindset. Do not connect your main accounts on day 1.</span>
         </p>
       </div>
       
       <div class="card p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold text-gray-800">Current Status</h2>
-          <a href="/status" class="text-sm text-red-600 hover:text-red-700">View details &rarr;</a>
+          <h2 class="font-display font-semibold text-gray-800">Current Status</h2>
+          <a href="/status" class="text-sm text-lobster-600 hover:text-lobster-700 font-medium">View details &rarr;</a>
         </div>
         <div class="flex gap-6 text-sm">
           <div class="flex items-center gap-2">
-            <span class="${isConfigured ? 'text-green-500' : 'text-gray-400'}">●</span>
-            <span>Setup: ${isConfigured ? 'Complete' : 'Not configured'}</span>
+            <span class="w-2 h-2 rounded-full ${isConfigured ? 'bg-green-500' : 'bg-gray-300'}"></span>
+            <span class="text-gray-600">Setup: ${isConfigured ? 'Complete' : 'Not configured'}</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="${gatewayRunning ? 'text-green-500' : 'text-gray-400'}">●</span>
-            <span>Gateway: ${gatewayRunning ? 'Running' : 'Stopped'}</span>
+            <span class="w-2 h-2 rounded-full ${gatewayRunning ? 'bg-green-500 animate-pulse' : 'bg-gray-300'}"></span>
+            <span class="text-gray-600">Gateway: ${gatewayRunning ? 'Running' : 'Stopped'}</span>
           </div>
         </div>
       </div>
       
       <div class="card p-6 mb-6" id="wizard-container">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Setup Wizard</h2>
+        <h2 class="font-display font-semibold text-gray-800 mb-4">Setup Wizard</h2>
         
         <div id="wizard-steps">
           <!-- Step 1: Choose Provider -->
           <div id="step-1" class="wizard-step">
             <div class="mb-4">
-              <span class="text-xs font-medium text-gray-500 uppercase">Step 1 of 3</span>
-              <h3 class="text-md font-medium text-gray-800">Choose AI Provider</h3>
+              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 1 of 3</span>
+              <h3 class="text-lg font-medium text-gray-800 mt-1">Choose AI Provider</h3>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <button onclick="selectProvider('openai')" class="provider-btn p-4 border-2 border-gray-200 rounded-lg hover:border-red-500 transition-colors text-left" data-provider="openai">
-                <div class="font-semibold">OpenAI</div>
-                <div class="text-xs text-gray-500">GPT models</div>
+              <button onclick="selectProvider('openai')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="openai">
+                <div class="font-display font-semibold text-gray-800">OpenAI</div>
+                <div class="text-xs text-gray-500 mt-1">GPT models</div>
               </button>
-              <button onclick="selectProvider('anthropic')" class="provider-btn p-4 border-2 border-gray-200 rounded-lg hover:border-red-500 transition-colors text-left" data-provider="anthropic">
-                <div class="font-semibold">Anthropic</div>
-                <div class="text-xs text-gray-500">Claude models</div>
+              <button onclick="selectProvider('anthropic')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="anthropic">
+                <div class="font-display font-semibold text-gray-800">Anthropic</div>
+                <div class="text-xs text-gray-500 mt-1">Claude models</div>
               </button>
-              <button onclick="selectProvider('openrouter')" class="provider-btn p-4 border-2 border-gray-200 rounded-lg hover:border-red-500 transition-colors text-left" data-provider="openrouter">
-                <div class="font-semibold">OpenRouter</div>
-                <div class="text-xs text-gray-500">Multiple providers</div>
+              <button onclick="selectProvider('openrouter')" class="provider-btn p-4 border-2 border-gray-200 rounded-xl hover:border-lobster-500 hover:bg-lobster-50 transition-all text-left" data-provider="openrouter">
+                <div class="font-display font-semibold text-gray-800">OpenRouter</div>
+                <div class="text-xs text-gray-500 mt-1">Multiple providers</div>
               </button>
             </div>
           </div>
@@ -95,75 +96,75 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
           <!-- Step 2: API Key -->
           <div id="step-2" class="wizard-step hidden">
             <div class="mb-4">
-              <span class="text-xs font-medium text-gray-500 uppercase">Step 2 of 3</span>
-              <h3 class="text-md font-medium text-gray-800">Enter API Key</h3>
+              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 2 of 3</span>
+              <h3 class="text-lg font-medium text-gray-800 mt-1">Enter API Key</h3>
             </div>
             <div class="mb-4">
-              <label for="api-key" class="block text-sm font-medium text-gray-700 mb-1">
+              <label for="api-key" class="block text-sm font-medium text-gray-700 mb-2">
                 <span id="provider-label">Provider</span> API Key
               </label>
               <input type="password" id="api-key" placeholder="sk-..."
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
-              <p class="text-xs text-gray-500 mt-1">Your key is stored securely and never logged.</p>
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lobster-500 focus:border-transparent transition-all">
+              <p class="text-xs text-gray-500 mt-2">🔒 Your key is stored securely and never logged.</p>
             </div>
             <div class="flex gap-3">
-              <button onclick="goToStep(1)" class="px-4 py-2 text-gray-600 hover:text-gray-800">Back</button>
-              <button onclick="goToStep(3)" id="next-step-2" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">Next</button>
+              <button onclick="goToStep(1)" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">← Back</button>
+              <button onclick="goToStep(3)" id="next-step-2" class="px-6 py-2 lobster-gradient hover:opacity-90 text-white rounded-xl font-medium shadow-md">Next →</button>
             </div>
           </div>
           
           <!-- Step 3: Model -->
           <div id="step-3" class="wizard-step hidden">
             <div class="mb-4">
-              <span class="text-xs font-medium text-gray-500 uppercase">Step 3 of 3</span>
-              <h3 class="text-md font-medium text-gray-800">Choose Model</h3>
+              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 3 of 3</span>
+              <h3 class="text-lg font-medium text-gray-800 mt-1">Choose Model</h3>
             </div>
             <div class="mb-4">
-              <label for="model-select" class="block text-sm font-medium text-gray-700 mb-1">Model</label>
+              <label for="model-select" class="block text-sm font-medium text-gray-700 mb-2">Model</label>
               <select id="model-select" onchange="handleModelSelect()"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lobster-500 focus:border-transparent transition-all bg-white">
               </select>
             </div>
             <div id="custom-model-container" class="mb-4 hidden">
-              <label for="custom-model" class="block text-sm font-medium text-gray-700 mb-1">Custom Model Name</label>
+              <label for="custom-model" class="block text-sm font-medium text-gray-700 mb-2">Custom Model Name</label>
               <input type="text" id="custom-model" placeholder="provider/model-name"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lobster-500 focus:border-transparent transition-all">
             </div>
             <div class="flex gap-3">
-              <button onclick="goToStep(2)" class="px-4 py-2 text-gray-600 hover:text-gray-800">Back</button>
-              <button onclick="runSetup()" id="run-setup-btn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">Run Setup</button>
+              <button onclick="goToStep(2)" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">← Back</button>
+              <button onclick="runSetup()" id="run-setup-btn" class="px-6 py-2 lobster-gradient hover:opacity-90 text-white rounded-xl font-medium shadow-md">🚀 Run Setup</button>
             </div>
           </div>
         </div>
         
-        <div id="setup-result" class="hidden mt-4 p-4 rounded-lg"></div>
+        <div id="setup-result" class="hidden mt-4 p-4 rounded-xl text-sm"></div>
       </div>
       
       <div class="card p-6 mb-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Gateway Control</h2>
-        <div class="flex flex-wrap gap-3">
-          <button onclick="startGateway()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm">
-            Start Gateway
+        <h2 class="font-display font-semibold text-gray-800 mb-4">Gateway Control</h2>
+        <div class="flex flex-wrap gap-3 mb-4">
+          <button onclick="startGateway()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium shadow-md transition-all">
+            ▶ Start Gateway
           </button>
-          <button onclick="stopGateway()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm">
-            Stop Gateway
+          <button onclick="stopGateway()" class="px-5 py-2.5 bg-gray-600 hover:bg-gray-700 text-white rounded-xl text-sm font-medium shadow-md transition-all">
+            ⏹ Stop Gateway
           </button>
-          <a href="/openclaw" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-sm inline-block">
-            Open Control UI
+          <a href="/openclaw" class="px-5 py-2.5 bg-gray-800 hover:bg-gray-900 text-white rounded-xl text-sm font-medium inline-block shadow-md transition-all">
+            🎛 Open Control UI
           </a>
         </div>
-        <div id="gateway-result" class="mt-3 text-sm"></div>
+        <div id="gateway-result" class="text-sm"></div>
       </div>
       
-      <div class="card p-6 border-2 border-red-200">
-        <h2 class="text-lg font-semibold text-red-700 mb-4">Danger Zone</h2>
+      <div class="card p-6 border-2 border-red-200 bg-red-50/30">
+        <h2 class="font-display font-semibold text-red-700 mb-3">⚠️ Danger Zone</h2>
         <p class="text-sm text-gray-600 mb-4">These actions cannot be undone.</p>
         <div class="flex flex-wrap gap-3">
-          <button onclick="killSwitch()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">
-            Kill Switch
+          <button onclick="killSwitch()" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-medium shadow-md transition-all">
+            ⚡ Kill Switch
           </button>
-          <button onclick="wipeEverything()" class="px-4 py-2 bg-red-800 hover:bg-red-900 text-white rounded-lg text-sm">
-            Wipe Everything
+          <button onclick="wipeEverything()" class="px-5 py-2.5 bg-red-800 hover:bg-red-900 text-white rounded-xl text-sm font-medium shadow-md transition-all">
+            🗑 Wipe Everything
           </button>
         </div>
         <div id="danger-result" class="mt-3 text-sm"></div>
@@ -200,9 +201,9 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
     function selectProvider(provider) {
       selectedProvider = provider;
       document.querySelectorAll('.provider-btn').forEach(btn => {
-        btn.classList.remove('border-red-500', 'bg-red-50');
+        btn.classList.remove('border-lobster-500', 'bg-lobster-50');
         if (btn.dataset.provider === provider) {
-          btn.classList.add('border-red-500', 'bg-red-50');
+          btn.classList.add('border-lobster-500', 'bg-lobster-50');
         }
       });
       goToStep(2);
@@ -263,7 +264,7 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
       }
       
       document.getElementById('run-setup-btn').disabled = true;
-      document.getElementById('run-setup-btn').textContent = 'Running...';
+      document.getElementById('run-setup-btn').textContent = '⏳ Running...';
       
       try {
         const res = await fetch('/setup/run', {
@@ -273,15 +274,15 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
         });
         const data = await res.json();
         if (data.success) {
-          showResult('setup-result', 'Setup completed successfully! You can now start the gateway.', 'success');
+          showResult('setup-result', '✅ Setup completed successfully! You can now start the gateway.', 'success');
         } else {
-          showResult('setup-result', 'Setup failed: ' + (data.error || data.stderr || 'Unknown error'), 'error');
+          showResult('setup-result', '❌ Setup failed: ' + (data.error || data.stderr || 'Unknown error'), 'error');
         }
       } catch (err) {
-        showResult('setup-result', 'Error: ' + err.message, 'error');
+        showResult('setup-result', '❌ Error: ' + err.message, 'error');
       } finally {
         document.getElementById('run-setup-btn').disabled = false;
-        document.getElementById('run-setup-btn').textContent = 'Run Setup';
+        document.getElementById('run-setup-btn').textContent = '🚀 Run Setup';
       }
     }
     
@@ -290,8 +291,9 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
         const res = await fetch('/api/gateway/start', { method: 'POST' });
         const data = await res.json();
         showResult('gateway-result', data.message, data.success ? 'success' : 'error');
+        if (data.success) setTimeout(() => location.reload(), 1500);
       } catch (err) {
-        showResult('gateway-result', 'Error: ' + err.message, 'error');
+        showResult('gateway-result', '❌ Error: ' + err.message, 'error');
       }
     }
     
@@ -300,43 +302,46 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false) {
         const res = await fetch('/api/gateway/stop', { method: 'POST' });
         const data = await res.json();
         showResult('gateway-result', data.message, data.success ? 'success' : 'error');
+        if (data.success) setTimeout(() => location.reload(), 1500);
       } catch (err) {
-        showResult('gateway-result', 'Error: ' + err.message, 'error');
+        showResult('gateway-result', '❌ Error: ' + err.message, 'error');
       }
     }
     
     async function killSwitch() {
-      if (!confirm('This will immediately stop the gateway. Continue?')) return;
+      if (!confirm('⚡ This will immediately stop the gateway. Continue?')) return;
       try {
         const res = await fetch('/api/gateway/stop', { method: 'POST' });
         const data = await res.json();
-        showResult('danger-result', 'Gateway stopped', 'success');
+        showResult('danger-result', '⚡ Gateway stopped', 'success');
+        setTimeout(() => location.reload(), 1500);
       } catch (err) {
-        showResult('danger-result', 'Error: ' + err.message, 'error');
+        showResult('danger-result', '❌ Error: ' + err.message, 'error');
       }
     }
     
     async function wipeEverything() {
-      if (!confirm('This will stop the gateway and delete ALL configuration and logs. This cannot be undone. Continue?')) return;
-      if (!confirm('Are you absolutely sure?')) return;
+      if (!confirm('🗑 This will stop the gateway and delete ALL configuration and logs. This cannot be undone. Continue?')) return;
+      if (!confirm('⚠️ Are you absolutely sure? Everything will be deleted.')) return;
       
       try {
         const res = await fetch('/api/wipe', { method: 'POST' });
         const data = await res.json();
-        showResult('danger-result', 'Everything has been wiped. You can now set up again.', 'success');
+        showResult('danger-result', '🗑 Everything has been wiped. Reloading...', 'success');
         setTimeout(() => location.reload(), 2000);
       } catch (err) {
-        showResult('danger-result', 'Error: ' + err.message, 'error');
+        showResult('danger-result', '❌ Error: ' + err.message, 'error');
       }
     }
     
     function showResult(containerId, message, type) {
       const container = document.getElementById(containerId);
-      container.classList.remove('hidden', 'bg-green-50', 'text-green-700', 'bg-red-50', 'text-red-700');
+      container.classList.remove('hidden', 'bg-green-50', 'text-green-700', 'bg-red-50', 'text-red-700', 'border-green-200', 'border-red-200');
+      container.classList.add('border');
       if (type === 'success') {
-        container.classList.add('bg-green-50', 'text-green-700');
+        container.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
       } else {
-        container.classList.add('bg-red-50', 'text-red-700');
+        container.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
       }
       container.textContent = message;
     }

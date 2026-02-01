@@ -5,6 +5,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import crypto from 'crypto';
 
 import * as openclaw from './lib/openclaw.js';
+import * as assistant from './lib/assistant.js';
 import { landingPage } from './views/landing.js';
 import { loginPage, setupWizardPage } from './views/setup.js';
 import { statusPage } from './views/status.js';
@@ -223,6 +224,20 @@ app.post('/api/wipe', apiLimiter, requireAuth, async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/assistant/chat', apiLimiter, async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+    const response = await assistant.chat(message);
+    res.json({ response });
+  } catch (err) {
+    console.error('Assistant error:', err.message);
+    res.status(500).json({ response: "I'm having trouble right now. Please try again!" });
   }
 });
 
