@@ -1,0 +1,129 @@
+We have LobsterSandbox working with a ship safe baseline security setup. Do not regress any of this.
+
+Security baseline that must remain intact
+- Login uses hash to hash constant time comparison, not plaintext compare
+- Sessions have 30 minute idle timeout plus 12 hour absolute lifetime
+- Session records are deleted on timeout, not only cookie cleared
+- Session ID is regenerated on each successful login
+- Login rate limit is enforced (10 attempts per 15 minutes)
+- CSRF is enforced on all POST routes except login
+- Origin and Referer validation on all POST routes
+- Secure cookies: httpOnly, sameSite, secure in production
+- app.set('trust proxy', 1) remains set
+- WebSocket upgrade authentication is enforced at the HTTP server level before proxying
+  This must validate session cookie and enforce idle and absolute lifetime
+  Reject invalid upgrades with 401 and destroy the socket
+  Only allow WS upgrades for /openclaw paths
+- OpenClaw gateway stays bound to loopback only and is only reachable through the reverse proxy
+- replit.md warning remains: DO NOT use autoscale because the app is stateful
+
+Now implement product v1.1 focused on Safe Sandbox playbook, not just a setup wizard.
+
+Primary goal
+Make LobsterSandbox feel safe and non technical:
+1) Safety Profile selector (Safe Mode default)
+2) Sandbox Identity Playbook cards inside the product
+3) Reorder the hero and flow so channels are act 2
+4) Kill switch and wipe are always visible
+
+Constraints
+- Do not auto create Gmail accounts, phone numbers, or anything that can be abused
+- Keep gateway bound to loopback and only reachable through the reverse proxy
+- Keep the HTTP server level WebSocket upgrade auth protection
+
+Work items
+
+A) Add Safety Profile selector
+1) New route GET /profile
+UI: two cards with big buttons
+- Safe Mode (recommended)
+- Power Mode
+Explain in plain language what each means.
+
+2) Store selection
+- Save selected profile in the session and also persist it to ./data/profile.json as the default
+- If no profile exists, default is Safe Mode
+
+3) Gate access based on profile
+- If setup is complete but no profile chosen, redirect to /profile from /status, /setup, /openclaw, and channel routes
+- Safe Mode behavior:
+  - Control UI allowed
+  - Channels UI hidden or disabled
+  - Show one toggle: “Enable channels (advanced)” that switches to Power Mode after confirmation
+- Power Mode behavior:
+  - Channels UI visible and enabled
+
+B) Add Sandbox Identity Playbook (no automation)
+Add a section called “Sandbox Playbook” shown on /status and /setup after login with three cards:
+
+1) Email separation
+- Use a secondary inbox you already control
+- Or create a new inbox manually
+- Or use a workspace domain you own
+Text: Do not connect your main inbox on day 1
+
+2) Phone separation
+- Spare number via eSIM or second device
+- WhatsApp Business with a separate number
+Text: Keep it isolated from your personal contacts early
+
+3) Billing separation
+- Use a separate card with a low limit
+- Start with a small monthly budget
+Text: If anything looks off, hit Kill Switch
+
+Optional: add simple “Done” checkboxes per card stored in session so users feel progress.
+
+C) Reorder the hero and landing page
+Update GET / to emphasize safety and simplicity:
+Headline: LobsterSandbox
+Subheadline: Run OpenClaw in a safe sandbox in minutes
+Bullets above the fold:
+- Safe Mode by default
+- Kill switch and wipe anytime
+- Guided sandbox playbook inside the app
+Buttons:
+- Start Setup
+- Open Control UI
+- View Status
+Do not mention channels above the fold.
+
+D) Persistent top bar with safety actions
+On all authenticated pages, include a top bar with:
+- Status link
+- Open Control UI link
+- Profile link
+- Kill Switch button
+- Wipe Everything button with typed confirmation WIPE
+Kill and Wipe must be visible everywhere.
+
+E) Documentation update
+Update README and replit.md:
+- Explain the new flow: setup then choose Safe Mode or Power Mode then status then Control UI
+- Keep the stateful deployment warning and no autoscale note
+- Add a short “What Safe Mode blocks” section
+
+Acceptance tests (manual)
+1) Unauthenticated
+- GET /openclaw redirects to login
+- WebSocket upgrade to /openclaw without a valid session is rejected (no 101)
+2) Authenticated
+- POST without CSRF returns 403
+- POST with wrong CSRF returns 403
+3) Profile gating
+- After setup, if no profile chosen, visiting /status or /openclaw redirects to /profile
+4) Safe Mode
+- Channels UI hidden or disabled
+- Control UI works
+5) Power Mode
+- Channels UI available
+6) Kill and Wipe
+- Kill stops gateway
+- Wipe resets app state and returns to /profile
+
+Deliverables
+- Implement routes, UI changes, and persistence
+- Keep security hardening intact
+- Update docs
+- Confirm the above tests pass
+- Tell me which files changed and how to test in the browser
