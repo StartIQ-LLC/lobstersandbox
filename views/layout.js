@@ -234,14 +234,14 @@ export function layout(title, content, options = {}) {
       <div class="lobster-chat-header">
         <span style="font-size: 28px;">🦞</span>
         <div>
-          <div class="font-semibold">Clawde</div>
+          <div class="font-semibold">Larry</div>
           <div class="text-xs opacity-80">Your LobsterSandbox Guide</div>
         </div>
       </div>
       <div class="lobster-chat-messages" id="lobster-messages">
         <div class="lobster-message assistant">
           <div class="lobster-message-content">
-            Hey there! 👋 I'm Clawde, your LobsterSandbox assistant. I can help you set up OpenClaw, understand the features, or troubleshoot any issues. What would you like to know?
+            Hey there! 👋 I'm Larry the Lobster, your LobsterSandbox guide. I can help you set up OpenClaw, understand the features, or troubleshoot any issues. What would you like to know?
           </div>
         </div>
       </div>

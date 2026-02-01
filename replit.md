@@ -8,9 +8,10 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 ```
 ├── server.js           # Express server with all routes and reverse proxy
 ├── lib/
-│   └── openclaw.js     # OpenClaw CLI helpers and gateway management
+│   ├── openclaw.js     # OpenClaw CLI helpers and gateway management
+│   └── assistant.js    # Larry the Lobster AI assistant (Anthropic)
 ├── views/
-│   ├── layout.js       # Base HTML layout template
+│   ├── layout.js       # Base HTML layout template with chat assistant
 │   ├── landing.js      # Landing page view
 │   ├── setup.js        # Setup wizard views (login + wizard)
 │   └── status.js       # Status page view
@@ -25,8 +26,10 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - **Runtime**: Node.js 22
 - **Framework**: Express.js
 - **Templating**: Server-rendered HTML with Tailwind CSS (CDN)
+- **Fonts**: Space Grotesk (headings), Inter (body)
 - **Proxy**: http-proxy-middleware with WebSocket support
 - **Rate Limiting**: express-rate-limit
+- **AI Assistant**: Anthropic Claude Haiku via Replit AI Integrations
 - **CLI**: OpenClaw npm package
 
 ## Key Features
@@ -36,6 +39,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 4. Secret masking in all logs and UI output
 5. Security tools (audit, verify, fix)
 6. Wipe and reset functionality
+7. Larry the Lobster - AI-powered assistant to guide users through setup
 
 ## Environment Variables
 - `PORT` - Server port (default: 5000, provided by Replit)
@@ -61,6 +65,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - `POST /api/security/audit` - Run security audit
 - `POST /api/security/fix` - Run security fix
 - `POST /api/wipe` - Wipe everything
+- `POST /api/assistant/chat` - Chat with Larry the Lobster assistant
 
 ## Security
 - Gateway binds to loopback only
@@ -70,4 +75,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Secure session cookies
 
 ## Recent Changes
+- Added Larry the Lobster AI assistant powered by Anthropic Claude (February 2026)
+- Modernized UI with Space Grotesk and Inter fonts (February 2026)
+- Configured autoscale deployment (February 2026)
 - Initial project setup (February 2026)
