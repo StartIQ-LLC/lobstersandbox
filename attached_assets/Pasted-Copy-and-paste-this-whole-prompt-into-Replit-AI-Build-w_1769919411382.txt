@@ -1,0 +1,180 @@
+Copy and paste this whole prompt into Replit AI (Build with AI). It will generate the project for LobsterSandbox.
+
+```text
+You are building a production quality Replit project called LobsterSandbox.
+
+PRODUCT
+LobsterSandbox is a simple “safe sandbox launcher” for OpenClaw. Non technical users should be able to set up OpenClaw in minutes from a clean web wizard, then use the OpenClaw Control UI inside the same app.
+
+Key promise:
+Try OpenClaw without touching your real accounts on day 1. Safe defaults, easy reset, kill switch.
+
+SCOPE
+This is v1. Do NOT provision external VPS instances. The goal is to run the OpenClaw gateway inside the Replit environment and expose it safely through a reverse proxy route. This makes it a sandbox demo and a template users can fork.
+
+STACK
+- Node.js 22
+- Express
+- Server rendered HTML with Tailwind CSS via CDN, no build pipeline
+- http-proxy-middleware (or node-http-proxy) for reverse proxy with WebSocket support
+- child_process.spawn to run OpenClaw CLI
+- Store state in ./data and never print secrets in logs
+- No database for v1
+
+IMPORTANT SECURITY RULES
+- The OpenClaw gateway must bind to loopback only.
+- The gateway must require token auth.
+- Never expose the raw gateway port publicly. Only access it through the Express reverse proxy.
+- Do not auto create Gmail accounts, phone numbers, or anything that can be used for abuse. The product is “safe sandbox and setup”, not “identity creation”.
+- Mask API keys in any UI output. Never echo the full key back.
+
+USER EXPERIENCE
+Landing page is super simple and friendly:
+Title: LobsterSandbox
+Subtitle: Launch OpenClaw in a safe sandbox in minutes.
+Two buttons:
+1) Open Setup
+2) Open Control UI
+
+Pages:
+1) GET /
+2) GET /setup
+   - Password gate using SETUP_PASSWORD
+   - After login show a 3 step wizard:
+     Step 1: Choose provider: OpenAI, Anthropic, OpenRouter
+     Step 2: Paste API key
+     Step 3: Choose model (preset dropdown + custom text)
+       Presets:
+       - OpenAI: openai/gpt-5.2
+       - Anthropic: anthropic/claude-opus-4-5
+       - OpenRouter: openrouter/auto
+   - Primary CTA: “Run Setup”
+   - Secondary CTA: “Start Gateway”
+   - Danger zone: “Kill Switch”, “Wipe Everything”
+3) GET /status
+   - Shows:
+     - Setup complete yes/no
+     - Gateway running yes/no
+     - Health status (openclaw health)
+     - Last 200 log lines (with secrets masked)
+     - Buttons: Run Quick Verify, Run Security Audit, Run Security Fix
+4) /openclaw
+   - Reverse proxy to the OpenClaw Control UI running at http://127.0.0.1:18789
+   - Must support WebSockets (upgrade headers)
+   - All subpaths under /openclaw/* must proxy correctly
+   - Add a small top bar on /openclaw that links back to /status
+
+ROUTING AND COMMANDS
+Use these environment variables:
+- PORT (provided by Replit)
+- SETUP_PASSWORD (required)
+- OPENCLAW_GATEWAY_TOKEN (required, long random string)
+- OPENCLAW_PORT default 18789 (allow override)
+- OPENCLAW_BIND default loopback
+- OPENCLAW_HOME = ./data/home (use as HOME for OpenClaw processes)
+- OPENCLAW_LOG = ./data/logs/openclaw.log
+
+OpenClaw installation:
+- Add openclaw as an npm dependency in package.json so the CLI is available.
+- Provide a helper that resolves the CLI path: ./node_modules/.bin/openclaw
+- On server startup, run “openclaw --version” to confirm it exists and show version on /status
+
+Onboarding (non interactive):
+- Always force local mode, loopback bind, gateway port, and token auth.
+- Always set HOME to OPENCLAW_HOME for the process so all config lives under ./data/home.
+
+When user clicks “Run Setup”, run:
+For OpenAI:
+openclaw onboard --non-interactive --mode local --flow quickstart --auth-choice openai-api-key --openai-api-key <KEY> --gateway-port <PORT> --gateway-bind loopback --gateway-auth token --gateway-token <OPENCLAW_GATEWAY_TOKEN> --skip-skills
+
+For Anthropic:
+openclaw onboard --non-interactive --mode local --flow quickstart --auth-choice apiKey --anthropic-api-key <KEY> --gateway-port <PORT> --gateway-bind loopback --gateway-auth token --gateway-token <OPENCLAW_GATEWAY_TOKEN> --skip-skills
+
+For OpenRouter:
+openclaw onboard --non-interactive --mode local --flow quickstart --auth-choice openrouter-api-key --openrouter-api-key <KEY> --gateway-port <PORT> --gateway-bind loopback --gateway-auth token --gateway-token <OPENCLAW_GATEWAY_TOKEN> --skip-skills
+
+After onboarding, set the default model:
+- Write a minimal config patch if needed so the primary model becomes the chosen model.
+- Prefer using an OpenClaw CLI config command if available, otherwise edit the config JSON safely.
+
+Gateway process:
+- Start it with:
+openclaw gateway --port <PORT> --bind loopback --auth token --token <OPENCLAW_GATEWAY_TOKEN> --verbose
+- Keep a single running gateway process in memory. Prevent duplicate starts.
+- “Kill switch” must terminate the gateway process cleanly.
+- If gateway is not configured yet, show a clear message and disable /openclaw.
+
+Reset and safety tools:
+- Wipe Everything button must:
+  - stop gateway
+  - run: openclaw reset --scope full --yes --non-interactive
+  - delete ./data/home and ./data/logs
+- Quick Verify must run:
+  - openclaw status
+  - openclaw health
+  - openclaw security audit --deep
+- Security Audit button runs: openclaw security audit --deep
+- Security Fix button runs: openclaw security audit --fix
+
+LOGGING
+- Log all stdout and stderr from OpenClaw commands to OPENCLAW_LOG
+- Show last 200 lines on /status
+- Implement a masking function that redacts:
+  - the provider key the user entered
+  - OPENCLAW_GATEWAY_TOKEN
+  - any strings that look like API keys (basic patterns)
+
+REVERSE PROXY REQUIREMENTS
+- Implement /openclaw and /openclaw/* proxy to http://127.0.0.1:<OPENCLAW_PORT>
+- WebSockets must work
+- Preserve headers needed for WS and cookies
+- Add basic security headers for the Express app
+
+RATE LIMITING
+- Add rate limit for /setup login and /setup/run
+
+FILES
+Create:
+- server.js (Express app)
+- lib/openclaw.js (helpers: runCommand, isConfigured, startGateway, stopGateway, audit, reset)
+- views/ (simple HTML templates)
+- README.md with:
+  - what LobsterSandbox does
+  - setup steps in Replit
+  - which secrets to set
+  - how to open /setup, /status, /openclaw
+  - troubleshooting section
+
+DEFINITION OF DONE
+- I can run the Replit app, set SETUP_PASSWORD and OPENCLAW_GATEWAY_TOKEN, open /setup, choose provider, paste key, click Run Setup, then click Open Control UI and see the OpenClaw dashboard through /openclaw.
+- /status shows health and logs.
+- Kill switch and wipe work.
+- WebSockets work through the proxy.
+
+Make the UI minimal and clean with LobsterSandbox branding and a short safety warning on the setup page: “Start with a sandbox mindset. Do not connect your main accounts on day 1.”
+```
+
+After Replit generates it, do this:
+
+1. In Replit, add Secrets
+   SETUP_PASSWORD = your password
+   OPENCLAW_GATEWAY_TOKEN = a long random token
+   Optional: OPENCLAW_PORT = 18789
+
+2. Click Run
+
+3. Open these routes
+   `/setup` to configure provider
+   `/status` to verify health and run security audit
+   `/openclaw` to use the Control UI
+
+Sources (plain links you can reference in your README)
+
+* [https://docs.openclaw.ai/start/getting-started](https://docs.openclaw.ai/start/getting-started)
+* [https://docs.openclaw.ai/start/wizard](https://docs.openclaw.ai/start/wizard)
+* [https://docs.openclaw.ai/providers/openai](https://docs.openclaw.ai/providers/openai)
+* [https://docs.openclaw.ai/providers/openrouter](https://docs.openclaw.ai/providers/openrouter)
+* [https://docs.openclaw.ai/cli](https://docs.openclaw.ai/cli)
+* [https://docs.openclaw.ai/cli/gateway](https://docs.openclaw.ai/cli/gateway)
+* [https://docs.openclaw.ai/cli/security](https://docs.openclaw.ai/cli/security)
+* [https://docs.openclaw.ai/help/faq](https://docs.openclaw.ai/help/faq)
