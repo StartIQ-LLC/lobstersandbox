@@ -1,7 +1,7 @@
 import { layout } from './layout.js';
 
 export function channelsPage(channelStatus = {}) {
-  const { whatsapp = {}, telegram = {} } = channelStatus;
+  const { whatsapp = {}, telegram = {}, discord = {} } = channelStatus;
   
   const content = `
   <div class="min-h-screen py-8 px-4">
@@ -119,6 +119,61 @@ export function channelsPage(channelStatus = {}) {
         <div id="telegram-result" class="mt-3 text-sm"></div>
       </div>
       
+      <!-- Discord Section -->
+      <div class="card p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-white text-xl">🎮</div>
+            <div>
+              <h2 class="font-display font-semibold text-gray-800">Discord</h2>
+              <p class="text-sm text-gray-500">Connect via Bot API</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full ${discord.connected ? 'bg-green-500' : 'bg-gray-300'}"></span>
+            <span class="text-sm text-gray-600">${discord.connected ? 'Connected' : 'Not connected'}</span>
+          </div>
+        </div>
+        
+        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+          <h3 class="font-medium text-gray-800 mb-2">Setup Instructions</h3>
+          <ol class="text-sm text-gray-600 space-y-2">
+            <li class="flex gap-2"><span class="font-semibold text-lobster-600">1.</span> Go to <a href="https://discord.com/developers/applications" target="_blank" class="text-indigo-600 hover:underline">Discord Developer Portal</a></li>
+            <li class="flex gap-2"><span class="font-semibold text-lobster-600">2.</span> Click "New Application" and give it a name</li>
+            <li class="flex gap-2"><span class="font-semibold text-lobster-600">3.</span> Go to Bot → Add Bot → Copy the token</li>
+            <li class="flex gap-2"><span class="font-semibold text-lobster-600">4.</span> Enable "Message Content Intent" under Privileged Intents</li>
+            <li class="flex gap-2"><span class="font-semibold text-lobster-600">5.</span> Paste the token below and click Save</li>
+          </ol>
+        </div>
+        
+        <div class="mb-4">
+          <label for="discord-token" class="block text-sm font-medium text-gray-700 mb-2">Bot Token</label>
+          <input type="password" id="discord-token" placeholder="MTIzNDU2Nzg5MDEyMzQ1Njc4OQ..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+          ${discord.tokenMasked ? `<p class="text-xs text-green-600 mt-2">✓ Token configured: ${discord.tokenMasked}</p>` : ''}
+          <p class="text-xs text-gray-500 mt-1">🔒 Your token is stored securely and never logged. ${discord.connected ? 'Leave empty to keep current token.' : ''}</p>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">DM Policy</label>
+          <select id="discord-dm-policy" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white">
+            <option value="pairing" ${discord.dmPolicy === 'pairing' ? 'selected' : ''}>Pairing (recommended) - Unknown users get a pairing code</option>
+            <option value="allowlist" ${discord.dmPolicy === 'allowlist' ? 'selected' : ''}>Allowlist - Only pre-approved users can chat</option>
+            <option value="open" ${discord.dmPolicy === 'open' ? 'selected' : ''}>Open - Anyone can chat (not recommended)</option>
+          </select>
+        </div>
+        
+        <div class="flex flex-wrap gap-3">
+          <button onclick="saveDiscordConfig()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium shadow-md transition-all">
+            💾 Save Discord Config
+          </button>
+          <button onclick="disconnectChannel('discord')" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl text-sm font-medium transition-all ${discord.connected ? '' : 'hidden'}" id="discord-disconnect-btn">
+            Disconnect
+          </button>
+        </div>
+        <div id="discord-result" class="mt-3 text-sm"></div>
+      </div>
+      
       <!-- Pairing Requests Section -->
       <div class="card p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
@@ -212,6 +267,37 @@ export function channelsPage(channelStatus = {}) {
         }
       } catch (err) {
         showResult('telegram-result', 'Error: ' + err.message, 'error');
+      }
+    }
+    
+    async function saveDiscordConfig() {
+      const token = document.getElementById('discord-token').value;
+      const dmPolicy = document.getElementById('discord-dm-policy').value;
+      const isUpdate = ${discord.connected ? 'true' : 'false'};
+      
+      if (!token && !isUpdate) {
+        showResult('discord-result', 'Please enter a bot token', 'error');
+        return;
+      }
+      
+      try {
+        const payload = { dmPolicy };
+        if (token) payload.botToken = token;
+        
+        const res = await fetch('/api/channels/discord/configure', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          showResult('discord-result', '✅ Discord configured! Restart gateway to apply.', 'success');
+        } else {
+          showResult('discord-result', data.error || 'Failed to save config', 'error');
+        }
+      } catch (err) {
+        showResult('discord-result', 'Error: ' + err.message, 'error');
       }
     }
     

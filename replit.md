@@ -57,7 +57,8 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - `POST /setup/login` - Password login
 - `POST /setup/run` - Run OpenClaw onboarding
 - `GET /status` - System status and logs
-- `GET /channels` - Channel setup (WhatsApp, Telegram, pairing)
+- `GET /channels` - Channel setup (WhatsApp, Telegram, Discord, pairing)
+- `GET /tools` - Web tools setup (Brave Search, Perplexity)
 - `GET /openclaw/*` - Reverse proxy to OpenClaw Control UI
 - `POST /api/gateway/start` - Start gateway
 - `POST /api/gateway/stop` - Stop gateway
@@ -72,6 +73,10 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - `POST /api/channels/whatsapp/login` - Start WhatsApp QR login
 - `POST /api/channels/telegram/configure` - Configure Telegram bot
 - `POST /api/channels/:channel/disconnect` - Disconnect a channel
+- `POST /api/channels/discord/configure` - Configure Discord bot
+- `GET /api/tools/status` - Get web tools status
+- `POST /api/tools/web-search/configure` - Configure web search (Brave/Perplexity)
+- `POST /api/tools/web-search/disable` - Disable web search
 - `GET /api/pairing/list` - List pending pairing requests
 - `POST /api/pairing/approve` - Approve a pairing request
 - `POST /api/pairing/deny` - Deny a pairing request
@@ -84,6 +89,7 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Secure session cookies
 
 ## Recent Changes
+- Phase 3: Added Web Tools page for Brave Search and Perplexity configuration; added Discord channel support with bot token input and DM policy; added web search enable/disable functionality (February 2026)
 - Enhanced Larry's knowledge base with official OpenClaw documentation (docs.openclaw.ai), comprehensive channel guides, pairing system details. Optimized response format for chat bubbles with plain text, numbered steps, and emoji separators (February 2026)
 - Phase 2: Added Channels page with WhatsApp QR login, Telegram bot token setup, and pairing approval interface (February 2026)
 - Added lobster favicon, switched to Nunito font for friendlier UI (February 2026)

@@ -10,6 +10,7 @@ import { landingPage } from './views/landing.js';
 import { loginPage, setupWizardPage } from './views/setup.js';
 import { statusPage } from './views/status.js';
 import { channelsPage } from './views/channels.js';
+import { toolsPage } from './views/tools.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -248,6 +249,15 @@ app.get('/channels', requireAuth, async (req, res) => {
   }
 });
 
+app.get('/tools', requireAuth, async (req, res) => {
+  try {
+    const toolsStatus = await openclaw.getWebToolsStatus();
+    res.send(toolsPage(toolsStatus));
+  } catch (err) {
+    res.status(500).send('Error loading tools page');
+  }
+});
+
 app.get('/api/channels/status', apiLimiter, requireAuth, async (req, res) => {
   try {
     const status = await openclaw.getChannelStatus();
@@ -276,6 +286,54 @@ app.post('/api/channels/telegram/configure', apiLimiter, requireAuth, async (req
     }
     const result = await openclaw.configureChannel('telegram', { botToken, dmPolicy, keepExistingToken: !botToken });
     res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/channels/discord/configure', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const { botToken, dmPolicy } = req.body;
+    const currentStatus = await openclaw.getChannelStatus();
+    
+    if (!botToken && !currentStatus.discord?.connected) {
+      return res.status(400).json({ success: false, error: 'Bot token is required' });
+    }
+    const result = await openclaw.configureChannel('discord', { botToken, dmPolicy, keepExistingToken: !botToken });
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/tools/web-search/configure', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const { provider, apiKey, model } = req.body;
+    const currentStatus = await openclaw.getWebToolsStatus();
+    
+    if (!apiKey && !currentStatus.webSearch?.enabled) {
+      return res.status(400).json({ success: false, error: 'API key is required' });
+    }
+    const result = await openclaw.configureWebSearch({ provider, apiKey, model });
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/tools/web-search/disable', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const result = await openclaw.disableWebSearch();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/tools/status', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const status = await openclaw.getWebToolsStatus();
+    res.json(status);
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
