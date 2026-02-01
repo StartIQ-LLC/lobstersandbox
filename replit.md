@@ -119,8 +119,11 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - All routes except landing page require login
 - Session-based authentication with secure cookies
 - 30-minute session idle timeout (auto-logout after inactivity)
-- Constant-time password comparison (prevents timing attacks)
-- Rate limiting on login and API endpoints
+- 12-hour absolute session max lifetime (hard cap even if active)
+- Hash-based password comparison at boot (password never logged as plaintext)
+- Constant-time comparison using crypto.timingSafeEqual (prevents timing attacks)
+- New session ID generated on each login (prevents session fixation)
+- Rate limiting on login and API endpoints (10 attempts per 15 min)
 
 ### CSRF Protection
 - CSRF tokens required for ALL POST routes (not just destructive actions)
