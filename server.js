@@ -98,15 +98,30 @@ function validateOrigin(req, res, next) {
   next();
 }
 
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+
 function isAuthenticated(req) {
   const token = req.cookies?.session_token;
-  return token && sessionTokens.has(token);
+  if (!token || !sessionTokens.has(token)) return false;
+  
+  const session = sessionTokens.get(token);
+  const now = Date.now();
+  
+  if (session.lastActivity && (now - session.lastActivity) > SESSION_TIMEOUT_MS) {
+    sessionTokens.delete(token);
+    csrfTokens.delete(token);
+    return false;
+  }
+  
+  session.lastActivity = now;
+  return true;
 }
 
 function requireAuth(req, res, next) {
   if (isAuthenticated(req)) {
     next();
   } else {
+    res.clearCookie('session_token');
     res.redirect('/setup');
   }
 }
@@ -170,12 +185,23 @@ app.get('/setup', (req, res) => {
   }
 });
 
+function constantTimeCompare(a, b) {
+  if (!a || !b) return false;
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) {
+    crypto.timingSafeEqual(bufA, bufA);
+    return false;
+  }
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
 app.post('/setup/login', setupLimiter, (req, res) => {
   const { password } = req.body;
   
-  if (password === SETUP_PASSWORD) {
+  if (constantTimeCompare(password, SETUP_PASSWORD)) {
     const token = generateSessionToken();
-    sessionTokens.set(token, { created: Date.now() });
+    sessionTokens.set(token, { created: Date.now(), lastActivity: Date.now() });
     generateCsrfToken(token);
     res.cookie('session_token', token, {
       httpOnly: true,

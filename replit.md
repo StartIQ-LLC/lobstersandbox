@@ -118,6 +118,8 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 ### Authentication & Authorization
 - All routes except landing page require login
 - Session-based authentication with secure cookies
+- 30-minute session idle timeout (auto-logout after inactivity)
+- Constant-time password comparison (prevents timing attacks)
 - Rate limiting on login and API endpoints
 
 ### CSRF Protection
@@ -140,8 +142,8 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - No secrets stored outside the sandbox
 
 ## Deployment
-- **Type**: VM (persistent instance)
-- **Reason**: App stores state in ./data (profile, logs, config)
+- **Type**: VM (persistent instance) - **DO NOT use autoscale**
+- **Reason**: App is stateful - stores profile, logs, and config in ./data. Autoscale would break persistence.
 - **Command**: `node server.js`
 - **Port**: 5000
 
