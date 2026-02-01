@@ -126,7 +126,8 @@ app.post('/setup/run', setupLimiter, requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Missing required fields' });
     }
     
-    if (!['openai', 'anthropic', 'openrouter'].includes(provider)) {
+    const validProviders = ['openai', 'anthropic', 'openrouter', 'gemini', 'moonshot', 'minimax', 'opencode-zen', 'vercel', 'synthetic'];
+    if (!validProviders.includes(provider)) {
       return res.status(400).json({ success: false, error: 'Invalid provider' });
     }
     
