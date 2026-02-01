@@ -1,0 +1,162 @@
+This is a strong plan. It tightens the product into something people actually want right now: “safe, isolated, reversible,” without getting dragged into account creation and compliance headaches.
+
+A few small upgrades will make it sharper and easier to ship.
+
+## What’s great
+
+* The pivot is right: from setup wizard to safe sandbox playbook.
+* Safe Mode first is the correct default for non technical users.
+* Reordering the hero is the real unlock for virality: kill switch, wipe, safe defaults.
+
+## Two refinements I’d make
+
+1. Make “Safe Mode” extremely concrete
+   Users should instantly understand what is blocked and what is allowed. Avoid vague terms.
+
+2. Treat “spend cap” as v1.1 guidance plus basic guardrails
+   A true spend cap is hard unless you sit in the request path. For v1.1, do:
+
+* Budget Mode copy + recommended caps
+* Optional “auto stop after X hours” and “max requests per hour” as lightweight controls
+* A visible warning banner if logs show high usage patterns (simple heuristic)
+
+## v1.1 implementation task list
+
+### Epic A: New first screen, Safety Profile Selector
+
+1. Add route `/profile`
+
+* Default selection: Safe Mode
+* Save selection to `./data/profile.json`
+
+2. Apply profile to behavior
+   Safe Mode:
+
+* Control UI only
+* Channels UI hidden or disabled until user flips a toggle
+* Force allowlist on
+* Force approval gating on “send” actions where possible
+* Show Kill Switch and Wipe on every page header
+
+Power Mode:
+
+* Channels enabled
+* Still keep loopback bind + token auth + proxy only
+
+Definition of done:
+
+* On first visit after setup, user must pick a profile
+* Profile visibly affects what the UI shows and what actions are enabled
+
+### Epic B: Sandbox Identity Playbook inside the product
+
+Add a new section on `/setup` and `/status` called “Sandbox Playbook” with 3 cards.
+
+Card 1: Email separation
+
+* Use a secondary inbox you already control
+* Or create a new inbox manually
+* Or use a workspace domain you own
+  Copy should emphasize: do not connect your main inbox on day 1
+
+Card 2: Phone separation
+
+* Spare number via eSIM or second device
+* WhatsApp Business with a separate number
+* Keep it isolated from personal contacts early
+
+Card 3: Billing separation
+
+* Use a separate card with a low limit
+* Start with a small monthly budget
+* Use the Kill Switch if anything looks off
+
+Definition of done:
+
+* Playbook is visible in the product, not a README
+* It feels like the product is holding the user’s hand
+
+### Epic C: Reorder the hero and landing page
+
+Update `/` copy and layout to focus on:
+
+* “Try OpenClaw safely in a sandbox”
+* “If it breaks, you wipe it”
+* Buttons: Setup, Open Control UI, Status
+* Show a small “Safety Checklist” on the home page:
+
+  * loopback only
+  * token required
+  * kill switch
+  * wipe and reset
+
+Definition of done:
+
+* Channels are not mentioned on the landing page above the fold
+
+### Epic D: Make Kill Switch and Wipe always reachable
+
+1. Add a persistent top bar on every page:
+
+* Status
+* Kill Switch
+* Wipe Everything (confirm dialog)
+
+2. Wipe behavior
+
+* Stop gateway
+* Reset OpenClaw state
+* Delete local app state in `./data`
+* Return user to `/profile`
+
+Definition of done:
+
+* User can always stop and wipe within one click from any screen
+
+### Epic E: “Remote access hardening” as a later layer, but add the placeholder now
+
+Add a section “Remote Access (optional)” with two choices:
+
+* Recommended: Tailscale (safe defaults)
+* Advanced: Cloudflare Tunnel + Access
+
+For v1.1, this can be guidance plus a checklist. You can automate later.
+
+Definition of done:
+
+* Users are explicitly warned not to open ports directly
+
+## Exact screen flow
+
+1. `/` Landing
+2. `/setup` Login
+3. `/setup` Wizard runs
+4. `/profile` Choose Safe Mode or Power Mode
+5. `/status` Verify, playbook, audit buttons
+6. `/openclaw` Control UI
+
+## Suggested copy (tight and non technical)
+
+Landing headline:
+LobsterSandbox
+
+Subheadline:
+Run OpenClaw in a safe sandbox. Safe Mode by default, kill switch included.
+
+Buttons:
+
+* Start Setup
+* Open Control UI
+* View Status
+
+Safe Mode card text:
+Best for first time users. Keeps things isolated and reversible.
+
+Power Mode card text:
+For experienced users. Enables channels, still keeps secure defaults.
+
+## Final opinion
+
+Yes, this is the right route. It answers the exact fear in the market: “I want to join the party without getting wrecked.” Your product becomes the default safe on ramp.
+
+If you want, paste your current route list and file structure from Replit and I’ll map this v1.1 plan into a checklist of exact edits per file, including the specific UI sections to add where.

@@ -1,0 +1,154 @@
+What you pasted is a fair read, and it’s actually good news.
+
+It confirms you already built the right wedge: “make OpenClaw usable fast, with safe defaults, in a place people can wipe if they get nervous.”
+
+The gap is not that the product is wrong. The gap is positioning and the next 2 layers that make it feel truly non technical.
+
+Here’s how I’d tighten the narrative and the roadmap.
+
+## A cleaner version of your assessment
+
+### What LobsterSandbox is today
+
+LobsterSandbox is a friendly setup wrapper for OpenClaw that helps people get running quickly with:
+
+* a simple provider key wizard
+* channel connection screens (WhatsApp, Telegram, Discord)
+* a guided experience (Larry)
+
+### What the bigger vision was
+
+A true “safe sandbox experience” for normal people, meaning:
+
+* isolation from your real accounts
+* safe defaults and permission gating
+* a wipe button that truly resets everything
+* guided separation steps for email, number, and billing
+
+### Honest reality
+
+The current build removes setup friction, but it does not remove “identity friction.”
+Users still need to:
+
+* bring their own API key
+* decide what accounts to connect
+* create a separate number or email if they want separation
+
+That does not make it useless. It just means the product is closer to “safe launcher” than “sandbox as a service.”
+
+## The right move
+
+Do not try to auto create Gmail accounts or phone numbers.
+
+That path invites abuse and becomes a compliance nightmare. It also adds a ton of complexity for very little long term defensibility.
+
+Instead, make LobsterSandbox the default safe way to try OpenClaw, and make separation feel effortless with guided flows and templates.
+
+Your product becomes:
+“OpenClaw, but with Safe Mode on by default, plus a guided sandbox playbook.”
+
+## The target user you should assume
+
+Non technical early adopters who want to try the trend today, but are nervous about security, cost, and messing up their real life.
+
+That lines up perfectly with the tweets you shared earlier.
+
+## What to build next
+
+### Layer 1: Make it feel “sandboxed” even without burner accounts
+
+Add a new first screen before channels:
+
+“Choose your safety profile”
+
+* Safe Mode (recommended)
+
+  * no channels connected yet
+  * Control UI only
+  * allowlist enabled
+  * approval required for actions
+  * spend cap enabled
+  * kill switch visible always
+* Power Mode
+
+  * channels allowed
+  * fewer prompts
+  * still keeps token and loopback defaults
+
+This makes the product instantly coherent for non technical people.
+
+### Layer 2: Sandbox Identity Playbook inside the product
+
+Inside `/setup`, add a section called “Sandbox Identity” with three boxes:
+
+Email
+
+* Option A: Use a secondary existing inbox you already control
+* Option B: Create a new inbox manually, then paste it here
+* Option C: Use a workspace domain you own
+
+Phone
+
+* Bring your own second number
+* Use a spare device or eSIM
+* Use WhatsApp Business with a separate number if needed
+
+Billing
+
+* Use a separate card with a low limit
+* Set a monthly cap in LobsterSandbox
+
+No automation needed. Just make it obvious and idiot proof.
+
+### Layer 3: One click “harden remote access”
+
+Most people get hacked when they expose something publicly.
+
+So give them one button options:
+
+* “Remote access with Tailscale” (recommended)
+* “Remote access with Cloudflare Tunnel” (advanced)
+
+Even if you only implement the copy and a checklist first, it increases trust massively.
+
+## What to remove or de emphasize
+
+Channel configuration UI should not be the hero of v1 for non technical users.
+
+It should be the second act.
+
+The hero should be:
+
+* Setup
+* Safe Mode
+* Control UI works
+* Kill switch and wipe
+
+## How to position LobsterSandbox so it goes viral
+
+One sentence:
+“Try OpenClaw safely in a sandbox. If it breaks, you wipe it.”
+
+Three bullets:
+
+* Safe Mode by default
+* Kill switch and wipe
+* Guided separation for accounts and costs
+
+This is exactly what people are asking for.
+
+## Practical recommendation
+
+Keep what you built. Do not throw it away.
+
+Rename the story:
+
+* From: “wrapper for OpenClaw”
+* To: “safe defaults and sandbox playbook for OpenClaw”
+
+Then add the two missing feelings:
+
+* “I can try it without risk”
+* “I can undo everything instantly”
+
+If you want, paste your current Replit routes and I’ll give you the exact v1.1 spec, including which screens to add and what the copy should say, so it stays simple and ships fast.
