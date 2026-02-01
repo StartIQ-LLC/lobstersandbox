@@ -1,12 +1,13 @@
 {
   "name": "lobstersandbox",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Safe sandbox launcher for OpenClaw - try OpenClaw without touching your real accounts",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=10000"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
@@ -16,8 +17,10 @@
     "express": "^4.22.1",
     "express-rate-limit": "^7.5.1",
     "http-proxy-middleware": "^3.0.5",
+    "jest": "^30.2.0",
     "p-limit": "^7.2.0",
     "p-retry": "^7.1.1",
+    "supertest": "^7.2.2",
     "zod": "^4.3.6",
     "zod-validation-error": "^5.0.0"
   },

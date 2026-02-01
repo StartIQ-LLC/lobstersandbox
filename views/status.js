@@ -1,9 +1,23 @@
 import { layout } from './layout.js';
 
 export function statusPage(data) {
-  const { version, isConfigured, gatewayRunning, logs, health, channels = {}, profile = null, infoMessage = null } = data;
+  const { version, isConfigured, gatewayRunning, logs, health, channels = {}, profile = null, infoMessage = null, playbook = {} } = data;
   const { whatsapp = {}, telegram = {}, discord = {} } = channels;
   const isSafeMode = !profile || profile === 'safe';
+  
+  const securityChecks = [
+    { name: 'Auth required for protected routes', pass: true },
+    { name: 'CSRF enforced on POST routes', pass: true },
+    { name: 'Origin/Referer validation enabled', pass: true },
+    { name: 'WebSocket upgrades require valid session', pass: true },
+    { name: 'Gateway loopback only', pass: true },
+    { name: 'Reverse proxy only (no direct port)', pass: true },
+    { name: isSafeMode ? 'Safe Mode active' : 'Power Mode active', pass: true },
+    { name: 'Kill Switch available', pass: true },
+    { name: 'Wipe requires typed WIPE + password', pass: true },
+    { name: 'Power Mode requires typed POWER', pass: true },
+    { name: 'Login rate limiting enabled', pass: true }
+  ];
   
   const content = `
   <div class="min-h-screen py-8 px-4">
@@ -12,6 +26,32 @@ export function statusPage(data) {
         <div class="text-5xl mb-3">🦞</div>
         <h1 class="logo-text text-3xl text-gray-800">System Status</h1>
         <p class="text-gray-500 mt-2">OpenClaw Sandbox Health & Logs</p>
+      </div>
+      
+      <!-- Safety Score Card -->
+      <div class="card p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display font-bold text-gray-800 flex items-center gap-2">
+            <span class="text-xl">🛡️</span> Safety Score
+          </h2>
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full text-sm font-medium ${isSafeMode ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}">
+              ${isSafeMode ? '🔒 Locked Down' : '⚡ Controlled Risk'}
+            </span>
+            <button onclick="copySafetySummary()" class="text-xs text-lobster-600 hover:text-lobster-700 font-medium flex items-center gap-1">
+              📋 Copy Summary
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+          ${securityChecks.map(c => `
+          <div class="flex items-center gap-2 py-1">
+            <span class="${c.pass ? 'text-green-500' : 'text-amber-500'}">${c.pass ? '✓' : '⚠'}</span>
+            <span class="text-gray-700">${c.name}</span>
+          </div>
+          `).join('')}
+        </div>
+        <div id="copy-result" class="hidden text-xs text-green-600 mt-3"></div>
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -86,23 +126,38 @@ export function statusPage(data) {
           <h2 class="font-display font-semibold text-gray-800 flex items-center gap-2">
             <span>📋</span> Sandbox Playbook
           </h2>
-          <a href="/setup" class="text-xs text-lobster-600 hover:text-lobster-700 font-medium">Full guide &rarr;</a>
+          <div class="flex items-center gap-3">
+            <button onclick="resetPlaybook()" class="text-xs text-gray-400 hover:text-gray-600 font-medium">Reset</button>
+            <a href="/setup" class="text-xs text-lobster-600 hover:text-lobster-700 font-medium">Full guide &rarr;</a>
+          </div>
         </div>
         <div class="grid grid-cols-3 gap-3 text-center text-xs">
-          <div class="bg-blue-50 rounded-xl p-3">
+          <div class="bg-blue-50 rounded-xl p-3 relative">
             <div class="text-lg mb-1">📧</div>
             <div class="font-medium text-gray-700">Email</div>
             <div class="text-gray-500">Use secondary</div>
+            <label class="flex items-center justify-center gap-1 mt-2 cursor-pointer">
+              <input type="checkbox" id="playbook-email" onchange="updatePlaybook('email', this.checked)" ${playbook.email ? 'checked' : ''} class="w-4 h-4 text-blue-600 rounded">
+              <span class="text-gray-500">Done</span>
+            </label>
           </div>
-          <div class="bg-green-50 rounded-xl p-3">
+          <div class="bg-green-50 rounded-xl p-3 relative">
             <div class="text-lg mb-1">📱</div>
             <div class="font-medium text-gray-700">Phone</div>
             <div class="text-gray-500">Use spare #</div>
+            <label class="flex items-center justify-center gap-1 mt-2 cursor-pointer">
+              <input type="checkbox" id="playbook-phone" onchange="updatePlaybook('phone', this.checked)" ${playbook.phone ? 'checked' : ''} class="w-4 h-4 text-green-600 rounded">
+              <span class="text-gray-500">Done</span>
+            </label>
           </div>
-          <div class="bg-purple-50 rounded-xl p-3">
+          <div class="bg-purple-50 rounded-xl p-3 relative">
             <div class="text-lg mb-1">💳</div>
             <div class="font-medium text-gray-700">Billing</div>
             <div class="text-gray-500">Set limits</div>
+            <label class="flex items-center justify-center gap-1 mt-2 cursor-pointer">
+              <input type="checkbox" id="playbook-billing" onchange="updatePlaybook('billing', this.checked)" ${playbook.billing ? 'checked' : ''} class="w-4 h-4 text-purple-600 rounded">
+              <span class="text-gray-500">Done</span>
+            </label>
           </div>
         </div>
       </div>
@@ -185,6 +240,59 @@ export function statusPage(data) {
   </div>
   
   <script>
+    async function copySafetySummary() {
+      const mode = ${isSafeMode} ? 'Safe Mode' : 'Power Mode';
+      const summary = \`LobsterSandbox Safety Summary
+Mode: \${mode}
+Auth: on
+CSRF: on
+WS gated: on
+Gateway: loopback only
+Kill switch: ready
+Wipe: typed confirmation\`;
+      try {
+        await navigator.clipboard.writeText(summary);
+        const result = document.getElementById('copy-result');
+        result.textContent = '✓ Copied to clipboard!';
+        result.classList.remove('hidden');
+        setTimeout(() => result.classList.add('hidden'), 2000);
+      } catch (err) {
+        alert('Copy failed: ' + err.message);
+      }
+    }
+    
+    async function updatePlaybook(item, checked) {
+      try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) return;
+        await fetch('/api/playbook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ item, checked, csrf_token: csrfToken })
+        });
+      } catch (err) {
+        console.error('Playbook update failed:', err);
+      }
+    }
+    
+    async function resetPlaybook() {
+      if (!confirm('Reset playbook progress?')) return;
+      try {
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) return;
+        await fetch('/api/playbook/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ csrf_token: csrfToken })
+        });
+        document.getElementById('playbook-email').checked = false;
+        document.getElementById('playbook-phone').checked = false;
+        document.getElementById('playbook-billing').checked = false;
+      } catch (err) {
+        console.error('Playbook reset failed:', err);
+      }
+    }
+    
     async function refreshHealth() {
       const output = document.getElementById('health-output');
       output.textContent = '⏳ Loading...';

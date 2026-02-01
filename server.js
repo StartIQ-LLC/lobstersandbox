@@ -270,6 +270,10 @@ app.get('/status', requireAuth, async (req, res) => {
       return res.redirect('/profile?from=status');
     }
     
+    const sessionToken = req.cookies?.session_token;
+    const session = sessionTokens.get(sessionToken);
+    const playbook = session?.playbook || {};
+    
     let infoMessage = null;
     if (req.query.info === 'channels_disabled') {
       infoMessage = '<strong>Safe Mode:</strong> Channels are disabled. Switch to Power Mode to connect messaging platforms.';
@@ -285,7 +289,8 @@ app.get('/status', requireAuth, async (req, res) => {
       health: null,
       channels,
       profile,
-      infoMessage
+      infoMessage,
+      playbook
     }));
   } catch (err) {
     res.send(statusPage({
@@ -424,6 +429,37 @@ app.get('/api/profile', apiLimiter, requireAuth, async (req, res) => {
   try {
     const profile = await openclaw.getProfile();
     res.json({ profile });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/playbook', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+  try {
+    const { item, checked } = req.body;
+    if (!['email', 'phone', 'billing'].includes(item)) {
+      return res.status(400).json({ success: false, error: 'Invalid playbook item' });
+    }
+    const sessionToken = req.cookies?.session_token;
+    const session = sessionTokens.get(sessionToken);
+    if (session) {
+      if (!session.playbook) session.playbook = {};
+      session.playbook[item] = checked;
+    }
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/playbook/reset', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+  try {
+    const sessionToken = req.cookies?.session_token;
+    const session = sessionTokens.get(sessionToken);
+    if (session) {
+      session.playbook = {};
+    }
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

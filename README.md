@@ -1,4 +1,4 @@
-# LobsterSandbox 🦞
+# LobsterSandbox 🦞 v1.1.1
 
 A safe sandbox launcher for [OpenClaw](https://openclaw.ai/) - try OpenClaw without touching your real accounts.
 
@@ -135,6 +135,21 @@ The app is stateful - it stores profile, logs, and configuration in `./data`. Au
 - Use "Wipe" button in the top bar
 - Type "WIPE" and enter your password to confirm
 - This removes all configuration and logs
+
+## Testing
+
+Run the security test suite:
+
+```bash
+npm test
+```
+
+Tests cover:
+- Auth redirect for protected routes
+- CSRF 403 for POST without token
+- Power Mode gating for channel/tool APIs
+
+**Manual WebSocket test**: Open an incognito window and try to connect to `/openclaw`. You should NOT receive `101 Switching Protocols` without a valid session.
 
 ## Documentation
 

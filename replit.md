@@ -1,4 +1,4 @@
-# LobsterSandbox
+# LobsterSandbox v1.1.1
 
 ## Overview
 LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based setup wizard and management interface for running OpenClaw in a secure, isolated environment within Replit.
@@ -167,11 +167,17 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 
 ## Recent Changes
 
-### v1.3 Safe Mode Enforcement (February 2026)
+### v1.1.1 Polish Release (February 2026)
+- Safety Score card on /status with security checklist and Copy Summary button
+- Playbook progress checkboxes (Email, Phone, Billing) stored in session
+- requirePowerMode middleware on all /api/channels/* and /api/tools/* routes
+- npm test script with Jest/Supertest for auth, CSRF, and Power Mode tests
+- Version bumped to 1.1.1 across package.json, README, replit.md
+
+### v1.1.0 Safe Mode Enforcement (February 2026)
 - Power Mode requires typed "POWER" confirmation
 - Wipe requires typed "WIPE" + password confirmation (double-layer)
 - Profile gating on /status, /setup, /openclaw (redirects to /profile if not set)
-- requirePowerMode middleware blocks all /api/channels/* and /api/tools/* in Safe Mode
 - Sandbox Playbook cards on /setup page (Email, Phone, Billing separation)
 - README.md updated with Safe Mode flow and what it blocks
 
