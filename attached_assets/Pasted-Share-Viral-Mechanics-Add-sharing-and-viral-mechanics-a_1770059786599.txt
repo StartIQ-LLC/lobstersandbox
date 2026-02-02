@@ -1,0 +1,66 @@
+Share & Viral Mechanics
+Add sharing and viral mechanics across the site. This is about making LobsterSandbox easy to share and giving users reasons to spread the word.
+
+PART 1 — SHARE MODAL COMPONENT (reusable)
+
+Create a reusable share modal that can be triggered from anywhere. When opened, it shows:
+
+Title: "Share LobsterSandbox"
+Subtitle: "Help someone else try OpenClaw safely."
+
+Share buttons row:
+- "Copy Link" button (copies https://lobstersandbox.com to clipboard, shows "Copied! ✅" for 2 seconds)
+- "𝕏 Twitter/X" button (opens new tab: https://twitter.com/intent/tweet?text=I%27m%20testing%20OpenClaw%20without%20risking%20my%20real%20accounts%20using%20LobsterSandbox%20%F0%9F%A6%9E&url=https://lobstersandbox.com )
+- "LinkedIn" button (opens new tab: https://www.linkedin.com/sharing/share-offsite/?url=https://lobstersandbox.com )
+- "Reddit" button (opens new tab: https://www.reddit.com/submit?url=https://lobstersandbox.com&title=LobsterSandbox%20-%20Try%20OpenClaw%20without%20risking%20your%20real%20accounts )
+
+Below the buttons, a text box with a pre-written message they can copy:
+"I'm testing OpenClaw without risking my real accounts. LobsterSandbox gives you throwaway account setup, API cost controls, and a Kill Switch. 🦞 https://lobstersandbox.com"
+
+The modal should close on clicking outside, clicking X, or pressing Escape.
+
+PART 2 — SHARE TRIGGERS
+
+Add share buttons/prompts in these locations:
+
+Location 1 — Homepage hero section:
+After the two main CTAs ("Launch Your Sandbox" and "Read the Burner Stack Guide"), add a smaller tertiary link: "📤 Share with a friend" → opens share modal
+
+Location 2 — Burner Stack Guide completion:
+When all 4 checkboxes are checked and the "Your Burner Stack is Ready!" section appears, add below the CTA:
+"Know someone who's scared of OpenClaw? Share the guide."
+Button: "📤 Share the Guide" → opens share modal (but with URL set to https://lobstersandbox.com/guide)
+
+Location 3 — Mission completion celebrations:
+When a user marks ANY mission as complete and the Larry celebration toast appears, add to the toast:
+"Share your progress → 📤" (small clickable link in the toast that opens share modal)
+
+Location 4 — After completing ALL 6 missions:
+Show a completion banner at the top of the missions page:
+"🏆 All Missions Complete! You've mastered the sandbox."
+"Share your achievement: 📤" → opens share modal with text: "I just completed all 6 LobsterSandbox missions — from first chat to building custom skills. Ready to try OpenClaw safely? 🦞 https://lobstersandbox.com/missions"
+
+PART 3 — COMMUNITY COUNTER (social proof)
+
+Add a counter to the homepage, below the hero section trust icons but above the "Built for People Like You" quotes:
+
+Display: "🦞 [NUMBER] sandboxes launched"
+
+For now, since we don't have real analytics, start the counter at 127 and increment it by 1 every time someone completes the setup wizard (store count in the database or a JSON file on the server). The counter should be fetched from an API endpoint: GET /api/sandbox-count
+
+Style: centered, large number, subtle animation (count up on page load from 0 to the current number over ~1 second). Muted descriptive text below or beside the number.
+
+PART 4 — FOOTER SHARE
+
+In the site footer, add a small section:
+"Built by lobster lovers for the OpenClaw community. 📤 Share LobsterSandbox"
+The "Share LobsterSandbox" text opens the share modal.
+
+DESIGN:
+- Share modal should feel lightweight and fast — not heavy or intrusive
+- Share buttons should use recognizable platform colors (X/Twitter black, LinkedIn blue, Reddit orange)
+- The community counter should feel organic, not aggressive
+- Share prompts at completion moments should feel celebratory, not pushy — users just accomplished something, sharing feels natural
+- All share links open in new tabs
+- Mobile: share modal takes full width with some padding, buttons stack if needed
+- All existing tests should pass. Add tests for: share modal renders, /api/sandbox-count endpoint returns a number, counter displays on homepage.
