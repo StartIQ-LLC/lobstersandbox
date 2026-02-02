@@ -1,0 +1,141 @@
+Completely rebuild the /guide page. The current version is too sparse — it needs to be the most detailed, helpful, and interactive page on the site. This is the page people will share on Twitter when someone asks "how do I try OpenClaw safely?"
+
+FIRST: Add "Guide" to the MAIN TOP NAVIGATION BAR between "Setup" and "Profile". This page must be accessible from every page in one click. It's currently only in the footer which is not enough.
+
+PAGE HEADER:
+Title: "🦞 The Burner Stack Guide"
+Subtitle: "Set up throwaway accounts in 10 minutes. Keep your real digital life completely separate from your AI sandbox."
+Explainer paragraph: "OpenClaw is powerful — it can read email, send messages, manage calendars, and run commands. That's exactly why you should test it with throwaway accounts first. This guide walks you through creating a clean 'burner stack' so nothing touches your real accounts."
+
+PROGRESS TRACKER (sticky or at the top):
+- A horizontal progress bar showing "X of 4 steps completed"
+- Four step indicators in a row (numbered circles) that turn green when their checkbox is checked
+- Store all checkbox states in localStorage so users can close the tab and come back later
+
+STEP 1: "📧 Create a Burner Email" (expandable section, starts EXPANDED)
+
+Intro text: "You need a fresh email that is NOT your real one. OpenClaw can interact with email — you don't want it anywhere near your real inbox."
+
+Option A — Gmail (Recommended for beginners):
+- Link: Go to accounts.google.com (make this a real clickable link, opens in new tab)
+- Click "Create account" → "For my personal use"
+- Use any name you want — it doesn't have to be real
+- Pick a new address like yourname.sandbox@gmail.com
+- Use a strong unique password — don't reuse one from your real accounts
+- Skip phone verification if possible, or use your real number just for the verification step then remove it after
+
+Option B — ProtonMail (More private):
+- Link: Go to proton.me (clickable, new tab)
+- Click "Create a free account"
+- No phone number required for basic account
+- Based in Switzerland, more privacy-focused
+
+Larry tip box (styled with lobster emoji, casual tone):
+"🦞 Don't overthink the name. This is a sandbox email. Call yourself Sandbox McTestface for all I care."
+
+Interactive checkbox at the bottom: "✅ I have a burner email ready"
+When checked: green checkmark animation, section collapses, next step auto-expands, progress bar updates.
+
+STEP 2: "📱 Get a Number or Skip This" (expandable, starts COLLAPSED, opens when Step 1 is checked)
+
+Intro: "Some OpenClaw channels like WhatsApp and Telegram need a phone number. But you can completely skip this."
+
+Option A — SKIP IT (make this the MOST PROMINENT option, bold it, put it first):
+- "You don't need WhatsApp or Telegram to test OpenClaw!"
+- "OpenClaw has a built-in WebChat in the Control UI dashboard — zero phone number needed"
+- "You can also use Discord — just create a new account with your burner email"
+- This should feel like the default, encouraged path
+
+Option B — Google Voice (Free, US only):
+- Link: Go to voice.google.com (clickable, new tab)
+- Sign in with your burner Gmail from Step 1
+- Get a free US phone number
+- Note: "Google Voice numbers don't always work for WhatsApp verification — results vary"
+
+Option C — Prepaid SIM ($10-15):
+- Buy a prepaid SIM at any convenience store or Walmart
+- Use it only for sandbox verification
+- Keep it completely separate from your real phone
+
+Larry tip: "🦞 Seriously, just skip this. WebChat works great for testing and you can always add WhatsApp later when you're comfortable."
+
+Checkbox: "✅ I have a number or I'm skipping this step"
+
+STEP 3: "🔑 Get an AI API Key" (expandable, starts COLLAPSED)
+
+Intro: "OpenClaw needs an AI model to think with. You bring your own API key. This is the only part that costs real money — and you control exactly how much."
+
+ADD A COST COMPARISON INFO BOX at the top of this step (blue or green background, visually distinct):
+Title: "💡 What will this actually cost me?"
+- Light testing (a few chats per day): $0.50 - $2/month
+- Regular usage (daily assistant tasks): $5 - $15/month  
+- Heavy usage (always-on automation): $20 - $50/month
+- Bold: "Start with a $10 limit. You can always increase later."
+
+Option A — Anthropic Claude (Recommended by OpenClaw community):
+- Link: Go to console.anthropic.com (clickable, new tab) → Create account with your BURNER email
+- Go to Settings → API Keys → Create Key → Copy it and save it somewhere safe
+- CRITICAL — highlight this with a warning/attention box:
+  "⚠️ Set a spending limit NOW: Go to Settings → Plans & Billing → Set monthly limit to $10"
+- Model guide:
+  - Claude Haiku 4.5 — cheapest, great for sandbox testing (~$0.25/million input tokens)
+  - Claude Sonnet 4.5 — balanced performance (~$3/million input tokens)
+  - Claude Opus 4.5 — most powerful but expensive (~$15/million input tokens)
+- Larry tip: "🦞 Start with Haiku and a $10 cap. It's shockingly good and dirt cheap. You can always switch models later."
+
+Option B — OpenAI:
+- Link: Go to platform.openai.com (clickable, new tab) → Create account with BURNER email
+- Go to API Keys → Create new secret key → Copy it
+- Set monthly budget: Settings → Billing → Set budget to $10
+- GPT-4o-mini is cheapest, GPT-4o is more capable
+
+Option C — OpenRouter (one key, many models):
+- Link: Go to openrouter.ai (clickable, new tab) → Create account
+- Add $10 credit
+- One API key works with Claude, GPT, Gemini, Llama, and 200+ models
+- The "Auto" model (openrouter/openrouter/auto) automatically picks the cheapest capable model per task
+- Larry tip: "🦞 OpenRouter Auto is the budget hack. Simple tasks get routed to cheap models automatically."
+
+Option D — Run models locally for free:
+- Install Ollama from ollama.ai (clickable, new tab)
+- Run in terminal: ollama pull llama3
+- Completely free, no API key needed, no data leaves your machine
+- Tradeoff: needs decent hardware (8GB+ RAM minimum)
+- Larry tip: "🦞 Zero dollars. Zero data leaving your machine. You just need a beefy computer."
+
+Checkbox: "✅ I have an API key with a spending limit set"
+
+STEP 4: "💳 Extra Payment Protection (Optional)" (expandable, starts COLLAPSED)
+
+Intro: "This step is optional. If you set a spending limit in Step 3, you're already protected. But if you want an extra layer:"
+
+- Privacy.com — free virtual debit cards with per-card spending limits (clickable link)
+- Revolut / Wise — disposable virtual cards from the app
+- Apple Pay / Google Pay — some API providers accept these without exposing your real card
+- "Or just rely on the spending limit you set in Step 3 — that's enough for most people."
+
+Larry tip: "🦞 Honestly? The $10 cap from Step 3 is solid protection. This step is for the extra-extra cautious."
+
+Checkbox: "✅ I've secured my payment or I'm comfortable with my spending limit"
+
+COMPLETION SECTION — only visible when ALL 4 checkboxes are checked:
+
+Big celebration state with animation or visual flair:
+- "🦞🎉 Your Burner Stack is Ready!"
+- Summary of what they have:
+  ✅ A throwaway email — not connected to your real life
+  ✅ A messaging plan — WebChat, Discord, or burner number
+  ✅ An API key — with a spending limit protecting you
+  ✅ Payment protection — cap set or virtual card in place
+- Large green CTA button: "🚀 Launch Your Sandbox" → /setup
+- Below: "Remember: if anything ever feels off, hit Kill Switch to stop or Wipe Everything to start fresh. Your real accounts were never involved."
+
+DESIGN REQUIREMENTS:
+- Each step should feel like an achievement when completed — green checkmark, satisfying visual feedback
+- Progress bar updates in real-time as checkboxes are checked
+- The "Skip it" option in Step 2 should be the most visually prominent choice (bold, maybe a recommended badge)
+- The spending limit warning in Step 3 should be impossible to miss — use a yellow or orange alert box
+- All external links (accounts.google.com, console.anthropic.com, platform.openai.com, openrouter.ai, ollama.ai, proton.me, voice.google.com, privacy.com) must be real clickable links that open in new tabs
+- Larry tip boxes should have a consistent style — lobster emoji, slightly different background, casual font
+- Fully mobile responsive — works perfectly on phone
+- The cost comparison box should stand out visually from the rest of the step content
