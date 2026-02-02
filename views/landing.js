@@ -4,50 +4,50 @@ export function landingPage(options = {}) {
   const { profile = null, configured = false, loggedIn = false, gatewayRunning = false } = typeof options === 'object' && options !== null && !Array.isArray(options) ? options : { profile: options };
   
   const content = `
-  <div class="min-h-screen flex flex-col items-center px-4 py-8">
+  <div class="min-h-screen flex flex-col items-center px-4 py-12 md:py-16">
     <div class="w-full max-w-5xl">
       
       <!-- SECTION 1: Hero (above the fold) -->
-      <div class="text-center mb-16">
-        <div class="text-7xl mb-4">🦞</div>
-        <h1 class="logo-text text-4xl md:text-5xl text-gray-800 mb-3">
+      <div class="text-center mb-20">
+        <div class="text-7xl mb-6">🦞</div>
+        <h1 class="logo-text text-4xl md:text-5xl text-gray-800 mb-4">
           Lobster<span class="text-lobster-600">Sandbox</span>
         </h1>
         
-        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-800 mb-4 mt-8">
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-800 mb-6 mt-10">
           Try OpenClaw Without Risking Your Real Accounts
         </h2>
-        <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-body leading-relaxed">
+        <p class="text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto font-body leading-relaxed">
           Your safe playground for AI agents. Use throwaway accounts, set a spending cap, and wipe everything with one click if anything feels off.
         </p>
         
-        <!-- Trust Icons Row - No Container -->
-        <div class="flex flex-col items-center gap-3 mb-24">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">🔒</span>
-            <span class="font-semibold text-gray-700 text-sm">Real accounts untouched</span>
+        <!-- Trust Icons Row - Horizontal on desktop with pill styling -->
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-12">
+          <div class="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+            <span class="text-lg">🔒</span>
+            <span class="font-medium text-gray-700 text-sm">Real accounts untouched</span>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="text-xl">💰</span>
-            <span class="font-semibold text-gray-700 text-sm">You control spending</span>
+          <div class="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+            <span class="text-lg">💰</span>
+            <span class="font-medium text-gray-700 text-sm">You control spending</span>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="text-xl">🗑️</span>
-            <span class="font-semibold text-gray-700 text-sm">One-click fresh start</span>
+          <div class="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+            <span class="text-lg">🗑️</span>
+            <span class="font-medium text-gray-700 text-sm">One-click fresh start</span>
           </div>
         </div>
         
         <!-- CTAs -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-4">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-lg">
             🚀 Launch Your Sandbox
           </a>
-          <a href="/guide" class="inline-flex items-center justify-center px-8 py-4 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl border border-gray-200 text-lg">
+          <a href="/guide" class="inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-50 text-gray-600 font-medium rounded-xl transition-all border border-gray-200 text-base">
             📖 Read the Burner Stack Guide
           </a>
         </div>
         
-        <button onclick="openShareModal()" class="text-sm text-gray-500 hover:text-red-500 mb-6 transition-colors">📤 Share with a friend</button>
+        <button onclick="openShareModal()" class="text-sm text-gray-400 hover:text-lobster-500 mt-2 mb-4 transition-colors">📤 Share with a friend</button>
         
         ${configured ? `
         <div class="mt-6">
@@ -99,32 +99,33 @@ export function landingPage(options = {}) {
       </script>
       
       <!-- SECTION 2: Why LobsterSandbox? (3-column cards) -->
-      <div class="mb-16">
-        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-8">Why LobsterSandbox?</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="mb-24">
+        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Why LobsterSandbox?</h2>
+        <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">The safe way to explore AI agents without the risk</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <!-- Card 1: The Problem -->
-          <div class="card p-6">
-            <div class="text-3xl mb-3">😰</div>
-            <h3 class="font-display font-bold text-gray-800 text-lg mb-3">The Problem</h3>
+          <div class="card p-8">
+            <div class="text-3xl mb-4">😰</div>
+            <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Problem</h3>
             <p class="text-gray-600 text-sm leading-relaxed">
               OpenClaw is incredible — it can manage your email, calendar, messages, and more. But it needs access to your real accounts. One wrong move and your AI agent is reading your real Gmail or sending from your real WhatsApp.
             </p>
           </div>
           
           <!-- Card 2: The Solution -->
-          <div class="card p-6">
-            <div class="text-3xl mb-3">🦞</div>
-            <h3 class="font-display font-bold text-gray-800 text-lg mb-3">The Solution</h3>
+          <div class="card p-8">
+            <div class="text-3xl mb-4">🦞</div>
+            <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Solution</h3>
             <p class="text-gray-600 text-sm leading-relaxed">
               LobsterSandbox guides you through setting up OpenClaw with throwaway accounts only. Your real email, phone, and billing stay completely separate. Nothing is connected to your actual life.
             </p>
           </div>
           
           <!-- Card 3: The Safety Net -->
-          <div class="card p-6">
-            <div class="text-3xl mb-3">🔄</div>
-            <h3 class="font-display font-bold text-gray-800 text-lg mb-3">The Safety Net</h3>
+          <div class="card p-8">
+            <div class="text-3xl mb-4">🔄</div>
+            <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Safety Net</h3>
             <p class="text-gray-600 text-sm leading-relaxed">
               Made a mistake? Hit Kill Switch to stop everything instantly. Want to start over? Hit Wipe and get a fresh sandbox in seconds. You're always in control.
             </p>
@@ -132,51 +133,57 @@ export function landingPage(options = {}) {
         </div>
       </div>
       
+      <!-- Subtle divider -->
+      <div class="w-24 h-px bg-gray-200 mx-auto mb-20"></div>
+      
       <!-- SECTION 3: Built for People Like You (Social Proof Quotes) -->
-      <div class="mb-20 pt-16">
-        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-4">Built for People Like You</h2>
-        <p class="text-gray-500 text-center mb-16">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
+      <div class="mb-24">
+        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Built for People Like You</h2>
+        <p class="text-gray-500 text-center mb-12 max-w-xl mx-auto">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           <!-- Quote Card 1 -->
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 flex flex-col">
-            <div class="text-4xl text-lobster-300 font-serif leading-none mb-2">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex flex-col hover:shadow-md transition-shadow">
+            <div class="text-4xl text-lobster-300 font-serif leading-none mb-3">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed mb-5 flex-grow">
               I want to join the party, but I don't want to be turned into digital mincemeat by hackers.
             </p>
-            <p class="text-xs text-gray-400 mb-3">— Tech founders asking about OpenClaw on Twitter/X</p>
-            <p class="text-sm font-bold text-lobster-600">LobsterSandbox keeps your real accounts completely separate.</p>
+            <p class="text-xs text-gray-400 mb-4">— Tech founders asking about OpenClaw on Twitter/X</p>
+            <p class="text-sm font-semibold text-lobster-600">LobsterSandbox keeps your real accounts completely separate.</p>
           </div>
           
           <!-- Quote Card 2 -->
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 flex flex-col">
-            <div class="text-4xl text-lobster-300 font-serif leading-none mb-2">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex flex-col hover:shadow-md transition-shadow">
+            <div class="text-4xl text-lobster-300 font-serif leading-none mb-3">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed mb-5 flex-grow">
               I can't find a single user in my communities — the concept of AI taking control of everything is too scary.
             </p>
-            <p class="text-xs text-gray-400 mb-3">— Hacker News discussion, February 2026</p>
-            <p class="text-sm font-bold text-lobster-600">Safe Mode means your agent asks before doing anything risky.</p>
+            <p class="text-xs text-gray-400 mb-4">— Hacker News discussion, February 2026</p>
+            <p class="text-sm font-semibold text-lobster-600">Safe Mode means your agent asks before doing anything risky.</p>
           </div>
           
           <!-- Quote Card 3 -->
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 flex flex-col">
-            <div class="text-4xl text-lobster-300 font-serif leading-none mb-2">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex flex-col hover:shadow-md transition-shadow">
+            <div class="text-4xl text-lobster-300 font-serif leading-none mb-3">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed mb-5 flex-grow">
               Do not install OpenClaw on your primary computer. There is no perfectly secure setup.
             </p>
-            <p class="text-xs text-gray-400 mb-3">— Security researchers and OpenClaw's own FAQ</p>
-            <p class="text-sm font-bold text-lobster-600">That's exactly why LobsterSandbox exists. Sandbox first, real setup later.</p>
+            <p class="text-xs text-gray-400 mb-4">— Security researchers and OpenClaw's own FAQ</p>
+            <p class="text-sm font-semibold text-lobster-600">That's exactly why LobsterSandbox exists. Sandbox first, real setup later.</p>
           </div>
         </div>
         
         <!-- CTA after quotes -->
-        <div class="text-center mt-24 mb-24">
+        <div class="text-center mt-16">
           <a href="/setup" class="inline-flex items-center justify-center px-6 py-3 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-base">
             🚀 Ready to try it safely? Launch Your Sandbox
           </a>
         </div>
       </div>
+      
+      <!-- Subtle divider -->
+      <div class="w-24 h-px bg-gray-200 mx-auto mb-16"></div>
       
       <!-- SECTION 4: Technical Safety Details (Collapsible) -->
       <div class="card p-6 mb-8">
