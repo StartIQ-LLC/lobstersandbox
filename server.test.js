@@ -116,11 +116,18 @@ describe('LobsterSandbox Security Tests', () => {
   });
 
   describe('Landing Page Safety Checklist', () => {
-    test('GET / returns 200 and contains Safe by Default section', async () => {
+    test('GET / returns 200 and contains hero and safety sections', async () => {
       const res = await request(BASE_URL).get('/');
       expect(res.status).toBe(200);
-      expect(res.text).toContain('Safe by Default');
-      expect(res.text).toContain('Show technical details');
+      expect(res.text).toContain('Try OpenClaw Without Risking Your Real Accounts');
+      expect(res.text).toContain('Technical Safety Details');
+    });
+
+    test('GET /guide returns 200 and contains Burner Stack Guide', async () => {
+      const res = await request(BASE_URL).get('/guide');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('The Burner Stack Guide');
+      expect(res.text).toContain('Burner Email');
     });
 
     test('Copy Checklist text does not contain Mode: or token patterns', () => {
@@ -159,7 +166,7 @@ Session max lifetime enforced`;
       const res = await request(BASE_URL).get('/healthz');
       expect(res.status).toBe(200);
       expect(res.body.ok).toBe(true);
-      expect(res.body.version).toBe('1.2.3');
+      expect(res.body.version).toBe('1.2.4');
       expect(typeof res.body.uptimeSeconds).toBe('number');
     });
 

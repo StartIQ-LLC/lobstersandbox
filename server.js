@@ -16,6 +16,7 @@ import { channelsPage } from './views/channels.js';
 import { toolsPage } from './views/tools.js';
 import { profilePage } from './views/profile.js';
 import { notFoundPage, serverErrorPage, csrfErrorPage } from './views/error.js';
+import { guidePage } from './views/guide.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -222,7 +223,7 @@ const startTime = Date.now();
 app.get('/healthz', (req, res) => {
   res.json({
     ok: true,
-    version: '1.2.3',
+    version: '1.2.4',
     uptimeSeconds: Math.floor((Date.now() - startTime) / 1000)
   });
 });
@@ -253,6 +254,12 @@ app.get('/', async (req, res) => {
   const loggedIn = isAuthenticated(req);
   const gatewayRunning = openclaw.isGatewayRunning();
   res.send(landingPage({ profile, configured, loggedIn, gatewayRunning }));
+});
+
+app.get('/guide', (req, res) => {
+  const loggedIn = isAuthenticated(req);
+  const gatewayRunning = openclaw.isGatewayRunning();
+  res.send(guidePage({ loggedIn, gatewayRunning }));
 });
 
 app.get('/setup', (req, res) => {

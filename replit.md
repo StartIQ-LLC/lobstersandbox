@@ -174,6 +174,17 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 
 ## Recent Changes
 
+### v1.2.4 Homepage Rewrite for Non-Technical Users (February 2026)
+- Complete homepage rewrite targeting scared non-technical users
+- New hero: "Try OpenClaw Without Risking Your Real Accounts"
+- Trust icons row: accounts untouched, spending control, one-click wipe
+- "Why LobsterSandbox?" 3-column cards: Problem, Solution, Safety Net
+- Technical Safety Details now collapsible (default collapsed)
+- Updated "What is LobsterSandbox?" section with new copy
+- New /guide route: "The Burner Stack Guide" with step-by-step burner account setup
+- Social proof line: "Join 117K+ people exploring OpenClaw — safely."
+- 15 passing tests
+
 ### v1.2.3 Production CSS & Health Optimization (February 2026)
 - Compiled Tailwind CSS: replaced Play CDN with static tailwind.css (26KB minified)
 - /readyz health check: 3-second result caching prevents DoS via repeated expensive checks

@@ -1,6 +1,6 @@
 {
   "name": "lobstersandbox",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Safe sandbox launcher for OpenClaw - try OpenClaw without touching your real accounts",
   "main": "server.js",
   "type": "module",
