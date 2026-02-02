@@ -45,6 +45,7 @@ LobsterSandbox is built with Node.js 22 and Express.js, utilizing server-rendere
 - **Deploy Page**: 4 deploy option cards (Replit recommended/prominent, Railway, Render, Docker collapsible), 5-step "What happens after you deploy?" section, safety reassurance; linked from homepage and footer.
 - **Share & Viral Mechanics**: Reusable share modal (Copy Link, Twitter/X, LinkedIn, Reddit) with customizable URL/message, share triggers on homepage hero/Guide completion/mission toasts/all-missions-complete banner, footer share link.
 - **Community Counter**: "🦞 [NUMBER] sandboxes launched" counter on homepage with animated count-up (1-second cubic easing), file-based persistence in data/sandbox-count.json starting at 127, increments on successful setup completion, GET /api/sandbox-count endpoint.
+- **Graduate to Production Page**: /graduate page with 6 sections (readiness checklist, config export, installation guide with copy-able code blocks, cloud deployment options, keep sandbox, feedback form), footer link only (not in top nav), GET /api/config-export (auth-protected, exports settings without API keys), POST /api/feedback (CSRF-protected, stores to data/feedback.json).
 - **Safety Modes**: "Safe Mode" (default) and "Power Mode" with distinct access levels to sensitive features like channel and tool setup.
 
 ## External Dependencies
