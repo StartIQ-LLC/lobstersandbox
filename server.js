@@ -17,6 +17,7 @@ import { toolsPage } from './views/tools.js';
 import { profilePage } from './views/profile.js';
 import { notFoundPage, serverErrorPage, csrfErrorPage } from './views/error.js';
 import { guidePage } from './views/guide.js';
+import { comparePage } from './views/compare.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -260,6 +261,12 @@ app.get('/guide', (req, res) => {
   const loggedIn = isAuthenticated(req);
   const gatewayRunning = openclaw.isGatewayRunning();
   res.send(guidePage({ loggedIn, gatewayRunning }));
+});
+
+app.get('/compare', (req, res) => {
+  const loggedIn = isAuthenticated(req);
+  const gatewayRunning = openclaw.isGatewayRunning();
+  res.send(comparePage({ loggedIn, gatewayRunning }));
 });
 
 app.get('/setup', (req, res) => {

@@ -523,7 +523,13 @@ export function layout(title, content, options = {}) {
     }
   </script>
   ` : ''}
-  <footer class="text-center text-xs text-gray-400 py-4 space-y-1">
+  <footer class="text-center text-xs text-gray-400 py-6 space-y-2">
+    <div class="flex flex-wrap justify-center gap-4 mb-2">
+      <a href="/" class="hover:text-gray-600">Home</a>
+      <a href="/guide" class="hover:text-gray-600">Burner Stack Guide</a>
+      <a href="/compare" class="hover:text-gray-600">Why LobsterSandbox?</a>
+      <a href="https://docs.openclaw.ai/" target="_blank" class="hover:text-gray-600">OpenClaw Docs</a>
+    </div>
     <div>LobsterSandbox v1.2.3</div>
     <div>Unofficial community tool. Not affiliated with OpenClaw.</div>
     <div>Bring your own API keys. Do not connect sensitive accounts on day one.</div>
