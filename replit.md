@@ -41,6 +41,7 @@ LobsterSandbox is built with Node.js 22 and Express.js, utilizing server-rendere
 - **Budget Tracking**: API cost tracking, pricing configuration, usage estimation, and budget alerts for 9 AI providers.
 - **Operational Dashboard**: Full dashboard with 6 cards (Gateway Status, Budget Tracker, Safety Status, Connected Channels, Recent Activity, Weekly API Usage), 30-second auto-refresh, collapsible Advanced Tools section.
 - **Sandbox Missions**: Guided tutorial system with 6 interactive missions (Hello Lobster, Research Assistant, Personal Scribe, Discord Buddy, Cron Master, Skill Builder), localStorage progress tracking, expandable step-by-step panels, Larry celebration toasts.
+- **Pricing Page**: Three-tier pricing (Explorer $0/free, Pro $19/month, Team $49/month) with feature lists, CTAs, "Most Popular" badge on Pro card, and 6-question FAQ accordion.
 - **Safety Modes**: "Safe Mode" (default) and "Power Mode" with distinct access levels to sensitive features like channel and tool setup.
 
 ## External Dependencies
