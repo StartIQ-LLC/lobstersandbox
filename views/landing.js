@@ -21,19 +21,21 @@ export function landingPage(options = {}) {
           Your safe playground for AI agents. Use throwaway accounts, set a spending cap, and wipe everything with one click if anything feels off.
         </p>
         
-        <!-- Trust Icons Row -->
-        <div class="flex flex-col md:flex-row justify-center gap-6 mb-10">
-          <div class="flex items-center justify-center gap-2 text-gray-700">
-            <span class="text-2xl">🔒</span>
-            <span class="font-medium">Your real accounts stay untouched</span>
-          </div>
-          <div class="flex items-center justify-center gap-2 text-gray-700">
-            <span class="text-2xl">💰</span>
-            <span class="font-medium">You control your AI spending</span>
-          </div>
-          <div class="flex items-center justify-center gap-2 text-gray-700">
-            <span class="text-2xl">🗑️</span>
-            <span class="font-medium">One-click wipe, fresh start anytime</span>
+        <!-- Trust Icons Row - Unified Badge Strip -->
+        <div class="flex justify-center mb-10">
+          <div class="inline-flex flex-col md:flex-row bg-gradient-to-r from-lobster-50 to-orange-50 border border-lobster-100 rounded-2xl px-6 py-4 md:divide-x md:divide-lobster-100">
+            <div class="flex flex-col items-center text-center px-4 py-2 md:py-0">
+              <span class="text-3xl mb-1">🔒</span>
+              <span class="font-bold text-gray-800 text-sm">Real accounts untouched</span>
+            </div>
+            <div class="flex flex-col items-center text-center px-4 py-2 md:py-0 border-t border-lobster-100 md:border-t-0">
+              <span class="text-3xl mb-1">💰</span>
+              <span class="font-bold text-gray-800 text-sm">You control spending</span>
+            </div>
+            <div class="flex flex-col items-center text-center px-4 py-2 md:py-0 border-t border-lobster-100 md:border-t-0">
+              <span class="text-3xl mb-1">🗑️</span>
+              <span class="font-bold text-gray-800 text-sm">One-click fresh start</span>
+            </div>
           </div>
         </div>
         
@@ -93,7 +95,53 @@ export function landingPage(options = {}) {
         </div>
       </div>
       
-      <!-- SECTION 3: Technical Safety Details (Collapsible) -->
+      <!-- SECTION 3: Built for People Like You (Social Proof Quotes) -->
+      <div class="mb-16">
+        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-2">Built for People Like You</h2>
+        <p class="text-gray-500 text-center mb-8">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Quote Card 1 -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
+            <div class="absolute top-4 left-4 text-5xl text-lobster-200 font-serif leading-none">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed pt-8 mb-4 flex-grow">
+              I want to join the party, but I don't want to be turned into digital mincemeat by hackers.
+            </p>
+            <p class="text-xs text-gray-400 mb-3">— Tech founders asking about OpenClaw on Twitter/X</p>
+            <p class="text-sm font-bold text-lobster-600">LobsterSandbox keeps your real accounts completely separate.</p>
+          </div>
+          
+          <!-- Quote Card 2 -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
+            <div class="absolute top-4 left-4 text-5xl text-lobster-200 font-serif leading-none">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed pt-8 mb-4 flex-grow">
+              I can't find a single user in my communities — the concept of AI taking control of everything is too scary.
+            </p>
+            <p class="text-xs text-gray-400 mb-3">— Hacker News discussion, February 2026</p>
+            <p class="text-sm font-bold text-lobster-600">Safe Mode means your agent asks before doing anything risky.</p>
+          </div>
+          
+          <!-- Quote Card 3 -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
+            <div class="absolute top-4 left-4 text-5xl text-lobster-200 font-serif leading-none">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed pt-8 mb-4 flex-grow">
+              Do not install OpenClaw on your primary computer. There is no perfectly secure setup.
+            </p>
+            <p class="text-xs text-gray-400 mb-3">— Security researchers and OpenClaw's own FAQ</p>
+            <p class="text-sm font-bold text-lobster-600">That's exactly why LobsterSandbox exists. Sandbox first, real setup later.</p>
+          </div>
+        </div>
+        
+        <!-- CTA after quotes -->
+        <div class="text-center mt-10">
+          <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-lg">
+            🚀 Ready to try it safely? Launch Your Sandbox
+          </a>
+        </div>
+      </div>
+      
+      <!-- SECTION 4: Technical Safety Details (Collapsible) -->
       <div class="card p-6 mb-8">
         <details>
           <summary class="flex items-center gap-2 cursor-pointer font-display font-bold text-gray-800 text-lg">
@@ -201,7 +249,7 @@ Session max lifetime enforced\`;
         }
       </script>
       
-      <!-- SECTION 4: What is LobsterSandbox? -->
+      <!-- SECTION 5: What is LobsterSandbox? -->
       <div class="card p-6 text-left mb-8">
         <h2 class="font-display font-semibold text-gray-800 mb-3 text-lg">What is LobsterSandbox?</h2>
         <p class="text-gray-600 text-sm leading-relaxed">
