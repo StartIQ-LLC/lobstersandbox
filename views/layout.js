@@ -281,6 +281,7 @@ export function layout(title, content, options = {}) {
         <a href="/setup" class="text-gray-300 hover:text-white font-medium">Setup</a>
         <a href="/guide" class="text-gray-300 hover:text-white font-medium">Guide</a>
         <a href="/missions" class="text-gray-300 hover:text-white font-medium">Missions</a>
+        <a href="/pricing" class="text-gray-300 hover:text-white font-medium">Pricing</a>
         <a href="/profile" class="text-gray-300 hover:text-white font-medium">Profile</a>
       </div>
     </div>

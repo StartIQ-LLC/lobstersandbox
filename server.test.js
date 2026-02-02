@@ -130,6 +130,18 @@ describe('LobsterSandbox Security Tests', () => {
       expect(res.text).toContain('Burner Email');
     });
 
+    test('GET /pricing returns 200 and contains pricing tiers', async () => {
+      const res = await request(BASE_URL).get('/pricing');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('Pricing');
+      expect(res.text).toContain('Explorer');
+      expect(res.text).toContain('Pro');
+      expect(res.text).toContain('Team');
+      expect(res.text).toContain('$0');
+      expect(res.text).toContain('$19');
+      expect(res.text).toContain('$49');
+    });
+
     test('Copy Checklist text does not contain Mode: or token patterns', () => {
       const checklistText = `LobsterSandbox Safety Checklist
 Auth required for protected routes

@@ -20,6 +20,7 @@ import { notFoundPage, serverErrorPage, csrfErrorPage } from './views/error.js';
 import { guidePage } from './views/guide.js';
 import { comparePage } from './views/compare.js';
 import { missionsPage } from './views/missions.js';
+import { pricingPage } from './views/pricing.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -268,6 +269,12 @@ app.get('/guide', (req, res) => {
 app.get('/missions', requireAuth, (req, res) => {
   const gatewayRunning = openclaw.isGatewayRunning();
   res.send(missionsPage({ loggedIn: true, gatewayRunning }));
+});
+
+app.get('/pricing', (req, res) => {
+  const loggedIn = isAuthenticated(req);
+  const gatewayRunning = openclaw.isGatewayRunning();
+  res.send(pricingPage({ loggedIn, gatewayRunning }));
 });
 
 app.get('/compare', (req, res) => {
