@@ -255,6 +255,7 @@ Session max lifetime enforced\`;
         </p>
         <div class="flex flex-wrap gap-4 text-sm mt-4">
           <a href="/profile" class="text-lobster-600 hover:text-lobster-700 font-medium">🛡️ Choose Safety Profile</a>
+          <a href="/deploy" class="text-lobster-600 hover:text-lobster-700 font-medium">🚀 Deploy your own sandbox</a>
           <a href="/compare" class="text-gray-600 hover:text-gray-700 font-medium">📊 See how we compare</a>
           <a href="/status" class="text-gray-600 hover:text-gray-700 font-medium">🔧 System Status</a>
           <a href="https://docs.openclaw.ai/" target="_blank" class="text-gray-500 hover:text-gray-700">Documentation &rarr;</a>

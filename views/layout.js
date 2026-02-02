@@ -679,6 +679,7 @@ export function layout(title, content, options = {}) {
     <div class="flex flex-wrap justify-center gap-4 mb-2">
       <a href="/" class="hover:text-gray-600">Home</a>
       <a href="/guide" class="hover:text-gray-600">Burner Stack Guide</a>
+      <a href="/deploy" class="hover:text-gray-600">Deploy</a>
       <a href="/compare" class="hover:text-gray-600">Why LobsterSandbox?</a>
       <a href="https://docs.openclaw.ai/" target="_blank" class="hover:text-gray-600">OpenClaw Docs</a>
     </div>

@@ -142,6 +142,17 @@ describe('LobsterSandbox Security Tests', () => {
       expect(res.text).toContain('$49');
     });
 
+    test('GET /deploy returns 200 and contains deploy options', async () => {
+      const res = await request(BASE_URL).get('/deploy');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('Deploy Your Sandbox');
+      expect(res.text).toContain('Replit');
+      expect(res.text).toContain('Railway');
+      expect(res.text).toContain('Render');
+      expect(res.text).toContain('Docker');
+      expect(res.text).toContain('Recommended');
+    });
+
     test('Copy Checklist text does not contain Mode: or token patterns', () => {
       const checklistText = `LobsterSandbox Safety Checklist
 Auth required for protected routes

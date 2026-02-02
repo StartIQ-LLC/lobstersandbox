@@ -21,6 +21,7 @@ import { guidePage } from './views/guide.js';
 import { comparePage } from './views/compare.js';
 import { missionsPage } from './views/missions.js';
 import { pricingPage } from './views/pricing.js';
+import { deployPage } from './views/deploy.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -275,6 +276,12 @@ app.get('/pricing', (req, res) => {
   const loggedIn = isAuthenticated(req);
   const gatewayRunning = openclaw.isGatewayRunning();
   res.send(pricingPage({ loggedIn, gatewayRunning }));
+});
+
+app.get('/deploy', (req, res) => {
+  const loggedIn = isAuthenticated(req);
+  const gatewayRunning = openclaw.isGatewayRunning();
+  res.send(deployPage({ loggedIn, gatewayRunning }));
 });
 
 app.get('/compare', (req, res) => {
