@@ -194,6 +194,8 @@ app.use((req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
   res.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   next();
 });
 
@@ -220,7 +222,7 @@ const startTime = Date.now();
 app.get('/healthz', (req, res) => {
   res.json({
     ok: true,
-    version: '1.2.2',
+    version: '1.2.3',
     uptimeSeconds: Math.floor((Date.now() - startTime) / 1000)
   });
 });

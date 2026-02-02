@@ -523,7 +523,11 @@ export function layout(title, content, options = {}) {
     }
   </script>
   ` : ''}
-  <footer class="text-center text-xs text-gray-400 py-4">LobsterSandbox v1.2.2</footer>
+  <footer class="text-center text-xs text-gray-400 py-4 space-y-1">
+    <div>LobsterSandbox v1.2.3</div>
+    <div>Unofficial community tool. Not affiliated with OpenClaw.</div>
+    <div>Bring your own API keys. Do not connect sensitive accounts on day one.</div>
+  </footer>
 </body>
 </html>`;
 }
