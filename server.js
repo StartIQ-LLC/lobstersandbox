@@ -677,6 +677,10 @@ const gatewayProxy = createProxyMiddleware({
         proxyReq.setHeader('Authorization', `Bearer ${OPENCLAW_GATEWAY_TOKEN}`);
       }
     },
+    proxyRes: (proxyRes, req, res) => {
+      proxyRes.headers['cache-control'] = 'no-store, no-cache, must-revalidate';
+      proxyRes.headers['pragma'] = 'no-cache';
+    },
     error: (err, req, res) => {
       console.error('Proxy error:', err.message);
       if (res.writeHead) {

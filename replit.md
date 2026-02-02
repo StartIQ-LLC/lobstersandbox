@@ -134,12 +134,19 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Password re-confirmation required to wipe
 - Double-layer protection against accidental data loss
 
+### Session Cookie Hardening
+- httpOnly: true (prevents XSS access)
+- secure: true in production (HTTPS only)
+- sameSite: 'lax' (CSRF protection)
+- maxAge: 12 hours (matches session max lifetime)
+
 ### Gateway Security
 - Gateway binds to loopback only (127.0.0.1)
 - Token authentication on all gateway requests
 - Token injected server-side, never exposed to client
 - WebSocket upgrades explicitly authenticated at server level (not just Express middleware)
 - Unauthenticated WS upgrade requests receive 401 and socket is destroyed
+- Cache-Control: no-store on all proxied responses (prevents stale UI)
 
 ### Secret Safety
 - API keys masked in logs and UI (shows last 8 chars only)
@@ -171,6 +178,8 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Compiled Tailwind CSS: replaced Play CDN with static tailwind.css (26KB minified)
 - /readyz health check: 3-second result caching prevents DoS via repeated expensive checks
 - /readyz timeout: reduced from 3s to 500ms for faster load balancer responses
+- /readyz uses lightweight HTTP ping to loopback (no CLI commands)
+- Cache-Control: no-store added to gateway proxy responses
 - Added npm run build:css script for CSS regeneration
 - Version v1.2.2 across package.json, README.md, replit.md, footer
 - 14 passing tests
