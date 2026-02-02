@@ -1,0 +1,120 @@
+Sandbox Missions Page
+Create a new page at /missions called "Sandbox Missions" and add "Missions" to the main top navigation bar (after Guide, before Profile).
+
+PAGE HEADER:
+Title: "🎯 Sandbox Missions"
+Subtitle: "Guided tutorials to see what OpenClaw can do. Each mission shows estimated time and cost so you know exactly what to expect."
+Progress tracker: "X of 6 missions completed" with a progress bar. Store completion state in localStorage.
+
+MISSION CARDS in a 2-column grid (1 column on mobile). Each card shows:
+- Emoji + title
+- Difficulty badge: "Beginner" (green), "Intermediate" (yellow)
+- "⏱️ ~X min" and "💰 ~$X.XX"
+- Required connections line
+- 2-sentence description
+- "Start Mission" button that expands a detailed step-by-step panel below the card (or opens a slide-out)
+- Completion checkbox at the end of the instructions: "✅ Mark as complete"
+- When completed: card gets a green border and checkmark overlay, progress bar updates
+
+THE 6 MISSIONS:
+
+MISSION 1: "🌊 Hello, Lobster!"
+- Difficulty: Beginner
+- Time: ~2 min | Cost: ~$0.02
+- Requires: Nothing (uses built-in WebChat)
+- Description: "Say hi to your AI agent through the built-in WebChat. No accounts or channels needed — just type and go."
+- Steps:
+  1. Click "Open Control UI" in the LobsterSandbox nav bar (or go to /openclaw)
+  2. In the Control UI, find the WebChat tab
+  3. Type: "Hi! Tell me 3 interesting facts about lobsters."
+  4. Try: "What kinds of things can you help me with?"
+  5. Try: "Write me a haiku about trying something new."
+  6. You just chatted with your own AI agent! Mark this mission complete.
+- Larry celebration: "🦞 You did it! Your first conversation with your own AI agent. Not so scary, right?"
+
+MISSION 2: "🔍 Research Assistant"
+- Difficulty: Beginner
+- Time: ~5 min | Cost: ~$0.10
+- Requires: Nothing (WebChat only)
+- Description: "Ask OpenClaw to research any topic and summarize what it finds. See how it gathers and synthesizes information."
+- Steps:
+  1. Open the Control UI WebChat
+  2. Try: "Research the latest news about [pick any topic you care about] and give me a 3-bullet summary."
+  3. Follow up: "What are the different perspectives on this?"
+  4. Try: "Find me 3 good sources about [topic] and summarize each one."
+  5. Notice how it structures information and cites what it finds.
+- Note box: "Web search works best with the Brave Search API skill enabled. Without it, OpenClaw uses its built-in knowledge, which is still useful but won't have the latest news."
+- Larry: "🦞 You now have a research assistant that works 24/7. Imagine what this does for your workflow."
+
+MISSION 3: "📝 Personal Scribe"
+- Difficulty: Beginner
+- Time: ~5 min | Cost: ~$0.08
+- Requires: Nothing (WebChat only)
+- Description: "Have OpenClaw draft emails, blog posts, or messages for you. See how it handles different writing styles."
+- Steps:
+  1. Open the Control UI WebChat
+  2. Try: "Draft a professional email to my team about postponing tomorrow's meeting to next week. Keep it brief and friendly."
+  3. Follow up: "Make it more casual" or "Add a note about bringing agenda items"
+  4. Try something different: "Write a 200-word blog post introduction about [any topic you like]."
+  5. Try: "Now rewrite that in a more conversational tone."
+- Larry: "🦞 You just got a writing assistant that adapts to any tone. No more staring at blank screens."
+
+MISSION 4: "💬 Discord Buddy"
+- Difficulty: Intermediate
+- Time: ~15 min | Cost: ~$0.10
+- Requires: Discord account (create one with your burner email if needed)
+- Description: "Connect OpenClaw to Discord and chat with it from there. Your first external channel — the agent leaves the sandbox chat and enters a real platform."
+- Steps:
+  1. If you don't have a Discord account, create one at discord.com using your burner email
+  2. Create a new Discord server (or use a test server you already have)
+  3. Go to discord.com/developers/applications → "New Application" → Give it a name
+  4. Go to the "Bot" section → Click "Add Bot" → Copy the bot token
+  5. Under "Privileged Gateway Intents," enable Message Content Intent
+  6. Go to OAuth2 → URL Generator → Select "bot" scope and "Send Messages" + "Read Messages" permissions → Copy the generated URL → Open it to invite the bot to your server
+  7. In the OpenClaw Control UI, go to Settings or Channels → Discord → Enter the bot token
+  8. Send a message in your Discord server mentioning the bot or via DM
+  9. You should get a response from OpenClaw in Discord!
+- Note: "For the full Discord setup guide, see docs.openclaw.ai → Channels → Discord"
+- Larry: "🦞 Your AI agent just left the chat box and entered the real world. This is where it starts getting fun."
+
+MISSION 5: "⏰ Cron Master"
+- Difficulty: Intermediate
+- Time: ~10 min | Cost: ~$0.15
+- Requires: Nothing (WebChat only)
+- Description: "Set up an automated scheduled task. Have OpenClaw do something on its own every day without you asking."
+- Steps:
+  1. Open the Control UI WebChat
+  2. Try: "Set up a daily task: every morning at 9am, give me a motivational quote and tell me what day it is and any notable events happening today."
+  3. Or try: "Every day at 5pm, remind me to wrap up work and list anything I told you about during the day."
+  4. Check the Cron section in the Control UI to see your scheduled task listed
+  5. Wait for it to trigger (or ask OpenClaw "show me my scheduled tasks" to verify it's set up)
+- Note box: "⚠️ Cron jobs use API credits each time they run. A simple daily task costs ~$0.01-0.05 per run. A job running every hour would cost ~$0.24-1.20/day. Keep an eye on your budget tracker."
+- Larry: "🦞 Your agent now does things while you sleep. Welcome to the future. Just watch that budget."
+
+MISSION 6: "🧠 Skill Builder"
+- Difficulty: Intermediate
+- Time: ~15 min | Cost: ~$0.25
+- Requires: Nothing (WebChat only)
+- Description: "Ask OpenClaw to create a brand new skill for itself. Watch it literally extend its own capabilities. This is the 'whoa' moment."
+- Steps:
+  1. Open the Control UI WebChat
+  2. Try: "Create a new skill called 'dice-roller' that lets me roll dice. I should be able to say 'roll 3d6' and get individual results plus a total."
+  3. Test it: "Roll 2d20" — it should use the new skill
+  4. Try another: "Create a skill that converts between currencies using current exchange rates."
+  5. Check the Skills section in the Control UI to see your custom skills listed
+  6. Skills are stored in your sandbox workspace — they're included if you Wipe.
+- Note: "Custom skills are saved in the agent workspace at ~/.openclaw/workspace/skills/. Browse community skills at clawhub.com for inspiration."
+- Larry: "🦞 You just taught your AI agent a new trick and it learned it. Now imagine what else you could build. Check out clawhub.com for ideas."
+
+BOTTOM OF PAGE:
+Text: "More missions coming soon! All activity stays in your sandbox — hit Wipe anytime for a fresh start."
+CTA: "💡 Have an idea for a mission? Tell Larry in the chat!" (points to Larry chatbot)
+
+DESIGN:
+- Cards should feel game-like — satisfying to complete, visual progress
+- Green border or glow on completed mission cards
+- The step-by-step instructions should be clean and numbered, easy to follow
+- Note boxes (warnings about costs, links to docs) should be visually distinct — yellow or blue info boxes
+- Larry celebration messages should appear after marking each mission complete — maybe a small toast or animation
+- Mobile: cards go single column, instructions still readable
+- All existing tests should pass. Add a test for the /missions route.
