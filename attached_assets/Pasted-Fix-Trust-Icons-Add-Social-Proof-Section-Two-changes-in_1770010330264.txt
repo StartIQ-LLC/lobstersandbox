@@ -1,0 +1,51 @@
+Fix Trust Icons + Add Social Proof Section
+Two changes in this update:
+
+CHANGE 1 — Fix the three trust icons row (🔒 💰 🗑️)
+
+The three trust icons ("Your real accounts stay untouched", "You control your AI spending", "One-click wipe, fresh start anytime") currently have too much spacing between them and don't look cohesive as a group.
+
+Fix the layout:
+- Reduce the gap between the three icons so they feel like ONE unified row, not three separate floating elements
+- Put all three inside a single container with a subtle rounded border or light background card (very light gray or a slight tint of the lobster theme color) with some padding
+- Each icon+text pair should be compact: emoji on top, bold short label below, in a tight column
+- On desktop: all three side by side in one row with even, tight spacing (think 20-30px gap, not 60+)
+- On mobile: stack vertically but keep them tight, maybe as a single card with a divider line between each
+- The whole row should feel like a "trust badge strip" — like the security badges you see on checkout pages
+- Center the entire row under the subheadline
+
+CHANGE 2 — Add "Built for People Like You" social proof section
+
+Add a new section between the "Why LobsterSandbox?" cards and the "Technical Safety Details" collapsible section.
+
+Section title: "Built for People Like You"
+Subtitle: "Real concerns from real people about OpenClaw. LobsterSandbox is the answer."
+
+Layout: 3 quote cards in a row (stack on mobile). Each card should have:
+- A large subtle quotation mark icon (") at the top left in a light color
+- The quote text in italics
+- An attribution line below in smaller text
+- A one-line LobsterSandbox response in bold below the attribution
+
+Card 1:
+Quote: "I want to join the party, but I don't want to be turned into digital mincemeat by hackers."
+Attribution: — Tech founders asking about OpenClaw on Twitter/X
+Response: "LobsterSandbox keeps your real accounts completely separate."
+
+Card 2:
+Quote: "I can't find a single user in my communities — the concept of AI taking control of everything is too scary."
+Attribution: — Hacker News discussion, February 2026
+Response: "Safe Mode means your agent asks before doing anything risky."
+
+Card 3:
+Quote: "Do not install OpenClaw on your primary computer. There is no perfectly secure setup."
+Attribution: — Security researchers and OpenClaw's own FAQ
+Response: "That's exactly why LobsterSandbox exists. Sandbox first, real setup later."
+
+Style the cards with:
+- Light background (white or very light gray)
+- Subtle shadow or border for definition
+- Consistent height across all three
+- The lobster theme color as an accent (for the quote mark or a top border)
+
+After the 3 cards, add a centered CTA button: "🚀 Ready to try it safely? Launch Your Sandbox" → /setup
