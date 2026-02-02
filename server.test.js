@@ -248,6 +248,11 @@ Session max lifetime enforced`;
       expect(res.status).toBe(302);
     });
 
+    test('GET /api/dashboard without auth returns 302 redirect', async () => {
+      const res = await request(BASE_URL).get('/api/dashboard');
+      expect(res.status).toBe(302);
+    });
+
     let sessionCookie;
     let csrfToken;
 
@@ -345,6 +350,26 @@ Session max lifetime enforced`;
       } else {
         expect(alertLevel).toBeNull();
       }
+    });
+
+    test('GET /api/dashboard returns dashboard data', async () => {
+      if (!sessionCookie) {
+        console.warn('Skipping test: no session cookie');
+        return;
+      }
+      
+      const res = await request(BASE_URL)
+        .get('/api/dashboard')
+        .set('Cookie', sessionCookie);
+      
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('gateway');
+      expect(res.body).toHaveProperty('budget');
+      expect(res.body).toHaveProperty('safety');
+      expect(res.body).toHaveProperty('channels');
+      expect(res.body).toHaveProperty('activity');
+      expect(res.body).toHaveProperty('weeklyUsage');
+      expect(res.body).toHaveProperty('timestamp');
     });
   });
 });

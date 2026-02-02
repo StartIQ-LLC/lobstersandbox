@@ -389,6 +389,9 @@ app.get('/status', requireAuth, async (req, res) => {
 app.post('/api/gateway/start', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.startGateway();
+    if (result.success) {
+      await budgetModule.setGatewayStarted();
+    }
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -398,6 +401,7 @@ app.post('/api/gateway/start', apiLimiter, requireAuth, validateCsrf, async (req
 app.post('/api/gateway/stop', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
     const result = await openclaw.stopGateway();
+    await budgetModule.setGatewayStopped();
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -546,6 +550,7 @@ app.post('/api/wipe-all', apiLimiter, requireAuth, validateCsrf, async (req, res
     }
     logger.info('Wipe initiated', { requestId: req.requestId, event: 'WIPE_INITIATED' });
     await budgetModule.clearBudgetData();
+    await budgetModule.recordWipe();
     const result = await openclaw.wipeEverything();
     res.json(result);
   } catch (err) {
@@ -729,6 +734,44 @@ app.post('/api/usage/reset', apiLimiter, requireAuth, validateCsrf, async (req, 
     res.json({ success: true, usage });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/dashboard', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const [budgetStatus, dashboardState, activityLog, weeklyUsage, gatewayRunning, channels, profile] = await Promise.all([
+      budgetModule.getBudgetStatus(),
+      budgetModule.getDashboardState(),
+      budgetModule.getActivityLog(),
+      budgetModule.getWeeklyUsage(),
+      openclaw.isGatewayRunning(),
+      openclaw.getChannelStatus().catch(() => ({ whatsapp: {}, telegram: {}, discord: {} })),
+      openclaw.getProfile(),
+    ]);
+    
+    const version = await openclaw.getVersion();
+    
+    res.json({
+      gateway: {
+        running: gatewayRunning,
+        startedAt: dashboardState.gatewayStartedAt,
+        version: version || 'Unknown',
+      },
+      budget: budgetStatus,
+      safety: {
+        mode: profile || 'safe',
+        killSwitchReady: true,
+        lastWipe: dashboardState.lastWipe,
+        idleTimeout: 30,
+        maxSession: 8,
+      },
+      channels,
+      activity: activityLog.activities || [],
+      weeklyUsage,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
