@@ -22,7 +22,7 @@ export function landingPage(options = {}) {
         </p>
         
         <!-- Trust Icons Row - No Container -->
-        <div class="flex flex-col items-center gap-2 mb-16">
+        <div class="flex flex-col items-center gap-2 mb-20">
           <div class="flex items-center gap-3">
             <span class="text-xl">🔒</span>
             <span class="font-semibold text-gray-700 text-sm">Real accounts untouched</span>
@@ -140,7 +140,7 @@ export function landingPage(options = {}) {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           <!-- Quote Card 1 -->
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 flex flex-col">
             <div class="text-4xl text-lobster-300 font-serif leading-none mb-2">"</div>
             <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
               I want to join the party, but I don't want to be turned into digital mincemeat by hackers.
@@ -150,7 +150,7 @@ export function landingPage(options = {}) {
           </div>
           
           <!-- Quote Card 2 -->
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 flex flex-col">
             <div class="text-4xl text-lobster-300 font-serif leading-none mb-2">"</div>
             <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
               I can't find a single user in my communities — the concept of AI taking control of everything is too scary.
@@ -160,7 +160,7 @@ export function landingPage(options = {}) {
           </div>
           
           <!-- Quote Card 3 -->
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 flex flex-col">
             <div class="text-4xl text-lobster-300 font-serif leading-none mb-2">"</div>
             <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
               Do not install OpenClaw on your primary computer. There is no perfectly secure setup.
@@ -171,8 +171,8 @@ export function landingPage(options = {}) {
         </div>
         
         <!-- CTA after quotes -->
-        <div class="text-center mt-20 mb-16">
-          <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-lg">
+        <div class="text-center mt-24 mb-24">
+          <a href="/setup" class="inline-flex items-center justify-center px-6 py-3 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-base">
             🚀 Ready to try it safely? Launch Your Sandbox
           </a>
         </div>
