@@ -394,9 +394,16 @@ export function guidePage(options = {}) {
             🚀 Launch Your Sandbox
           </a>
           
-          <p class="text-sm text-green-700 max-w-md mx-auto">
+          <p class="text-sm text-green-700 max-w-md mx-auto mb-4">
             Remember: if anything ever feels off, hit <strong>Kill Switch</strong> to stop or <strong>Wipe Everything</strong> to start fresh. Your real accounts were never involved.
           </p>
+          
+          <div class="pt-4 border-t border-green-200">
+            <p class="text-sm text-green-600 mb-2">Know someone who's scared of OpenClaw? Share the guide.</p>
+            <button onclick="openShareModal('https://lobstersandbox.com/guide', 'Check out the Burner Stack Guide — it shows you how to set up throwaway accounts to try OpenClaw safely. 🦞 https://lobstersandbox.com/guide')" class="text-sm bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-all">
+              📤 Share the Guide
+            </button>
+          </div>
         </div>
       </div>
       

@@ -38,7 +38,7 @@ export function landingPage(options = {}) {
         </div>
         
         <!-- CTAs -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-4">
           <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-lg">
             🚀 Launch Your Sandbox
           </a>
@@ -47,8 +47,7 @@ export function landingPage(options = {}) {
           </a>
         </div>
         
-        <!-- Social Proof -->
-        <p class="text-sm text-gray-500">Join 117K+ people exploring OpenClaw — safely.</p>
+        <button onclick="openShareModal()" class="text-sm text-gray-500 hover:text-red-500 mb-6 transition-colors">📤 Share with a friend</button>
         
         ${configured ? `
         <div class="mt-6">
@@ -58,6 +57,46 @@ export function landingPage(options = {}) {
         </div>
         ` : ''}
       </div>
+      
+      <!-- Community Counter -->
+      <div class="text-center mb-16" id="sandbox-counter-section">
+        <div class="flex items-center justify-center gap-3">
+          <span class="text-3xl">🦞</span>
+          <span id="sandbox-count-display" class="text-4xl font-display font-bold text-gray-800">0</span>
+          <span class="text-lg text-gray-500">sandboxes launched</span>
+        </div>
+      </div>
+      
+      <script>
+        async function loadSandboxCount() {
+          try {
+            const res = await fetch('/api/sandbox-count');
+            if (res.ok) {
+              const data = await res.json();
+              animateCounter(data.count);
+            }
+          } catch {}
+        }
+        
+        function animateCounter(target) {
+          const el = document.getElementById('sandbox-count-display');
+          const duration = 1000;
+          const start = Date.now();
+          
+          function tick() {
+            const elapsed = Date.now() - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(target * eased).toLocaleString();
+            
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+          
+          requestAnimationFrame(tick);
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadSandboxCount);
+      </script>
       
       <!-- SECTION 2: Why LobsterSandbox? (3-column cards) -->
       <div class="mb-16">

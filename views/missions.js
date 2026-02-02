@@ -223,6 +223,16 @@ export function missionsPage(options = {}) {
   <div class="min-h-screen flex flex-col items-center px-4 py-8">
     <div class="w-full max-w-4xl">
       
+      <!-- All Missions Complete Banner (hidden by default) -->
+      <div id="all-missions-complete-banner" class="hidden mb-8 bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400 text-white rounded-2xl p-6 text-center shadow-xl">
+        <div class="text-4xl mb-2">🏆</div>
+        <h2 class="text-2xl font-display font-bold mb-2">All Missions Complete!</h2>
+        <p class="mb-4">You've mastered the sandbox.</p>
+        <button onclick="openShareModal('https://lobstersandbox.com/missions', 'I just completed all 6 LobsterSandbox missions — from first chat to building custom skills. Ready to try OpenClaw safely? 🦞 https://lobstersandbox.com/missions')" class="bg-white text-amber-600 hover:bg-amber-50 px-6 py-2 rounded-xl font-bold transition-all">
+          Share your achievement 📤
+        </button>
+      </div>
+      
       <div class="text-center mb-8">
         <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-800 mb-4">
           🎯 Sandbox Missions
@@ -259,7 +269,10 @@ export function missionsPage(options = {}) {
   <div id="larry-toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-md text-center hidden transition-all duration-300 opacity-0">
     <div class="flex items-center gap-3">
       <span class="text-3xl">🦞</span>
-      <p id="larry-toast-message" class="font-medium"></p>
+      <div class="flex-1">
+        <p id="larry-toast-message" class="font-medium"></p>
+        <button onclick="openShareModal()" class="text-xs text-red-200 hover:text-white mt-1">Share your progress → 📤</button>
+      </div>
     </div>
   </div>
   
@@ -291,6 +304,13 @@ export function missionsPage(options = {}) {
       
       document.getElementById('missions-progress-text').textContent = count + ' of ' + total + ' missions completed';
       document.getElementById('missions-progress-bar').style.width = pct + '%';
+      
+      const banner = document.getElementById('all-missions-complete-banner');
+      if (count === total) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
       
       MISSION_IDS.forEach(id => {
         const card = document.getElementById('mission-card-' + id);

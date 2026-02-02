@@ -22,6 +22,7 @@ import { comparePage } from './views/compare.js';
 import { missionsPage } from './views/missions.js';
 import { pricingPage } from './views/pricing.js';
 import { deployPage } from './views/deploy.js';
+import * as sandboxCount from './lib/sandboxCount.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -284,6 +285,11 @@ app.get('/deploy', (req, res) => {
   res.send(deployPage({ loggedIn, gatewayRunning }));
 });
 
+app.get('/api/sandbox-count', (req, res) => {
+  const count = sandboxCount.getCount();
+  res.json({ count });
+});
+
 app.get('/compare', (req, res) => {
   const loggedIn = isAuthenticated(req);
   const gatewayRunning = openclaw.isGatewayRunning();
@@ -351,6 +357,10 @@ app.post('/setup/run', setupLimiter, requireAuth, validateCsrf, async (req, res)
     
     if (result.success && budgetLimit) {
       await budgetModule.setBudget(budgetLimit, model);
+    }
+    
+    if (result.success) {
+      sandboxCount.incrementCount();
     }
     
     res.json({ success: result.success, stdout: result.stdout, stderr: result.stderr });

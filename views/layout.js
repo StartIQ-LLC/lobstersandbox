@@ -675,6 +675,80 @@ export function layout(title, content, options = {}) {
     }
   </script>
   ` : ''}
+  <!-- Share Modal -->
+  <div id="share-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden" onclick="if(event.target === this) closeShareModal()">
+    <div class="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl w-full">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-display font-bold text-gray-800">📤 Share LobsterSandbox</h2>
+        <button onclick="closeShareModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      </div>
+      <p class="text-gray-600 mb-6">Help someone else try OpenClaw safely.</p>
+      
+      <div class="flex flex-wrap gap-3 mb-6">
+        <button onclick="copyShareLink()" id="share-copy-btn" class="flex-1 min-w-[120px] px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+          📋 Copy Link
+        </button>
+        <a href="https://twitter.com/intent/tweet?text=I%27m%20testing%20OpenClaw%20without%20risking%20my%20real%20accounts%20using%20LobsterSandbox%20%F0%9F%A6%9E&url=https://lobstersandbox.com" target="_blank" class="flex-1 min-w-[120px] px-4 py-3 bg-black hover:bg-gray-800 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+          𝕏 Twitter
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://lobstersandbox.com" target="_blank" class="flex-1 min-w-[120px] px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+          LinkedIn
+        </a>
+        <a href="https://www.reddit.com/submit?url=https://lobstersandbox.com&title=LobsterSandbox%20-%20Try%20OpenClaw%20without%20risking%20your%20real%20accounts" target="_blank" class="flex-1 min-w-[120px] px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+          Reddit
+        </a>
+      </div>
+      
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs text-gray-500 mb-2">Or copy this message:</p>
+        <p id="share-message-text" class="text-sm text-gray-700 leading-relaxed">I'm testing OpenClaw without risking my real accounts. LobsterSandbox gives you throwaway account setup, API cost controls, and a Kill Switch. 🦞 https://lobstersandbox.com</p>
+        <button onclick="copyShareMessage()" class="mt-3 text-sm text-red-500 hover:text-red-600 font-medium">📋 Copy message</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    let shareUrl = 'https://lobstersandbox.com';
+    let shareMessage = "I'm testing OpenClaw without risking my real accounts. LobsterSandbox gives you throwaway account setup, API cost controls, and a Kill Switch. 🦞 https://lobstersandbox.com";
+    
+    function openShareModal(customUrl, customMessage) {
+      if (customUrl) shareUrl = customUrl;
+      if (customMessage) {
+        shareMessage = customMessage;
+        document.getElementById('share-message-text').textContent = customMessage;
+      }
+      document.getElementById('share-modal').classList.remove('hidden');
+    }
+    
+    function closeShareModal() {
+      document.getElementById('share-modal').classList.add('hidden');
+    }
+    
+    async function copyShareLink() {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        const btn = document.getElementById('share-copy-btn');
+        btn.innerHTML = '✅ Copied!';
+        setTimeout(() => { btn.innerHTML = '📋 Copy Link'; }, 2000);
+      } catch (err) {
+        alert('Copy failed: ' + err.message);
+      }
+    }
+    
+    async function copyShareMessage() {
+      try {
+        await navigator.clipboard.writeText(shareMessage);
+        alert('Message copied!');
+      } catch (err) {
+        alert('Copy failed: ' + err.message);
+      }
+    }
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeShareModal();
+    });
+  </script>
+
   <footer class="text-center text-xs text-gray-400 py-6 space-y-2">
     <div class="flex flex-wrap justify-center gap-4 mb-2">
       <a href="/" class="hover:text-gray-600">Home</a>
@@ -683,6 +757,7 @@ export function layout(title, content, options = {}) {
       <a href="/compare" class="hover:text-gray-600">Why LobsterSandbox?</a>
       <a href="https://docs.openclaw.ai/" target="_blank" class="hover:text-gray-600">OpenClaw Docs</a>
     </div>
+    <div class="mb-2">Built by lobster lovers for the OpenClaw community. <button onclick="openShareModal()" class="text-red-400 hover:text-red-500 font-medium">📤 Share LobsterSandbox</button></div>
     <div>LobsterSandbox v1.2.3</div>
     <div>Unofficial community tool. Not affiliated with OpenClaw.</div>
     <div>Bring your own API keys. Do not connect sensitive accounts on day one.</div>

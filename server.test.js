@@ -153,6 +153,36 @@ describe('LobsterSandbox Security Tests', () => {
       expect(res.text).toContain('Recommended');
     });
 
+    test('GET /api/sandbox-count returns a number', async () => {
+      const res = await request(BASE_URL).get('/api/sandbox-count');
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('count');
+      expect(typeof res.body.count).toBe('number');
+      expect(res.body.count).toBeGreaterThanOrEqual(127);
+    });
+
+    test('Homepage contains sandbox counter section', async () => {
+      const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('sandbox-count-display');
+      expect(res.text).toContain('sandboxes launched');
+    });
+
+    test('Homepage contains share modal', async () => {
+      const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('share-modal');
+      expect(res.text).toContain('Share LobsterSandbox');
+      expect(res.text).toContain('openShareModal');
+    });
+
+    test('Footer contains share link', async () => {
+      const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('Share LobsterSandbox');
+      expect(res.text).toContain('Built by lobster lovers');
+    });
+
     test('Copy Checklist text does not contain Mode: or token patterns', () => {
       const checklistText = `LobsterSandbox Safety Checklist
 Auth required for protected routes
