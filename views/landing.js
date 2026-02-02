@@ -102,10 +102,10 @@ export function landingPage(options = {}) {
       <div class="mb-24">
         <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Why LobsterSandbox?</h2>
         <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">The safe way to explore AI agents without the risk</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
           
           <!-- Card 1: The Problem -->
-          <div class="card p-8">
+          <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow">
             <div class="text-3xl mb-4">😰</div>
             <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Problem</h3>
             <p class="text-gray-600 text-sm leading-relaxed">
@@ -114,7 +114,7 @@ export function landingPage(options = {}) {
           </div>
           
           <!-- Card 2: The Solution -->
-          <div class="card p-8">
+          <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow">
             <div class="text-3xl mb-4">🦞</div>
             <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Solution</h3>
             <p class="text-gray-600 text-sm leading-relaxed">
@@ -123,7 +123,7 @@ export function landingPage(options = {}) {
           </div>
           
           <!-- Card 3: The Safety Net -->
-          <div class="card p-8">
+          <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow">
             <div class="text-3xl mb-4">🔄</div>
             <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Safety Net</h3>
             <p class="text-gray-600 text-sm leading-relaxed">
@@ -141,35 +141,35 @@ export function landingPage(options = {}) {
         <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Built for People Like You</h2>
         <p class="text-gray-500 text-center mb-12 max-w-xl mx-auto">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
           
           <!-- Quote Card 1 -->
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex flex-col hover:shadow-md transition-shadow">
-            <div class="text-4xl text-lobster-300 font-serif leading-none mb-3">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-5 flex-grow">
+          <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col hover:shadow-lg transition-shadow">
+            <div class="text-3xl text-lobster-300 font-serif leading-none mb-2">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
               I want to join the party, but I don't want to be turned into digital mincemeat by hackers.
             </p>
-            <p class="text-xs text-gray-400 mb-4">— Tech founders asking about OpenClaw on Twitter/X</p>
+            <p class="text-xs text-gray-400 mb-3">— Tech founders asking about OpenClaw on Twitter/X</p>
             <p class="text-sm font-semibold text-lobster-600">LobsterSandbox keeps your real accounts completely separate.</p>
           </div>
           
           <!-- Quote Card 2 -->
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex flex-col hover:shadow-md transition-shadow">
-            <div class="text-4xl text-lobster-300 font-serif leading-none mb-3">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-5 flex-grow">
+          <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col hover:shadow-lg transition-shadow">
+            <div class="text-3xl text-lobster-300 font-serif leading-none mb-2">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
               I can't find a single user in my communities — the concept of AI taking control of everything is too scary.
             </p>
-            <p class="text-xs text-gray-400 mb-4">— Hacker News discussion, February 2026</p>
+            <p class="text-xs text-gray-400 mb-3">— Hacker News discussion, February 2026</p>
             <p class="text-sm font-semibold text-lobster-600">Safe Mode means your agent asks before doing anything risky.</p>
           </div>
           
           <!-- Quote Card 3 -->
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 flex flex-col hover:shadow-md transition-shadow">
-            <div class="text-4xl text-lobster-300 font-serif leading-none mb-3">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-5 flex-grow">
+          <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col hover:shadow-lg transition-shadow">
+            <div class="text-3xl text-lobster-300 font-serif leading-none mb-2">"</div>
+            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
               Do not install OpenClaw on your primary computer. There is no perfectly secure setup.
             </p>
-            <p class="text-xs text-gray-400 mb-4">— Security researchers and OpenClaw's own FAQ</p>
+            <p class="text-xs text-gray-400 mb-3">— Security researchers and OpenClaw's own FAQ</p>
             <p class="text-sm font-semibold text-lobster-600">That's exactly why LobsterSandbox exists. Sandbox first, real setup later.</p>
           </div>
         </div>
