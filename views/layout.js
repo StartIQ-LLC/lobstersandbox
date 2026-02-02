@@ -232,6 +232,15 @@ export function layout(title, content, options = {}) {
       30% { transform: translateY(-6px); }
     }
     
+    /* Shimmer animation for progress bar */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .animate-shimmer {
+      animation: shimmer 2s infinite;
+    }
+    
     /* Pulse animation for attention */
     @keyframes pulse-ring {
       0% { transform: scale(1); opacity: 1; }

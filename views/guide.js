@@ -26,8 +26,10 @@ export function guidePage(options = {}) {
           <span class="text-sm font-medium text-gray-700" id="progress-text">0 of 4 steps completed</span>
           <span class="text-xs text-gray-400">Progress saved automatically</span>
         </div>
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
-          <div id="progress-bar" class="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500 ease-out" style="width: 0%"></div>
+        <div class="h-3 bg-gray-200 rounded-full overflow-hidden mb-4 shadow-inner">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-green-400 via-green-500 to-emerald-500 transition-all duration-700 ease-out relative" style="width: 0%">
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+          </div>
         </div>
         <div class="flex justify-between">
           <div class="flex flex-col items-center">
@@ -269,9 +271,32 @@ export function guidePage(options = {}) {
                 </div>
               </div>
               
+              <!-- Moonshot AI Kimi K2 Option -->
+              <div class="bg-gray-50 rounded-lg p-4">
+                <h3 class="font-semibold text-gray-800 mb-3">Option D — Moonshot AI Kimi K2 (powerful & cheap)</h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                  <li>1. <a href="https://platform.moonshot.ai" target="_blank" class="text-lobster-600 hover:underline font-medium">Go to platform.moonshot.ai →</a> — Create account</li>
+                  <li>2. Add $5 credit (you get a $5 bonus on first deposit!)</li>
+                  <li>3. Go to Console → Create API Key</li>
+                  <li>4. Set spending limit in billing settings</li>
+                </ul>
+                
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-3 mt-3 text-sm">
+                  <p class="text-purple-800">
+                    <strong>🔥 Why Kimi K2?</strong> 1 trillion parameters, 256K context window, frontier-level coding performance — at just <strong>$0.60/M input tokens</strong>. That's 5x cheaper than Claude Sonnet.
+                  </p>
+                </div>
+                
+                <div class="bg-lobster-50 border border-lobster-200 rounded-lg p-3 mt-3 text-sm">
+                  <p class="text-lobster-800">
+                    <span class="text-lg">🦞</span> <strong>Larry says:</strong> Kimi K2 is the new hotness. Incredible value if you want power without breaking the bank.
+                  </p>
+                </div>
+              </div>
+              
               <!-- Ollama Option -->
               <div class="bg-gray-50 rounded-lg p-4">
-                <h3 class="font-semibold text-gray-800 mb-3">Option D — Run models locally for free</h3>
+                <h3 class="font-semibold text-gray-800 mb-3">Option E — Run models locally for free</h3>
                 <ul class="space-y-2 text-sm text-gray-600">
                   <li>1. Install Ollama from <a href="https://ollama.ai" target="_blank" class="text-lobster-600 hover:underline font-medium">ollama.ai →</a></li>
                   <li>2. Run in terminal: <code class="bg-gray-200 px-1 rounded">ollama pull llama3</code></li>
@@ -443,12 +468,12 @@ export function guidePage(options = {}) {
         
         if (checkbox && checkbox.checked) {
           indicator.classList.remove('bg-gray-200', 'text-gray-500');
-          indicator.classList.add('bg-green-500', 'text-white');
+          indicator.classList.add('bg-green-500', 'text-white', 'scale-110', 'shadow-lg', 'shadow-green-200');
           indicator.innerHTML = '✓';
           checkmark.classList.remove('hidden');
         } else {
           indicator.classList.add('bg-gray-200', 'text-gray-500');
-          indicator.classList.remove('bg-green-500', 'text-white');
+          indicator.classList.remove('bg-green-500', 'text-white', 'scale-110', 'shadow-lg', 'shadow-green-200');
           indicator.innerHTML = i;
           checkmark.classList.add('hidden');
         }
