@@ -7,10 +7,12 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "build:css": "npx tailwindcss -i ./public/input.css -o ./public/styles.css --minify",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=10000"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.72.1",
+    "autoprefixer": "^10.4.24",
     "cookie": "^1.1.1",
     "cookie-parser": "^1.4.7",
     "drizzle-zod": "^0.8.3",
@@ -20,7 +22,10 @@
     "jest": "^30.2.0",
     "p-limit": "^7.2.0",
     "p-retry": "^7.1.1",
+    "postcss": "^8.5.6",
     "supertest": "^7.2.2",
+    "tailwindcss": "^4.1.18",
+    "winston": "^3.19.0",
     "zod": "^4.3.6",
     "zod-validation-error": "^5.0.0"
   },

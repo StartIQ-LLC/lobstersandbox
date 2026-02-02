@@ -8,6 +8,7 @@ import crypto from 'crypto';
 
 import * as openclaw from './lib/openclaw.js';
 import * as assistant from './lib/assistant.js';
+import logger, { logRequest, logSecurityEvent } from './lib/logger.js';
 import { landingPage } from './views/landing.js';
 import { loginPage, setupWizardPage } from './views/setup.js';
 import { statusPage } from './views/status.js';
@@ -23,14 +24,14 @@ const OPENCLAW_GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN;
 const OPENCLAW_PORT = parseInt(process.env.OPENCLAW_PORT || '18789', 10);
 
 if (!SETUP_PASSWORD) {
-  console.error('ERROR: SETUP_PASSWORD environment variable is required');
+  logger.error('SETUP_PASSWORD environment variable is required');
   process.exit(1);
 }
 
 const SETUP_PASSWORD_HASH = crypto.createHash('sha256').update(SETUP_PASSWORD).digest();
 
 if (!OPENCLAW_GATEWAY_TOKEN) {
-  console.error('ERROR: OPENCLAW_GATEWAY_TOKEN environment variable is required');
+  logger.error('OPENCLAW_GATEWAY_TOKEN environment variable is required');
   process.exit(1);
 }
 
@@ -52,10 +53,12 @@ function validateCsrf(req, res, next) {
   const csrfToken = req.body?.csrf_token || req.headers['x-csrf-token'];
   
   if (!sessionToken || !csrfTokens.has(sessionToken)) {
+    logSecurityEvent('CSRF_INVALID_SESSION', { requestId: req.requestId, path: req.path });
     return res.status(403).json({ success: false, error: 'Invalid session' });
   }
   
   if (csrfTokens.get(sessionToken) !== csrfToken) {
+    logSecurityEvent('CSRF_TOKEN_MISMATCH', { requestId: req.requestId, path: req.path });
     return res.status(403).json({ success: false, error: 'Invalid CSRF token' });
   }
   
@@ -81,9 +84,11 @@ function validateOrigin(req, res, next) {
     try {
       const originHost = new URL(origin).hostname;
       if (originHost !== allowedHost && originHost !== 'localhost' && originHost !== '127.0.0.1') {
+        logSecurityEvent('ORIGIN_MISMATCH', { requestId: req.requestId, origin, path: req.path });
         return res.status(403).json({ success: false, error: 'Invalid origin' });
       }
     } catch {
+      logSecurityEvent('ORIGIN_PARSE_ERROR', { requestId: req.requestId, origin, path: req.path });
       return res.status(403).json({ success: false, error: 'Invalid origin' });
     }
   }
@@ -92,9 +97,11 @@ function validateOrigin(req, res, next) {
     try {
       const refererHost = new URL(referer).hostname;
       if (refererHost !== allowedHost && refererHost !== 'localhost' && refererHost !== '127.0.0.1') {
+        logSecurityEvent('REFERER_MISMATCH', { requestId: req.requestId, referer, path: req.path });
         return res.status(403).json({ success: false, error: 'Invalid referer' });
       }
     } catch {
+      logSecurityEvent('REFERER_PARSE_ERROR', { requestId: req.requestId, referer, path: req.path });
       return res.status(403).json({ success: false, error: 'Invalid referer' });
     }
   }
@@ -113,12 +120,14 @@ function isAuthenticated(req) {
   const now = Date.now();
   
   if ((now - session.created) > SESSION_MAX_LIFETIME_MS) {
+    logSecurityEvent('SESSION_MAX_LIFETIME_EXPIRED', { sessionAge: now - session.created });
     sessionTokens.delete(token);
     csrfTokens.delete(token);
     return false;
   }
   
   if (session.lastActivity && (now - session.lastActivity) > SESSION_IDLE_TIMEOUT_MS) {
+    logSecurityEvent('SESSION_IDLE_TIMEOUT', { idleTime: now - session.lastActivity });
     sessionTokens.delete(token);
     csrfTokens.delete(token);
     return false;
@@ -152,6 +161,7 @@ async function requirePowerMode(req, res, next) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(logRequest);
 
 app.get('/favicon.ico', (req, res) => {
   res.redirect('/favicon.png');
@@ -230,8 +240,10 @@ app.post('/setup/login', setupLimiter, (req, res) => {
       sameSite: 'lax',
       maxAge: 12 * 60 * 60 * 1000
     });
+    logger.info('Login successful', { requestId: req.requestId, event: 'LOGIN_SUCCESS' });
     res.redirect('/setup');
   } else {
+    logSecurityEvent('LOGIN_FAILED', { requestId: req.requestId, ip: req.ip });
     res.send(loginPage('Invalid password'));
   }
 });
@@ -469,8 +481,10 @@ app.post('/api/wipe-all', apiLimiter, requireAuth, validateCsrf, async (req, res
   try {
     const { password } = req.body;
     if (password !== SETUP_PASSWORD) {
+      logSecurityEvent('WIPE_PASSWORD_MISMATCH', { requestId: req.requestId });
       return res.status(403).json({ success: false, error: 'Invalid password. Wipe requires password confirmation.' });
     }
+    logger.info('Wipe initiated', { requestId: req.requestId, event: 'WIPE_INITIATED' });
     const result = await openclaw.wipeEverything();
     res.json(result);
   } catch (err) {
@@ -724,19 +738,13 @@ server.on('upgrade', (req, socket, head) => {
 });
 
 server.listen(PORT, '0.0.0.0', async () => {
-  console.log(`LobsterSandbox running on http://0.0.0.0:${PORT}`);
-  console.log('');
-  console.log('Routes:');
-  console.log('  /         - Landing page');
-  console.log('  /setup    - Setup wizard (password protected)');
-  console.log('  /status   - System status and logs');
-  console.log('  /openclaw - OpenClaw Control UI (proxied)');
-  console.log('');
+  logger.info(`LobsterSandbox running on http://0.0.0.0:${PORT}`);
+  logger.info('Routes: / (landing), /setup (wizard), /status (status), /openclaw (proxy)');
   
   try {
     const version = await openclaw.getVersion();
-    console.log('OpenClaw version:', version);
+    logger.info(`OpenClaw version: ${version}`);
   } catch (err) {
-    console.log('OpenClaw CLI:', err.message);
+    logger.warn(`OpenClaw CLI: ${err.message}`);
   }
 });
