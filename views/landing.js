@@ -21,21 +21,19 @@ export function landingPage(options = {}) {
           Your safe playground for AI agents. Use throwaway accounts, set a spending cap, and wipe everything with one click if anything feels off.
         </p>
         
-        <!-- Trust Icons Row - Compact Vertical Strip -->
-        <div class="flex justify-center mb-10">
-          <div class="bg-gray-50 border border-gray-200 rounded-xl px-8 py-5 space-y-3">
-            <div class="flex items-center gap-3">
-              <span class="text-xl">🔒</span>
-              <span class="font-semibold text-gray-700 text-sm">Real accounts untouched</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="text-xl">💰</span>
-              <span class="font-semibold text-gray-700 text-sm">You control spending</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="text-xl">🗑️</span>
-              <span class="font-semibold text-gray-700 text-sm">One-click fresh start</span>
-            </div>
+        <!-- Trust Icons Row - No Container -->
+        <div class="flex flex-col items-center gap-2 mb-12">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🔒</span>
+            <span class="font-semibold text-gray-700 text-sm">Real accounts untouched</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xl">💰</span>
+            <span class="font-semibold text-gray-700 text-sm">You control spending</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🗑️</span>
+            <span class="font-semibold text-gray-700 text-sm">One-click fresh start</span>
           </div>
         </div>
         
@@ -96,9 +94,9 @@ export function landingPage(options = {}) {
       </div>
       
       <!-- SECTION 3: Built for People Like You (Social Proof Quotes) -->
-      <div class="mb-20 pt-4">
-        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Built for People Like You</h2>
-        <p class="text-gray-500 text-center mb-10">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
+      <div class="mb-20 pt-10">
+        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-4">Built for People Like You</h2>
+        <p class="text-gray-500 text-center mb-12">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           
@@ -134,7 +132,7 @@ export function landingPage(options = {}) {
         </div>
         
         <!-- CTA after quotes -->
-        <div class="text-center mt-12 mb-4">
+        <div class="text-center mt-16 mb-16">
           <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-lg">
             🚀 Ready to try it safely? Launch Your Sandbox
           </a>
