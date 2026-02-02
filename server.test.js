@@ -253,6 +253,11 @@ Session max lifetime enforced`;
       expect(res.status).toBe(302);
     });
 
+    test('GET /missions without auth returns 302 redirect', async () => {
+      const res = await request(BASE_URL).get('/missions');
+      expect(res.status).toBe(302);
+    });
+
     let sessionCookie;
     let csrfToken;
 
@@ -370,6 +375,23 @@ Session max lifetime enforced`;
       expect(res.body).toHaveProperty('activity');
       expect(res.body).toHaveProperty('weeklyUsage');
       expect(res.body).toHaveProperty('timestamp');
+    });
+
+    test('GET /missions returns missions page with mission content', async () => {
+      if (!sessionCookie) {
+        console.warn('Skipping test: no session cookie');
+        return;
+      }
+      
+      const res = await request(BASE_URL)
+        .get('/missions')
+        .set('Cookie', sessionCookie);
+      
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('Sandbox Missions');
+      expect(res.text).toContain('Hello, Lobster!');
+      expect(res.text).toContain('Research Assistant');
+      expect(res.text).toContain('missions completed');
     });
   });
 });
