@@ -183,6 +183,36 @@ describe('LobsterSandbox Security Tests', () => {
       expect(res.text).toContain('Built by lobster lovers');
     });
 
+    test('GET /graduate returns 200 and contains Graduate to Production content', async () => {
+      const res = await request(BASE_URL).get('/graduate');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('Graduate to Production');
+      expect(res.text).toContain('Before you graduate');
+      expect(res.text).toContain('Export Your Sandbox Config');
+      expect(res.text).toContain('Install OpenClaw');
+      expect(res.text).toContain('Deploy to the Cloud');
+      expect(res.text).toContain('feedback-form');
+    });
+
+    test('GET /api/config-export without auth returns 302 redirect', async () => {
+      const res = await request(BASE_URL).get('/api/config-export');
+      expect(res.status).toBe(302);
+    });
+
+    test('POST /api/feedback requires CSRF token', async () => {
+      const res = await request(BASE_URL)
+        .post('/api/feedback')
+        .send({ feedback: 'Great app!' });
+      expect(res.status).toBe(403);
+    });
+
+    test('Footer contains Graduate link', async () => {
+      const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('/graduate');
+      expect(res.text).toContain('Graduate');
+    });
+
     test('Copy Checklist text does not contain Mode: or token patterns', () => {
       const checklistText = `LobsterSandbox Safety Checklist
 Auth required for protected routes

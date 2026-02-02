@@ -756,6 +756,8 @@ export function layout(title, content, options = {}) {
       <a href="/deploy" class="hover:text-gray-600">Deploy</a>
       <a href="/compare" class="hover:text-gray-600">Why LobsterSandbox?</a>
       <a href="https://docs.openclaw.ai/" target="_blank" class="hover:text-gray-600">OpenClaw Docs</a>
+      <span class="mx-1 text-gray-300">|</span>
+      <a href="/graduate" class="hover:text-gray-600">🎓 Graduate</a>
     </div>
     <div class="mb-2">Built by lobster lovers for the OpenClaw community. <button onclick="openShareModal()" class="text-red-400 hover:text-red-500 font-medium">📤 Share LobsterSandbox</button></div>
     <div>LobsterSandbox v1.2.3</div>

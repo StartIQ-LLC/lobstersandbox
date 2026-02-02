@@ -22,7 +22,9 @@ import { comparePage } from './views/compare.js';
 import { missionsPage } from './views/missions.js';
 import { pricingPage } from './views/pricing.js';
 import { deployPage } from './views/deploy.js';
+import { graduatePage } from './views/graduate.js';
 import * as sandboxCount from './lib/sandboxCount.js';
+import * as feedback from './lib/feedback.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -288,6 +290,47 @@ app.get('/deploy', (req, res) => {
 app.get('/api/sandbox-count', (req, res) => {
   const count = sandboxCount.getCount();
   res.json({ count });
+});
+
+app.get('/graduate', (req, res) => {
+  const loggedIn = isAuthenticated(req);
+  const gatewayRunning = openclaw.isGatewayRunning();
+  res.send(graduatePage({ loggedIn, gatewayRunning }));
+});
+
+app.get('/api/config-export', requireAuth, (req, res) => {
+  const profile = openclaw.loadProfile();
+  const budget = budgetModule.getBudget();
+  
+  const exportData = {
+    exported_from: 'LobsterSandbox',
+    exported_at: new Date().toISOString(),
+    version: '1.2.3',
+    settings: {
+      safe_mode: profile.safeMode !== false,
+      model_preference: profile.modelPreference || 'claude-3-haiku',
+      budget_limit: budget.limit || 0,
+      channels_configured: profile.channels || []
+    },
+    note: 'Import these settings into your OpenClaw instance. API keys must be re-entered manually for security.'
+  };
+  
+  res.json(exportData);
+});
+
+app.post('/api/feedback', validateCsrf, (req, res) => {
+  const { feedback: text } = req.body;
+  if (!text || typeof text !== 'string' || text.trim().length === 0) {
+    return res.status(400).json({ error: 'Feedback text is required' });
+  }
+  
+  try {
+    feedback.saveFeedback(text.trim());
+    res.json({ success: true });
+  } catch (err) {
+    logger.error('Failed to save feedback', { error: err.message });
+    res.status(500).json({ error: 'Failed to save feedback' });
+  }
 });
 
 app.get('/compare', (req, res) => {
