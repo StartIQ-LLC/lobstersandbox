@@ -43,6 +43,8 @@ LobsterSandbox is built with Node.js 22 and Express.js, utilizing server-rendere
 - **Sandbox Missions**: Guided tutorial system with 6 interactive missions (Hello Lobster, Research Assistant, Personal Scribe, Discord Buddy, Cron Master, Skill Builder), localStorage progress tracking, expandable step-by-step panels, Larry celebration toasts.
 - **Pricing Page**: Three-tier pricing (Explorer $0/free, Pro $19/month, Team $49/month) with feature lists, CTAs, "Most Popular" badge on Pro card, and 6-question FAQ accordion.
 - **Deploy Page**: 4 deploy option cards (Replit recommended/prominent, Railway, Render, Docker collapsible), 5-step "What happens after you deploy?" section, safety reassurance; linked from homepage and footer.
+- **Share & Viral Mechanics**: Reusable share modal (Copy Link, Twitter/X, LinkedIn, Reddit) with customizable URL/message, share triggers on homepage hero/Guide completion/mission toasts/all-missions-complete banner, footer share link.
+- **Community Counter**: "🦞 [NUMBER] sandboxes launched" counter on homepage with animated count-up (1-second cubic easing), file-based persistence in data/sandbox-count.json starting at 127, increments on successful setup completion, GET /api/sandbox-count endpoint.
 - **Safety Modes**: "Safe Mode" (default) and "Power Mode" with distinct access levels to sensitive features like channel and tool setup.
 
 ## External Dependencies
