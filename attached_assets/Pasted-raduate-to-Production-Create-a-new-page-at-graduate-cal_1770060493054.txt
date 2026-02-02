@@ -1,0 +1,110 @@
+raduate to Production
+Create a new page at /graduate called "Graduate to Production." Add a link to this page from the footer navigation. Do NOT add it to the main top nav — this is for users who are ready to leave the sandbox, not something we want to promote prominently.
+
+PAGE HEADER:
+Title: "🎓 Graduate to Production"
+Subtitle: "You've outgrown the sandbox. Here's how to run OpenClaw for real."
+Text: "LobsterSandbox was your training wheels. Now you're ready to set up a full OpenClaw instance with your real accounts, real infrastructure, and real workflows. Here's how to make the transition safely."
+
+SECTION 1 — "Are You Ready?" (checklist)
+Title: "Before you graduate, make sure you've:"
+Checklist (visual only, not interactive — just styled like a checklist):
+- ✅ Completed at least a few Sandbox Missions
+- ✅ Understand how OpenClaw agents, channels, and skills work
+- ✅ Know which AI model you want to use and roughly what it costs
+- ✅ Decided which channels you want to connect (WhatsApp, Discord, Telegram, etc.)
+- ✅ Set a real budget for API costs
+
+Small reassurance text: "Not there yet? No rush. Your sandbox isn't going anywhere."
+Link: "← Back to Sandbox Missions" → /missions
+
+SECTION 2 — "Export Your Config" (Pro feature)
+Title: "Step 1: Export Your Sandbox Config"
+Description: "Download your current sandbox configuration so you can import it into a fresh OpenClaw installation. This includes your model preferences, safe mode settings, and channel configurations. API keys are NOT included in the export for security."
+
+If user is on Pro plan (or for now, just show this to everyone with a note):
+Button: "📦 Download Config Export" — this should trigger a download of a JSON file called lobstersandbox-config-export.json
+
+The exported JSON should include:
+{
+  "exported_from": "LobsterSandbox",
+  "exported_at": "[ISO timestamp]",
+  "version": "[current version]",
+  "settings": {
+    "safe_mode": true/false,
+    "model_preference": "[selected model]",
+    "budget_limit": [number],
+    "channels_configured": ["list", "of", "channels"]
+  },
+  "note": "Import these settings into your OpenClaw instance. API keys must be re-entered manually for security."
+}
+
+Note below button: "🔒 API keys are never included in exports. You'll re-enter them in your new setup."
+If not on Pro: show the export section but with a note: "Config export is a Pro feature. Upgrade to export your settings." with link to /pricing.
+
+SECTION 3 — "Set Up Production OpenClaw" (the main guide)
+Title: "Step 2: Install OpenClaw"
+Description: "Follow the official setup on your own machine or cloud server."
+
+Numbered steps:
+1. "Install OpenClaw" — code block:
+   curl -fsSL https://www.openclaw.com/install.sh | bash
+   openclaw onboard --install-daemon
+   
+   Note: "Requires Node.js 22+. The installer handles dependencies."
+
+2. "Open the Control UI" — text:
+   "Once installed, open http://127.0.0.1:18789 in your browser. This is your OpenClaw dashboard — same interface you used in the sandbox, but now it's yours."
+
+3. "Add your API key" — text:
+   "Go to Settings → Model Configuration and enter your API key. If you exported your config, your model preference is noted in the export file."
+
+4. "Connect your real channels" — text:
+   "Now you can connect your actual WhatsApp, Discord, Telegram, or other accounts. The sandbox taught you how each channel works — now do it with your real accounts."
+   Warning box (amber): "⚠️ This is the point of no return for account safety. You're connecting real accounts now. LobsterSandbox safety controls (Kill Switch, Wipe) only work inside the sandbox — they won't protect your production instance."
+
+5. "Set up your own cost controls" — text:
+   "OpenClaw doesn't have built-in budget limits. Set spending caps directly with your API provider:"
+   - "Anthropic: console.anthropic.com → Settings → Spend Limits"
+   - "OpenAI: platform.openai.com → Settings → Limits"
+   - "OpenRouter: openrouter.ai → Settings → Credit Limit"
+
+6. "Run a health check" — code block:
+   openclaw doctor
+   
+   Text: "This verifies your installation. Fix any issues it flags before going further."
+
+SECTION 4 — "Cloud Deployment Options"
+Title: "Step 3: Deploy to the Cloud (Optional)"
+Description: "If you want your agent running 24/7, deploy to a cloud provider."
+
+Three small cards side by side (not as detailed as /deploy — just quick links):
+- Railway: "One-click deploy. $5/mo." → link to Railway OpenClaw template (placeholder)
+- DigitalOcean: "1-Click Droplet. $24/mo." → link to DigitalOcean marketplace (placeholder)  
+- Docker/VPS: "Any Linux server with Docker." → link to OpenClaw Docker docs (placeholder)
+
+Text: "For detailed deployment instructions, see the official OpenClaw docs at docs.openclaw.com"
+
+SECTION 5 — "Keep Your Sandbox"
+Title: "You don't have to choose"
+Description: "Many users keep their sandbox running alongside their production setup. Use the sandbox to test new skills, try risky configurations, or experiment with new channels before connecting them to your real accounts. That's what it's there for."
+
+CTA: "← Back to Your Sandbox" → /status
+
+SECTION 6 — Feedback
+Title: "How was your LobsterSandbox experience?"
+Description: "We'd love to hear how the sandbox helped you get started with OpenClaw."
+Simple feedback box: textarea with placeholder "Tell us what worked, what didn't, and what you'd add..."
+Button: "Send Feedback"
+On submit: store feedback in database/JSON file (POST /api/feedback with the text), show a thank-you message: "🦞 Thanks! Your feedback helps us make LobsterSandbox better for the next person."
+Note: "You can also open issues or contribute at github.com/lobstersandbox/lobstersandbox"
+
+DESIGN:
+- This page should feel mature and empowering — the user has grown
+- Clean, documentation-style layout — more text-heavy than other pages, that's fine
+- Code blocks should be styled with monospace font and copy buttons
+- Warning boxes should be clear and attention-grabbing (amber background)
+- The "keep your sandbox" section should feel warm and reassuring
+- Mobile responsive, all code blocks scroll horizontally if needed
+- Consistent with site theme, footer, Larry chatbot
+- All existing tests should pass. Add tests for: /graduate route, GET /api/feedback or POST /api/feedback endpoint, config export endpoint.
