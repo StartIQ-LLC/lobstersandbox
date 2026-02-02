@@ -113,4 +113,34 @@ describe('LobsterSandbox Security Tests', () => {
       expect(res.body.error).toMatch(/Power Mode/i);
     });
   });
+
+  describe('Landing Page Safety Checklist', () => {
+    test('GET / returns 200 and contains Safety Checklist', async () => {
+      const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('Safety Checklist');
+    });
+
+    test('Copy Checklist text does not contain Mode: or token patterns', () => {
+      const checklistText = `LobsterSandbox Safety Checklist
+Auth required for protected routes
+CSRF enforced on POST routes
+Origin and Referer validation on POST
+WebSocket upgrades require a valid session
+Gateway binds to loopback only
+Gateway reachable only through reverse proxy
+Kill switch available
+Wipe requires typed WIPE plus password
+Power Mode requires typed POWER for channels and tools
+Session idle timeout enforced
+Session max lifetime enforced`;
+      
+      expect(checklistText).not.toMatch(/Mode:/);
+      expect(checklistText).not.toMatch(/OPENCLAW/i);
+      expect(checklistText).not.toMatch(/API_KEY/i);
+      expect(checklistText).not.toMatch(/TOKEN/i);
+      expect(checklistText).not.toMatch(/sk-[a-zA-Z0-9]/);
+      expect(checklistText).not.toMatch(/[a-f0-9]{32}/i);
+    });
+  });
 });

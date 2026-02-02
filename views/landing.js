@@ -25,28 +25,91 @@ export function landingPage(profile = null) {
       
       <!-- Safety Checklist -->
       <div class="card p-6 mb-6">
-        <h2 class="font-display font-bold text-gray-800 mb-4 text-lg flex items-center justify-center gap-2">
-          <span class="text-xl">🛡️</span> Safety Checklist
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-3 rounded-xl">
-            <span class="text-green-500 font-bold">✓</span>
-            <span class="font-medium">Loopback Only</span>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display font-bold text-gray-800 text-lg flex items-center gap-2">
+            <span class="text-xl">🛡️</span> Safety Checklist
+          </h2>
+          <div class="flex items-center gap-2">
+            <span id="copy-checklist-result" class="text-xs text-green-600 hidden"></span>
+            <button onclick="copyChecklist()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-lg transition-colors">
+              📋 Copy Checklist
+            </button>
           </div>
-          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-3 rounded-xl">
+        </div>
+        <p class="text-sm text-gray-500 mb-4 text-center">LobsterSandbox enforces these protections by default:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
             <span class="text-green-500 font-bold">✓</span>
-            <span class="font-medium">Token Required</span>
+            <span class="font-medium">Auth required for protected routes</span>
           </div>
-          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-3 rounded-xl">
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
             <span class="text-green-500 font-bold">✓</span>
-            <span class="font-medium">Kill Switch</span>
+            <span class="font-medium">CSRF enforced on POST routes</span>
           </div>
-          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-3 rounded-xl">
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
             <span class="text-green-500 font-bold">✓</span>
-            <span class="font-medium">Wipe & Reset</span>
+            <span class="font-medium">Origin and Referer validation on POST</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">WebSocket upgrades require valid session</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">Gateway binds to loopback only</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">Gateway reachable only through reverse proxy</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">Kill switch available</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">Wipe requires typed WIPE plus password</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">Power Mode requires typed POWER</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">Session idle timeout enforced</span>
+          </div>
+          <div class="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-lg md:col-span-2 md:justify-center">
+            <span class="text-green-500 font-bold">✓</span>
+            <span class="font-medium">Session max lifetime enforced</span>
           </div>
         </div>
       </div>
+      
+      <script>
+        async function copyChecklist() {
+          const checklist = \`LobsterSandbox Safety Checklist
+Auth required for protected routes
+CSRF enforced on POST routes
+Origin and Referer validation on POST
+WebSocket upgrades require a valid session
+Gateway binds to loopback only
+Gateway reachable only through reverse proxy
+Kill switch available
+Wipe requires typed WIPE plus password
+Power Mode requires typed POWER for channels and tools
+Session idle timeout enforced
+Session max lifetime enforced\`;
+          try {
+            await navigator.clipboard.writeText(checklist);
+            const result = document.getElementById('copy-checklist-result');
+            result.textContent = '✓ Copied!';
+            result.classList.remove('hidden');
+            setTimeout(() => result.classList.add('hidden'), 2000);
+          } catch (err) {
+            alert('Copy failed: ' + err.message);
+          }
+        }
+      </script>
       
       <!-- What is this -->
       <div class="card p-6 text-left">
