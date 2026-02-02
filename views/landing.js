@@ -98,13 +98,13 @@ export function landingPage(options = {}) {
         document.addEventListener('DOMContentLoaded', loadSandboxCount);
       </script>
       
-      <!-- SECTION 2: Why LobsterSandbox? (3-column cards with 8px grid spacing) -->
-      <div class="mb-32">
+      <!-- SECTION 2: Why LobsterSandbox? (3-column cards with proper spacing) -->
+      <div class="mb-40">
         <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-4">Why LobsterSandbox?</h2>
         <p class="text-gray-500 text-center mb-16 max-w-lg mx-auto">The safe way to explore AI agents without the risk</p>
         
-        <!-- Cards with generous 48px gaps (gap-12) and constrained width -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-4xl mx-auto px-4">
+        <!-- Cards with ~quarter inch gaps (gap-14 = 56px) and constrained width -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14 max-w-4xl mx-auto px-4">
           
           <!-- Card 1: The Problem -->
           <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
@@ -140,31 +140,34 @@ export function landingPage(options = {}) {
         <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-4">Built for People Like You</h2>
         <p class="text-gray-500 text-center mb-16 max-w-lg mx-auto">Real concerns from real people. LobsterSandbox is the answer.</p>
         
-        <!-- Modern quote cards with subtle left border accent -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-4xl mx-auto px-4">
+        <!-- Testimonial cards in organized boxes with quarter inch gaps -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14 max-w-4xl mx-auto px-4">
           
-          <!-- Quote 1 - Left border accent style -->
-          <div class="border-l-4 border-lobster-200 pl-5 py-2">
+          <!-- Quote 1 - Clean box container -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="text-2xl text-lobster-300 font-serif leading-none mb-3">"</div>
             <p class="text-gray-600 text-sm leading-relaxed mb-4">
-              "I don't want to be turned into digital mincemeat by hackers."
+              I don't want to be turned into digital mincemeat by hackers.
             </p>
             <p class="text-xs text-gray-400 mb-3">— Tech founders on Twitter/X</p>
             <p class="text-sm font-medium text-lobster-600">Your real accounts stay separate.</p>
           </div>
           
-          <!-- Quote 2 - Left border accent style -->
-          <div class="border-l-4 border-lobster-200 pl-5 py-2">
+          <!-- Quote 2 - Clean box container -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="text-2xl text-lobster-300 font-serif leading-none mb-3">"</div>
             <p class="text-gray-600 text-sm leading-relaxed mb-4">
-              "AI taking control of everything is too scary."
+              AI taking control of everything is too scary.
             </p>
             <p class="text-xs text-gray-400 mb-3">— Hacker News, February 2026</p>
             <p class="text-sm font-medium text-lobster-600">Safe Mode asks before acting.</p>
           </div>
           
-          <!-- Quote 3 - Left border accent style -->
-          <div class="border-l-4 border-lobster-200 pl-5 py-2">
+          <!-- Quote 3 - Clean box container -->
+          <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="text-2xl text-lobster-300 font-serif leading-none mb-3">"</div>
             <p class="text-gray-600 text-sm leading-relaxed mb-4">
-              "Do not install on your primary computer."
+              Do not install on your primary computer.
             </p>
             <p class="text-xs text-gray-400 mb-3">— Security researchers</p>
             <p class="text-sm font-medium text-lobster-600">Sandbox first, real setup later.</p>
@@ -172,8 +175,8 @@ export function landingPage(options = {}) {
         </div>
       </div>
       
-      <!-- CTA Section - Intentional breathing room (80px above, 64px below) -->
-      <div class="text-center mb-24">
+      <!-- CTA Section - Half inch gap below to Technical Safety box -->
+      <div class="text-center mb-12">
         <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-base">
           🚀 Ready to try it safely? Launch Your Sandbox
         </a>
