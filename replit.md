@@ -76,6 +76,8 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 
 ### Public Routes
 - `GET /` - Landing page (no auth required)
+- `GET /guide` - Burner Stack Guide (no auth required)
+- `GET /compare` - Comparison page vs other OpenClaw options (no auth required)
 
 ### Protected Routes (require login)
 - `GET /setup` - Setup wizard
@@ -173,6 +175,15 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Workspace: `~/.openclaw/workspace/`
 
 ## Recent Changes
+
+### v1.2.5 Comparison Page (February 2026)
+- New /compare route: "Why LobsterSandbox?" comparison page
+- Feature comparison table: LobsterSandbox vs OpenClaw Direct vs DigitalOcean 1-Click vs Docker Self-Host
+- 8 feature rows with color-coded cells (green ✅, amber ⚠️, red ❌, blue 🔜)
+- Positioning statement: "We're not replacing these tools — we're the on-ramp"
+- Footer navigation: added links to Home, Burner Stack Guide, Why LobsterSandbox?, OpenClaw Docs
+- Homepage: added "See how we compare" link in What is LobsterSandbox? section
+- 16 passing tests
 
 ### v1.2.4 Homepage Rewrite for Non-Technical Users (February 2026)
 - Complete homepage rewrite targeting scared non-technical users
