@@ -260,6 +260,7 @@ export function layout(title, content, options = {}) {
       <div class="hidden md:flex items-center gap-3 ml-4 text-sm">
         <a href="/status" class="text-gray-300 hover:text-white font-medium">Status</a>
         <a href="/setup" class="text-gray-300 hover:text-white font-medium">Setup</a>
+        <a href="/guide" class="text-gray-300 hover:text-white font-medium">Guide</a>
         <a href="/profile" class="text-gray-300 hover:text-white font-medium">Profile</a>
       </div>
     </div>
