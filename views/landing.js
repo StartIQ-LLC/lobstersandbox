@@ -102,32 +102,32 @@ export function landingPage(options = {}) {
       <div class="mb-24">
         <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Why LobsterSandbox?</h2>
         <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">The safe way to explore AI agents without the risk</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 max-w-5xl mx-auto">
           
           <!-- Card 1: The Problem -->
-          <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow">
-            <div class="text-3xl mb-4">😰</div>
-            <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Problem</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">
-              OpenClaw is incredible — it can manage your email, calendar, messages, and more. But it needs access to your real accounts. One wrong move and your AI agent is reading your real Gmail or sending from your real WhatsApp.
+          <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow">
+            <div class="text-2xl mb-3">😰</div>
+            <h3 class="font-display font-bold text-gray-800 text-base mb-2">The Problem</h3>
+            <p class="text-gray-600 text-xs leading-relaxed">
+              OpenClaw needs access to your real accounts. One wrong move and your AI agent is reading your real Gmail or sending from your real WhatsApp.
             </p>
           </div>
           
           <!-- Card 2: The Solution -->
-          <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow">
-            <div class="text-3xl mb-4">🦞</div>
-            <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Solution</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">
-              LobsterSandbox guides you through setting up OpenClaw with throwaway accounts only. Your real email, phone, and billing stay completely separate. Nothing is connected to your actual life.
+          <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow">
+            <div class="text-2xl mb-3">🦞</div>
+            <h3 class="font-display font-bold text-gray-800 text-base mb-2">The Solution</h3>
+            <p class="text-gray-600 text-xs leading-relaxed">
+              LobsterSandbox uses throwaway accounts only. Your real email, phone, and billing stay completely separate.
             </p>
           </div>
           
           <!-- Card 3: The Safety Net -->
-          <div class="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-shadow">
-            <div class="text-3xl mb-4">🔄</div>
-            <h3 class="font-display font-bold text-gray-800 text-lg mb-4">The Safety Net</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">
-              Made a mistake? Hit Kill Switch to stop everything instantly. Want to start over? Hit Wipe and get a fresh sandbox in seconds. You're always in control.
+          <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow">
+            <div class="text-2xl mb-3">🔄</div>
+            <h3 class="font-display font-bold text-gray-800 text-base mb-2">The Safety Net</h3>
+            <p class="text-gray-600 text-xs leading-relaxed">
+              Made a mistake? Hit Kill Switch instantly. Want to start over? Hit Wipe for a fresh sandbox in seconds.
             </p>
           </div>
         </div>
@@ -141,49 +141,46 @@ export function landingPage(options = {}) {
         <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Built for People Like You</h2>
         <p class="text-gray-500 text-center mb-12 max-w-xl mx-auto">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 max-w-5xl mx-auto">
           
-          <!-- Quote Card 1 -->
-          <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col hover:shadow-lg transition-shadow">
-            <div class="text-3xl text-lobster-300 font-serif leading-none mb-2">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
-              I want to join the party, but I don't want to be turned into digital mincemeat by hackers.
+          <!-- Quote 1 - No box, clean modern text -->
+          <div class="text-center">
+            <p class="text-gray-600 italic text-sm leading-relaxed mb-3">
+              "I want to join the party, but I don't want to be turned into digital mincemeat by hackers."
             </p>
-            <p class="text-xs text-gray-400 mb-3">— Tech founders asking about OpenClaw on Twitter/X</p>
-            <p class="text-sm font-semibold text-lobster-600">LobsterSandbox keeps your real accounts completely separate.</p>
+            <p class="text-xs text-gray-400 mb-3">— Tech founders on Twitter/X</p>
+            <p class="text-sm font-medium text-lobster-600">LobsterSandbox keeps your real accounts separate.</p>
           </div>
           
-          <!-- Quote Card 2 -->
-          <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col hover:shadow-lg transition-shadow">
-            <div class="text-3xl text-lobster-300 font-serif leading-none mb-2">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
-              I can't find a single user in my communities — the concept of AI taking control of everything is too scary.
+          <!-- Quote 2 - No box, clean modern text -->
+          <div class="text-center">
+            <p class="text-gray-600 italic text-sm leading-relaxed mb-3">
+              "The concept of AI taking control of everything is too scary."
             </p>
-            <p class="text-xs text-gray-400 mb-3">— Hacker News discussion, February 2026</p>
-            <p class="text-sm font-semibold text-lobster-600">Safe Mode means your agent asks before doing anything risky.</p>
+            <p class="text-xs text-gray-400 mb-3">— Hacker News, February 2026</p>
+            <p class="text-sm font-medium text-lobster-600">Safe Mode asks before doing anything risky.</p>
           </div>
           
-          <!-- Quote Card 3 -->
-          <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col hover:shadow-lg transition-shadow">
-            <div class="text-3xl text-lobster-300 font-serif leading-none mb-2">"</div>
-            <p class="text-gray-700 italic text-sm leading-relaxed mb-4 flex-grow">
-              Do not install OpenClaw on your primary computer. There is no perfectly secure setup.
+          <!-- Quote 3 - No box, clean modern text -->
+          <div class="text-center">
+            <p class="text-gray-600 italic text-sm leading-relaxed mb-3">
+              "Do not install OpenClaw on your primary computer."
             </p>
-            <p class="text-xs text-gray-400 mb-3">— Security researchers and OpenClaw's own FAQ</p>
-            <p class="text-sm font-semibold text-lobster-600">That's exactly why LobsterSandbox exists. Sandbox first, real setup later.</p>
+            <p class="text-xs text-gray-400 mb-3">— Security researchers & OpenClaw FAQ</p>
+            <p class="text-sm font-medium text-lobster-600">Sandbox first, real setup later.</p>
           </div>
         </div>
         
-        <!-- CTA after quotes -->
-        <div class="text-center mt-16">
+        <!-- CTA after quotes - extra spacing above and below -->
+        <div class="text-center mt-20 mb-8">
           <a href="/setup" class="inline-flex items-center justify-center px-6 py-3 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-base">
             🚀 Ready to try it safely? Launch Your Sandbox
           </a>
         </div>
       </div>
       
-      <!-- Subtle divider -->
-      <div class="w-24 h-px bg-gray-200 mx-auto mb-16"></div>
+      <!-- Subtle divider with more spacing -->
+      <div class="w-24 h-px bg-gray-200 mx-auto mb-20"></div>
       
       <!-- SECTION 4: Technical Safety Details (Collapsible) -->
       <div class="card p-6 mb-8">
