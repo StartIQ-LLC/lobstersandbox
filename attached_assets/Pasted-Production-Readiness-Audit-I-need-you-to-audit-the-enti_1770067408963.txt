@@ -1,0 +1,66 @@
+Production Readiness Audit
+I need you to audit the entire LobsterSandbox codebase for production readiness. Go through every feature and tell me what's REAL (actually works) vs FAKE (placeholder/mock/UI-only).
+
+Check each of these and report back with status:
+
+CATEGORY 1: SAFETY CONTROLS
+- Kill Switch button: Does clicking it actually stop an OpenClaw process, or is it just UI?
+- Wipe Everything button: Does it actually delete files/data, or is it just UI?
+- Safe Mode toggle: Does it actually change OpenClaw config, or is it just a setting stored in our DB?
+
+CATEGORY 2: OPENCLAW INTEGRATION
+- Is there any code that actually spawns, connects to, or communicates with an OpenClaw gateway?
+- Is there an OpenClaw process running as part of this Replit, or is LobsterSandbox standalone?
+- Does the Status Dashboard actually check a real OpenClaw gateway, or is it mock data?
+- Does the Channel Status (WhatsApp/Discord/Telegram dots) check real connections?
+
+CATEGORY 3: API COST TRACKING
+- Is there a proxy that intercepts API calls and logs token usage?
+- Is the cost data in the nav widget coming from real API call logs, or is it mock/hardcoded?
+- Does the budget alert system actually trigger, or is it just UI?
+- Does auto-pause at budget limit actually work?
+
+CATEGORY 4: PAYMENTS
+- Is Stripe connected? Are there any Stripe API calls or webhook handlers?
+- Do the pricing page buttons go to real Stripe Checkout, or are they just links to /setup?
+- Is there a subscription status check that gates Pro features?
+- Is config export actually gated behind Pro, or does everyone get it?
+
+CATEGORY 5: DEPLOY BUTTONS
+- Are the deploy button URLs real templates, or placeholder "#" links?
+- Is there a Replit template set up for forking?
+
+CATEGORY 6: DATA & AUTH
+- What database is being used? (SQLite? Replit DB? PostgreSQL?)
+- Is user auth real and secure? (password hashing, session management)
+- Is the sandbox counter (/api/sandbox-count) persistent across restarts?
+- Is feedback storage (/api/feedback) persistent?
+
+CATEGORY 7: ENVIRONMENT & CONFIG
+- What environment variables are required? List them all.
+- Are there any hardcoded secrets or API keys in the code?
+- Is there a .env.example file documenting required config?
+
+FORMAT YOUR RESPONSE AS:
+
+## Audit Results
+
+### Category 1: Safety Controls
+- Kill Switch: [REAL/FAKE] — [explanation of what the code actually does]
+- Wipe Everything: [REAL/FAKE] — [explanation]
+- Safe Mode: [REAL/FAKE] — [explanation]
+
+[Continue for all categories]
+
+### Summary Table
+| Feature | Status | What's Needed |
+|---------|--------|---------------|
+| Kill Switch | FAKE | Need to spawn OpenClaw process and wire kill command |
+| ... | ... | ... |
+
+### Recommended Fix Order
+1. [Most critical fix first]
+2. [Second priority]
+...
+
+Be brutally honest. I need to know exactly what work remains before this is production-ready.

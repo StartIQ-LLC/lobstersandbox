@@ -1,0 +1,73 @@
+Create the following deployment configuration files in the project root:
+
+FILE 1 - README.md:
+Create a professional README with:
+- Title: "🦞 LobsterSandbox"
+- Tagline: "Try OpenClaw without risking your real accounts."
+- Brief description of what it does (safety wrapper for OpenClaw)
+- Features list: Burner Stack Guide, API Cost Tracking, Kill Switch, Wipe Everything, Guided Missions, Safe Mode
+- Deploy badges/buttons for Replit, Railway, Render
+- Requirements: Node.js 22+, OpenClaw CLI, API key
+- Environment variables section listing SETUP_PASSWORD, OPENCLAW_GATEWAY_TOKEN, SESSION_SECRET
+- Local development instructions (git clone, npm install, npm run dev)
+- MIT License
+- Disclaimer: unofficial community tool, not affiliated with OpenClaw
+
+FILE 2 - .env.example:
+SETUP_PASSWORD=change-this-to-a-secure-password
+OPENCLAW_GATEWAY_TOKEN=generate-a-random-token
+SESSION_SECRET=generate-a-random-32-char-string
+PORT=5000
+LOG_LEVEL=info
+
+FILE 3 - Dockerfile:
+FROM node:22-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y curl && curl -fsSL https://www.openclaw.com/install.sh | bash && apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN mkdir -p data
+EXPOSE 5000
+CMD ["npm", "start"]
+
+FILE 4 - docker-compose.yml:
+version: '3.8'
+services:
+  lobstersandbox:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SETUP_PASSWORD=${SETUP_PASSWORD}
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
+      - SESSION_SECRET=${SESSION_SECRET}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+FILE 5 - render.yaml:
+services:
+  - type: web
+    name: lobstersandbox
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: SETUP_PASSWORD
+        sync: false
+      - key: OPENCLAW_GATEWAY_TOKEN
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+
+FILE 6 - railway.toml:
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "npm start"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+After creating these files, confirm they exist and list them.
