@@ -1,0 +1,82 @@
+Pricing Page
+Create a new page at /pricing and add "Pricing" to the main top navigation bar (after Missions, before Profile).
+
+PAGE HEADER:
+Title: "Pricing"
+Subtitle: "Start free. Upgrade when you're ready."
+Important note below subtitle (smaller text, slightly muted color): "LobsterSandbox is the safety and guidance layer. OpenClaw is free and open source. AI model API costs are separate and paid directly to your provider (Anthropic, OpenAI, etc.)."
+
+THREE PRICING CARDS side by side (stack on mobile):
+
+CARD 1 — "Explorer" (Free tier):
+Price display: "$0" with "forever" below it
+No badge
+Feature list with checkmarks:
+- ✅ Full sandbox environment
+- ✅ All safety controls (Kill Switch, Wipe, Safe Mode)
+- ✅ Burner Stack Guide
+- ✅ 3 starter missions (Hello Lobster, Research Assistant, Personal Scribe)
+- ✅ WebChat + 1 external channel
+- ✅ Community support
+- ⬜ "Powered by LobsterSandbox" branding visible
+CTA button (outlined/secondary style): "Start Free" → /setup
+Small text below button: "No credit card required"
+
+CARD 2 — "Pro" (highlighted as recommended):
+Price display: "$19" with "/month" below it
+Badge at top of card: "Most Popular" in an accent color
+Make this card visually prominent — slightly larger, colored border or shadow, or elevated
+Feature list:
+- ✅ Everything in Explorer
+- ✅ API cost tracking with budget alerts
+- ✅ Auto-pause at budget limit
+- ✅ All 6 sandbox missions (including Discord, Cron, Skill Builder)
+- ✅ Unlimited external channels
+- ✅ Config export for production migration
+- ✅ No "Powered by" branding
+- ✅ Priority email support
+- ✅ Auto-updates to latest stable OpenClaw
+CTA button (primary/filled style, bold): "Start 14-Day Free Trial" → /setup?plan=pro
+Small text: "14-day free trial. Cancel anytime."
+
+CARD 3 — "Team":
+Price display: "$49" with "/month" below it
+No badge
+Feature list:
+- ✅ Everything in Pro
+- ✅ Up to 5 team members
+- ✅ Shared sandbox environment
+- ✅ Admin dashboard with team activity
+- ✅ Team onboarding flow
+- ✅ Priority support
+CTA button (outlined/secondary style): "Start Team Trial" → /setup?plan=team
+Small text: "14-day free trial. Cancel anytime."
+
+FAQ SECTION below the pricing cards (collapsible accordion style):
+
+Q: "Is OpenClaw itself free?"
+A: "Yes! OpenClaw is open source and always free. LobsterSandbox adds the safety layer, guided setup, cost tracking, and managed experience on top."
+
+Q: "What about AI model costs?"
+A: "AI model costs (Anthropic Claude, OpenAI GPT, etc.) are separate and paid directly to your provider. LobsterSandbox helps you set spending limits and track costs so there are no surprises. Testing with Claude Haiku or GPT-4o-mini typically costs a few cents per session."
+
+Q: "Can I self-host LobsterSandbox?"
+A: "LobsterSandbox is open source. You can fork it and run it yourself for free. Paid plans add managed hosting, cost tracking, automatic updates, and support."
+
+Q: "What happens when I outgrow the sandbox?"
+A: "We help you graduate! Pro users can export their sandbox config and follow our migration guide to set up a full OpenClaw instance on their own hardware or cloud provider."
+
+Q: "Can I change or cancel my plan?"
+A: "Upgrade, downgrade, or cancel anytime. Your sandbox stays accessible. If you cancel a paid plan, you keep Explorer-tier features."
+
+Q: "Is my data safe?"
+A: "Your sandbox data stays on your instance. We don't have access to your AI conversations, API keys, or connected accounts. That's the whole point."
+
+DESIGN:
+- The Pro card should clearly stand out as the recommended option — use visual hierarchy (larger, border, shadow, or background tint)
+- Checkmarks should be green, the ⬜ for branding limitation should be a muted gray empty box
+- Price numbers should be large and bold
+- FAQ answers should be hidden by default, expand on click with smooth animation
+- Consistent with site theme, nav bar, Larry chatbot, footer
+- Mobile: cards stack vertically, Pro card still visually prominent
+- All existing tests should pass. Add a test for /pricing route.
