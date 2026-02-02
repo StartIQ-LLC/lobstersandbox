@@ -1,0 +1,82 @@
+he Comparison Page. This is important because it directly answers "why not just use OpenClaw's built-in sandbox or DigitalOcean 1-click?" which is the first question any technical person will ask:
+PROMPT 3: Comparison Page
+Create a new page at /compare called "LobsterSandbox vs. Other Options"
+
+PAGE HEADER:
+Title: "Why LobsterSandbox?"
+Subtitle: "There are many ways to run OpenClaw. Here's how LobsterSandbox compares."
+
+SECTION 1 — Comparison table with these columns:
+- Feature (row label)
+- LobsterSandbox
+- OpenClaw Direct Install
+- DigitalOcean 1-Click
+- Docker Self-Host
+
+Make it a clean, responsive table. On mobile, allow horizontal scroll or convert to stacked cards.
+
+Rows:
+
+Row 1: "Technical knowledge needed"
+- LobsterSandbox: "None — guided wizard" ✅
+- OpenClaw Direct: "Node.js, CLI, terminal" ❌
+- DigitalOcean: "SSH, server admin" ❌
+- Docker: "Docker, Compose, CLI" ❌
+
+Row 2: "Account separation guidance"
+- LobsterSandbox: "Built-in Burner Stack Guide" ✅
+- OpenClaw Direct: "Not included" ❌
+- DigitalOcean: "Not included" ❌
+- Docker: "Not included" ❌
+
+Row 3: "Kill Switch"
+- LobsterSandbox: "Always visible, one click" ✅
+- OpenClaw Direct: "Manual process stop" ⚠️
+- DigitalOcean: "Destroy droplet" ⚠️
+- Docker: "docker stop command" ⚠️
+
+Row 4: "Full environment wipe"
+- LobsterSandbox: "One click + confirmation" ✅
+- OpenClaw Direct: "Delete ~/.openclaw/ manually" ⚠️
+- DigitalOcean: "Destroy and rebuild droplet" ⚠️
+- Docker: "Remove container + volumes" ⚠️
+
+Row 5: "Safe Mode by default"
+- LobsterSandbox: "Yes — agent asks before acting" ✅
+- OpenClaw Direct: "Must configure manually" ❌
+- DigitalOcean: "Must configure manually" ❌
+- Docker: "Must configure manually" ❌
+
+Row 6: "API cost controls"
+- LobsterSandbox: "Budget caps coming soon" 🔜
+- OpenClaw Direct: "Not included" ❌
+- DigitalOcean: "Not included" ❌
+- Docker: "Not included" ❌
+
+Row 7: "Time to first chat"
+- LobsterSandbox: "Under 5 minutes" ✅
+- OpenClaw Direct: "30-60 minutes" ❌
+- DigitalOcean: "15-20 minutes" ⚠️
+- Docker: "20-30 minutes" ⚠️
+
+Row 8: "Cost"
+- LobsterSandbox: "Free tier available"
+- OpenClaw Direct: "Free + API costs"
+- DigitalOcean: "$24/mo + API costs"
+- Docker: "Free + hosting + API costs"
+
+Use green background tint for ✅ cells, yellow for ⚠️, red for ❌, and blue for 🔜. Make the LobsterSandbox column slightly highlighted (subtle background) so it stands out.
+
+SECTION 2 — Below the table, add an important positioning statement:
+
+Title: "We're not replacing these tools — we're the on-ramp"
+Text: "LobsterSandbox doesn't host OpenClaw infrastructure. We guide you through safe setup and wrap it with safety controls. Once you're comfortable, you can graduate to a full production setup on your own hardware or any cloud provider. Think of us as the training wheels that make the scary part easy."
+
+CTA button: "🚀 Start Your Safe Setup" → /setup
+
+SECTION 3 — Add a link to /compare from the homepage. Put it in the "What is LobsterSandbox?" section at the bottom as an additional link: "📊 See how we compare" → /compare
+
+Also add /compare to the footer navigation if there is one.
+
+Keep the nav bar, Kill Switch, Wipe button, Larry chatbot, and footer consistent with all other pages.
+This page is critical for credibility. When someone shares LobsterSandbox on Hacker News or Twitter, the first response will be "why not just use Docker?" — this page answers that before they even ask.
