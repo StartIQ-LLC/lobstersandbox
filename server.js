@@ -187,6 +187,14 @@ app.get('/favicon.png', (req, res) => {
   res.sendFile('public/favicon.png', { root: '.' });
 });
 
+app.get('/lobster-hero.png', (req, res) => {
+  res.sendFile('public/lobster-hero.png', { root: '.' });
+});
+
+app.get('/lobster-icon.png', (req, res) => {
+  res.sendFile('public/lobster-icon.png', { root: '.' });
+});
+
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');

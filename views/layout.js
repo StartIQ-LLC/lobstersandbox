@@ -254,7 +254,7 @@ export function layout(title, content, options = {}) {
   <div class="bg-gray-900 text-white py-2 px-4 flex items-center justify-between sticky top-0 z-50">
     <div class="flex items-center gap-3">
       <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <span class="text-xl">🦞</span>
+        <img src="/lobster-icon.png" alt="LobsterSandbox" class="w-6 h-6" style="image-rendering: pixelated;">
         <span class="logo-text text-base hidden sm:inline">LobsterSandbox</span>
       </a>
       <div class="hidden md:flex items-center gap-3 ml-4 text-sm">
@@ -374,7 +374,7 @@ export function layout(title, content, options = {}) {
   <div class="lobster-assistant" id="lobster-assistant">
     <div class="lobster-chat" id="lobster-chat">
       <div class="lobster-chat-header">
-        <span style="font-size: 28px;">🦞</span>
+        <img src="/lobster-icon.png" alt="Larry" class="w-8 h-8" style="image-rendering: pixelated;">
         <div>
           <div class="font-semibold">Larry</div>
           <div class="text-xs opacity-80">Your LobsterSandbox Guide</div>
@@ -393,7 +393,7 @@ export function layout(title, content, options = {}) {
       </div>
     </div>
     <div class="lobster-bubble" id="lobster-toggle" onclick="toggleLobsterChat()">
-      🦞
+      <img src="/lobster-icon.png" alt="Larry" class="w-8 h-8" style="image-rendering: pixelated;">
     </div>
   </div>
   
