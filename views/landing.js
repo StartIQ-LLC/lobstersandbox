@@ -22,7 +22,7 @@ export function landingPage(options = {}) {
         </p>
         
         <!-- Trust Icons Row - No Container -->
-        <div class="flex flex-col items-center gap-2 mb-20">
+        <div class="flex flex-col items-center gap-3 mb-24">
           <div class="flex items-center gap-3">
             <span class="text-xl">🔒</span>
             <span class="font-semibold text-gray-700 text-sm">Real accounts untouched</span>
