@@ -15,6 +15,7 @@ import { statusPage } from './views/status.js';
 import { channelsPage } from './views/channels.js';
 import { toolsPage } from './views/tools.js';
 import { profilePage } from './views/profile.js';
+import { notFoundPage, serverErrorPage } from './views/error.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -282,9 +283,7 @@ app.get('/status', requireAuth, async (req, res) => {
       return res.redirect('/profile?from=status');
     }
     
-    const sessionToken = req.cookies?.session_token;
-    const session = sessionTokens.get(sessionToken);
-    const playbook = session?.playbook || {};
+    const playbook = await openclaw.getPlaybook();
     
     let infoMessage = null;
     if (req.query.info === 'channels_disabled') {
@@ -452,13 +451,8 @@ app.post('/api/playbook', apiLimiter, requireAuth, validateCsrf, async (req, res
     if (!['email', 'phone', 'billing'].includes(item)) {
       return res.status(400).json({ success: false, error: 'Invalid playbook item' });
     }
-    const sessionToken = req.cookies?.session_token;
-    const session = sessionTokens.get(sessionToken);
-    if (session) {
-      if (!session.playbook) session.playbook = {};
-      session.playbook[item] = checked;
-    }
-    res.json({ success: true });
+    const result = await openclaw.setPlaybookItem(item, checked);
+    res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -466,12 +460,8 @@ app.post('/api/playbook', apiLimiter, requireAuth, validateCsrf, async (req, res
 
 app.post('/api/playbook/reset', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
-    const sessionToken = req.cookies?.session_token;
-    const session = sessionTokens.get(sessionToken);
-    if (session) {
-      session.playbook = {};
-    }
-    res.json({ success: true });
+    const result = await openclaw.resetPlaybook();
+    res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -735,6 +725,19 @@ server.on('upgrade', (req, socket, head) => {
   }
   
   gatewayProxy.upgrade(req, socket, head);
+});
+
+app.use((req, res) => {
+  res.status(404).send(notFoundPage());
+});
+
+app.use((err, req, res, next) => {
+  logSecurityEvent('SERVER_ERROR', { 
+    requestId: req.requestId, 
+    path: req.path, 
+    error: err.message 
+  });
+  res.status(500).send(serverErrorPage(req.requestId));
 });
 
 server.listen(PORT, '0.0.0.0', async () => {

@@ -143,4 +143,12 @@ Session max lifetime enforced`;
       expect(checklistText).not.toMatch(/[a-f0-9]{32}/i);
     });
   });
+
+  describe('Error Pages', () => {
+    test('GET /nonexistent-page returns 404', async () => {
+      const res = await request(BASE_URL).get('/this-page-does-not-exist-xyz');
+      expect(res.status).toBe(404);
+      expect(res.text).toContain('Page Not Found');
+    });
+  });
 });

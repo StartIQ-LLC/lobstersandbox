@@ -1,4 +1,4 @@
-# LobsterSandbox 🦞 v1.1.1
+# LobsterSandbox 🦞 v1.2.0
 
 A safe sandbox launcher for [OpenClaw](https://openclaw.ai/) - try OpenClaw without touching your real accounts.
 

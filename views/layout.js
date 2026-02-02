@@ -536,7 +536,7 @@ export function layout(title, content, options = {}) {
     }
   </script>
   ` : ''}
-  <footer class="text-center text-xs text-gray-400 py-4">LobsterSandbox v1.1.1</footer>
+  <footer class="text-center text-xs text-gray-400 py-4">LobsterSandbox v1.2.0</footer>
 </body>
 </html>`;
 }
