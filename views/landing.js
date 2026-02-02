@@ -22,7 +22,7 @@ export function landingPage(options = {}) {
         </p>
         
         <!-- Trust Icons Row - No Container -->
-        <div class="flex flex-col items-center gap-2 mb-12">
+        <div class="flex flex-col items-center gap-2 mb-16">
           <div class="flex items-center gap-3">
             <span class="text-xl">🔒</span>
             <span class="font-semibold text-gray-700 text-sm">Real accounts untouched</span>
@@ -133,9 +133,9 @@ export function landingPage(options = {}) {
       </div>
       
       <!-- SECTION 3: Built for People Like You (Social Proof Quotes) -->
-      <div class="mb-20 pt-10">
+      <div class="mb-20 pt-16">
         <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-4">Built for People Like You</h2>
-        <p class="text-gray-500 text-center mb-12">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
+        <p class="text-gray-500 text-center mb-16">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           
@@ -171,7 +171,7 @@ export function landingPage(options = {}) {
         </div>
         
         <!-- CTA after quotes -->
-        <div class="text-center mt-16 mb-16">
+        <div class="text-center mt-20 mb-16">
           <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-lg">
             🚀 Ready to try it safely? Launch Your Sandbox
           </a>
