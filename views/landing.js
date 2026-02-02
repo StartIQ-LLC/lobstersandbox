@@ -98,89 +98,86 @@ export function landingPage(options = {}) {
         document.addEventListener('DOMContentLoaded', loadSandboxCount);
       </script>
       
-      <!-- SECTION 2: Why LobsterSandbox? (3-column cards) -->
-      <div class="mb-24">
-        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Why LobsterSandbox?</h2>
-        <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">The safe way to explore AI agents without the risk</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 max-w-5xl mx-auto">
+      <!-- SECTION 2: Why LobsterSandbox? (3-column cards with 8px grid spacing) -->
+      <div class="mb-32">
+        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-4">Why LobsterSandbox?</h2>
+        <p class="text-gray-500 text-center mb-16 max-w-lg mx-auto">The safe way to explore AI agents without the risk</p>
+        
+        <!-- Cards with generous 48px gaps (gap-12) and constrained width -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-4xl mx-auto px-4">
           
           <!-- Card 1: The Problem -->
-          <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow">
-            <div class="text-2xl mb-3">😰</div>
-            <h3 class="font-display font-bold text-gray-800 text-base mb-2">The Problem</h3>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              OpenClaw needs access to your real accounts. One wrong move and your AI agent is reading your real Gmail or sending from your real WhatsApp.
+          <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="text-2xl mb-4">😰</div>
+            <h3 class="font-display font-semibold text-gray-800 text-sm mb-3">The Problem</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+              OpenClaw needs access to your real accounts. One wrong move and it's reading your real Gmail.
             </p>
           </div>
           
           <!-- Card 2: The Solution -->
-          <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow">
-            <div class="text-2xl mb-3">🦞</div>
-            <h3 class="font-display font-bold text-gray-800 text-base mb-2">The Solution</h3>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              LobsterSandbox uses throwaway accounts only. Your real email, phone, and billing stay completely separate.
+          <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="text-2xl mb-4">🦞</div>
+            <h3 class="font-display font-semibold text-gray-800 text-sm mb-3">The Solution</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+              Use throwaway accounts only. Your real email and billing stay completely separate.
             </p>
           </div>
           
           <!-- Card 3: The Safety Net -->
-          <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow">
-            <div class="text-2xl mb-3">🔄</div>
-            <h3 class="font-display font-bold text-gray-800 text-base mb-2">The Safety Net</h3>
-            <p class="text-gray-600 text-xs leading-relaxed">
-              Made a mistake? Hit Kill Switch instantly. Want to start over? Hit Wipe for a fresh sandbox in seconds.
+          <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="text-2xl mb-4">🔄</div>
+            <h3 class="font-display font-semibold text-gray-800 text-sm mb-3">The Safety Net</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+              Made a mistake? Kill Switch stops everything. Wipe gives you a fresh start in seconds.
             </p>
           </div>
         </div>
       </div>
       
-      <!-- Subtle divider -->
-      <div class="w-24 h-px bg-gray-200 mx-auto mb-20"></div>
-      
       <!-- SECTION 3: Built for People Like You (Social Proof Quotes) -->
-      <div class="mb-24">
-        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-3">Built for People Like You</h2>
-        <p class="text-gray-500 text-center mb-12 max-w-xl mx-auto">Real concerns from real people about OpenClaw. LobsterSandbox is the answer.</p>
+      <div class="mb-32">
+        <h2 class="text-2xl font-display font-bold text-gray-800 text-center mb-4">Built for People Like You</h2>
+        <p class="text-gray-500 text-center mb-16 max-w-lg mx-auto">Real concerns from real people. LobsterSandbox is the answer.</p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 max-w-5xl mx-auto">
+        <!-- Modern quote cards with subtle left border accent -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-4xl mx-auto px-4">
           
-          <!-- Quote 1 - No box, clean modern text -->
-          <div class="text-center">
-            <p class="text-gray-600 italic text-sm leading-relaxed mb-3">
-              "I want to join the party, but I don't want to be turned into digital mincemeat by hackers."
+          <!-- Quote 1 - Left border accent style -->
+          <div class="border-l-4 border-lobster-200 pl-5 py-2">
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+              "I don't want to be turned into digital mincemeat by hackers."
             </p>
             <p class="text-xs text-gray-400 mb-3">— Tech founders on Twitter/X</p>
-            <p class="text-sm font-medium text-lobster-600">LobsterSandbox keeps your real accounts separate.</p>
+            <p class="text-sm font-medium text-lobster-600">Your real accounts stay separate.</p>
           </div>
           
-          <!-- Quote 2 - No box, clean modern text -->
-          <div class="text-center">
-            <p class="text-gray-600 italic text-sm leading-relaxed mb-3">
-              "The concept of AI taking control of everything is too scary."
+          <!-- Quote 2 - Left border accent style -->
+          <div class="border-l-4 border-lobster-200 pl-5 py-2">
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+              "AI taking control of everything is too scary."
             </p>
             <p class="text-xs text-gray-400 mb-3">— Hacker News, February 2026</p>
-            <p class="text-sm font-medium text-lobster-600">Safe Mode asks before doing anything risky.</p>
+            <p class="text-sm font-medium text-lobster-600">Safe Mode asks before acting.</p>
           </div>
           
-          <!-- Quote 3 - No box, clean modern text -->
-          <div class="text-center">
-            <p class="text-gray-600 italic text-sm leading-relaxed mb-3">
-              "Do not install OpenClaw on your primary computer."
+          <!-- Quote 3 - Left border accent style -->
+          <div class="border-l-4 border-lobster-200 pl-5 py-2">
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+              "Do not install on your primary computer."
             </p>
-            <p class="text-xs text-gray-400 mb-3">— Security researchers & OpenClaw FAQ</p>
+            <p class="text-xs text-gray-400 mb-3">— Security researchers</p>
             <p class="text-sm font-medium text-lobster-600">Sandbox first, real setup later.</p>
           </div>
         </div>
-        
-        <!-- CTA after quotes - extra spacing above and below -->
-        <div class="text-center mt-20 mb-8">
-          <a href="/setup" class="inline-flex items-center justify-center px-6 py-3 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-base">
-            🚀 Ready to try it safely? Launch Your Sandbox
-          </a>
-        </div>
       </div>
       
-      <!-- Subtle divider with more spacing -->
-      <div class="w-24 h-px bg-gray-200 mx-auto mb-20"></div>
+      <!-- CTA Section - Intentional breathing room (80px above, 64px below) -->
+      <div class="text-center mb-24">
+        <a href="/setup" class="inline-flex items-center justify-center px-8 py-4 lobster-gradient hover:opacity-90 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl text-base">
+          🚀 Ready to try it safely? Launch Your Sandbox
+        </a>
+      </div>
       
       <!-- SECTION 4: Technical Safety Details (Collapsible) -->
       <div class="card p-6 mb-8">
