@@ -1,0 +1,78 @@
+Prompt 5 — API Cost Tracking. This is Phase 3. Here it is ready to send:
+PROMPT 5: API Cost Tracking
+Add an API cost estimation and tracking feature to LobsterSandbox.
+
+PART 1 — Budget Selection in Setup Wizard:
+In the existing setup wizard (where users enter their API key and select a model), add a new field after model selection:
+
+Label: "Monthly Spending Limit"
+- Dropdown with options:
+  - $5 (Tourist Mode)
+  - $10 (Recommended) ← default selected
+  - $20 (Power User)
+  - Custom amount (text input appears when selected)
+- Helper text below: "We'll warn you as you approach this limit and auto-pause your sandbox if you hit it. You can change this anytime."
+- Store this value in the user's config/session/database
+
+PART 2 — Cost Reference Data:
+Create a cost estimation module with these approximate rates per 1 million tokens. Store these in a config file so they're easy to update:
+
+Anthropic:
+- Claude Haiku 4.5: $0.25 input / $1.25 output
+- Claude Sonnet 4.5: $3.00 input / $15.00 output
+- Claude Opus 4.5: $15.00 input / $75.00 output
+
+OpenAI:
+- GPT-4o: $2.50 input / $10.00 output
+- GPT-4o-mini: $0.15 input / $0.60 output
+
+Google:
+- Gemini 2.5 Pro: $1.25 input / $10.00 output
+- Gemini 2.5 Flash: $0.15 input / $0.60 output
+
+OpenRouter Auto: estimate ~$1.00 input / $3.00 output average
+
+Local models (Ollama): $0.00
+
+PART 3 — Cost Display in Navigation:
+Add a small cost tracker widget in the top navigation bar, positioned between the nav links and the Kill Switch button:
+
+Display format: "💰 $2.34 / $10.00"
+- Thin progress bar underneath the text (about 3px tall)
+- Colors based on percentage used:
+  - Green: 0-50%
+  - Yellow: 50-80%
+  - Red: 80-100%
+
+Clicking the cost widget opens a small dropdown panel showing:
+- "Today: $0.87"
+- "Total: $2.34 / $10.00 limit"
+- "Model: Claude Haiku 4.5"
+- A small link: "Change budget →" that goes to a settings page or modal
+
+If no budget is set yet (user hasn't completed setup), show: "💰 No budget set" in gray, and clicking it links to /setup.
+
+PART 4 — Budget Alerts:
+- At 75%: Yellow toast notification at the top of the page: "You've used 75% of your $10 sandbox budget."
+- At 90%: Orange toast notification: "⚠️ Approaching budget limit. 90% of your $10 budget used."
+- At 100%: Auto-trigger the Kill Switch. Show a modal dialog:
+  Title: "Budget Limit Reached"
+  Text: "Your sandbox has been paused to prevent unexpected charges. You've used $10.00 of your $10.00 budget."
+  Options:
+  - "Increase Budget" → opens budget change setting
+  - "Wipe & Start Fresh" → triggers wipe flow
+  - "Keep Paused" → dismisses modal, sandbox stays paused
+
+PART 5 — Tracking mechanism:
+Track API usage by monitoring requests that pass through the LobsterSandbox reverse proxy to the OpenClaw gateway. For each API-related request:
+- Log timestamp
+- Log which model was used (parse from request or gateway config)
+- Estimate input token count from request payload size
+- Estimate output token count from response payload size
+- Calculate estimated cost using the pricing table from Part 2
+- Store in a database table or JSON log file
+
+The estimates don't need to be perfectly accurate — it's better to slightly overestimate than underestimate. The goal is preventing surprise bills, not exact accounting. Add a small disclaimer visible in the dropdown: "Costs are estimates. Check your API provider dashboard for exact billing."
+
+Make sure the cost widget appears on ALL pages (it's in the nav bar which is shared across pages).
+All existing tests should still pass. Add tests for the budget alert thresholds.
