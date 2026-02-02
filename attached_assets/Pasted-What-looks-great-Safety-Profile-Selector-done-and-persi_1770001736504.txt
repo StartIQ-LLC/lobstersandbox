@@ -1,0 +1,97 @@
+What looks great
+
+Safety Profile Selector done and persisted
+
+Safe Mode hides channels until intentional enable
+
+Kill switch and wipe everywhere (typed WIPE + password is strong)
+
+Playbook inside the app and persisted
+
+/healthz and /readyz added
+
+CSRF with friendly error page for human flows plus JSON for API clients
+
+Tests expanded
+
+What I would double check before you ship publicly
+
+Gate /openclaw behind the same login session as /setup
+Even with gateway token auth, you do not want a public URL where anyone can hit the proxied UI. Make sure access to /openclaw requires the setup session.
+
+/readyz must be fast and safe under load
+If /readyz runs an expensive CLI check every request, it can become a mini DoS vector. Ideal pattern:
+
+use a lightweight connectivity check (TCP connect or a fast HTTP ping to loopback)
+
+add a short timeout (ex: 300 to 800 ms)
+
+cache the result for 2 to 5 seconds
+
+Secrets masking must cover error paths
+Make sure you never log full command strings that include keys, and that stack traces and proxy logs do not include env vars.
+
+Tailwind: what to do next
+
+You have two realistic options:
+
+Option A (fine for MVP): keep Play CDN, but be honest
+
+In docs and UI, say “MVP uses Tailwind Play CDN for speed”
+
+Add a CSP that only allows the specific CDN you use
+
+Accept the console warning
+
+This is acceptable for a viral MVP, but it is not “production hardened” per Tailwind’s own guidance.
+
+Option B (recommended for production): compile a static CSS file
+
+This removes runtime JS, removes the warning, and gives you deterministic styling.
+
+Minimal approach using Tailwind CLI:
+
+npm i -D tailwindcss
+npx tailwindcss init
+
+
+Create an input file (example: styles/input.css):
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+Build CSS:
+
+npx tailwindcss -i ./styles/input.css -o ./public/tailwind.css --minify --content "./views/**/*.html,./lib/**/*.js,./server.js"
+
+
+Then replace the Play CDN script with:
+
+<link rel="stylesheet" href="/tailwind.css">
+
+
+That is the clean “real production” step.
+
+How I would update your release note wording
+
+Change:
+
+“The app is production-ready as-is”
+
+To:
+
+“The app is launch-ready for MVP. Tailwind is currently using the Play CDN for speed; we can switch to compiled CSS when we want full production hardening.”
+
+Quick ship checklist
+
+Confirm /openclaw requires login
+
+Confirm /readyz is fast with a timeout and small cache
+
+Confirm no secrets in logs, error pages, proxy headers
+
+Post the “Safe Mode by default” message everywhere
+
+If you paste your route list (just the endpoints) and which routes are protected by the setup session today, I’ll tell you immediately if there is any exposure risk.
