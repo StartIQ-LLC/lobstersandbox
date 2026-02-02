@@ -176,6 +176,21 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 
 ## Recent Changes
 
+### v1.2.6 Interactive Burner Stack Guide (February 2026)
+- Complete rebuild of /guide page with interactive step-by-step wizard
+- Sticky progress tracker with 4 numbered steps and horizontal progress bar
+- localStorage persistence - users can close tab and resume later
+- Step 1: Burner Email (Gmail + ProtonMail options)
+- Step 2: Phone Number with "SKIP IT" as prominent recommended option
+- Step 3: API Key with cost comparison box and spending limit warning
+- Step 4: Optional payment protection
+- Auto-expand/collapse behavior when steps are checked
+- Completion celebration section with summary and CTA
+- Larry tip boxes throughout with lobster styling
+- Guide link added to main top navigation bar
+- All external links open in new tabs
+- 16 passing tests
+
 ### v1.2.5 Comparison Page (February 2026)
 - New /compare route: "Why LobsterSandbox?" comparison page
 - Feature comparison table: LobsterSandbox vs OpenClaw Direct vs DigitalOcean 1-Click vs Docker Self-Host
