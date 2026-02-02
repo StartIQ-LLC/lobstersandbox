@@ -1,4 +1,4 @@
-# LobsterSandbox v1.2.1
+# LobsterSandbox v1.2.2
 
 ## Overview
 LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based setup wizard and management interface for running OpenClaw in a secure, isolated environment within Replit.
@@ -166,6 +166,14 @@ LobsterSandbox is a safe sandbox launcher for OpenClaw. It provides a web-based 
 - Workspace: `~/.openclaw/workspace/`
 
 ## Recent Changes
+
+### v1.2.2 Production CSS & Health Optimization (February 2026)
+- Compiled Tailwind CSS: replaced Play CDN with static tailwind.css (26KB minified)
+- /readyz health check: 3-second result caching prevents DoS via repeated expensive checks
+- /readyz timeout: reduced from 3s to 500ms for faster load balancer responses
+- Added npm run build:css script for CSS regeneration
+- Version v1.2.2 across package.json, README.md, replit.md, footer
+- 14 passing tests
 
 ### v1.2.1 Health & Accessibility (February 2026)
 - Health endpoints: /healthz (liveness) and /readyz (readiness with gateway connectivity check)

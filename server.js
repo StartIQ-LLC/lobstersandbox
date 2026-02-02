@@ -172,6 +172,11 @@ async function requirePowerMode(req, res, next) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use('/tailwind.css', express.static('public/tailwind.css', { 
+  setHeaders: (res) => {
+    res.setHeader('Content-Type', 'text/css');
+  }
+}));
 app.use(logRequest);
 
 app.get('/favicon.ico', (req, res) => {
@@ -215,7 +220,7 @@ const startTime = Date.now();
 app.get('/healthz', (req, res) => {
   res.json({
     ok: true,
-    version: '1.2.1',
+    version: '1.2.2',
     uptimeSeconds: Math.floor((Date.now() - startTime) / 1000)
   });
 });

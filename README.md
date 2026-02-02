@@ -1,4 +1,4 @@
-# LobsterSandbox 🦞 v1.2.1
+# LobsterSandbox 🦞 v1.2.2
 
 A safe sandbox launcher for [OpenClaw](https://openclaw.ai/) - try OpenClaw without touching your real accounts.
 
@@ -118,7 +118,7 @@ For uptime monitoring and load balancers:
 Example:
 ```bash
 curl https://your-app.replit.app/healthz
-# {"ok":true,"version":"1.2.1","uptimeSeconds":3600}
+# {"ok":true,"version":"1.2.2","uptimeSeconds":3600}
 
 curl https://your-app.replit.app/readyz
 # {"ready":true} or {"ready":false,"reason":"Gateway not reachable"}

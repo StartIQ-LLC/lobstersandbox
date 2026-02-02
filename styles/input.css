@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-lobster-50: #fef2f2;
+  --color-lobster-100: #fee2e2;
+  --color-lobster-200: #fecaca;
+  --color-lobster-300: #fca5a5;
+  --color-lobster-400: #f87171;
+  --color-lobster-500: #ef4444;
+  --color-lobster-600: #dc2626;
+  --color-lobster-700: #b91c1c;
+  --color-lobster-800: #991b1b;
+  --color-lobster-900: #7f1d1d;
+  
+  --font-family-display: 'Nunito', sans-serif;
+  --font-family-body: 'Nunito', sans-serif;
+}

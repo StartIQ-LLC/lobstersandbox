@@ -11,33 +11,7 @@ export function layout(title, content, options = {}) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com?v=3.4.1"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['Nunito', 'sans-serif'],
-            body: ['Nunito', 'sans-serif'],
-          },
-          colors: {
-            lobster: {
-              50: '#fef2f2',
-              100: '#fee2e2',
-              200: '#fecaca',
-              300: '#fca5a5',
-              400: '#f87171',
-              500: '#ef4444',
-              600: '#dc2626',
-              700: '#b91c1c',
-              800: '#991b1b',
-              900: '#7f1d1d',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="/tailwind.css">
   <style>
     body {
       font-family: 'Nunito', sans-serif;
@@ -536,7 +510,7 @@ export function layout(title, content, options = {}) {
     }
   </script>
   ` : ''}
-  <footer class="text-center text-xs text-gray-400 py-4">LobsterSandbox v1.2.1</footer>
+  <footer class="text-center text-xs text-gray-400 py-4">LobsterSandbox v1.2.2</footer>
 </body>
 </html>`;
 }

@@ -158,7 +158,7 @@ Session max lifetime enforced`;
       const res = await request(BASE_URL).get('/healthz');
       expect(res.status).toBe(200);
       expect(res.body.ok).toBe(true);
-      expect(res.body.version).toBe('1.2.1');
+      expect(res.body.version).toBe('1.2.2');
       expect(typeof res.body.uptimeSeconds).toBe('number');
     });
 

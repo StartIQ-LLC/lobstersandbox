@@ -1,13 +1,13 @@
 {
   "name": "lobstersandbox",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Safe sandbox launcher for OpenClaw - try OpenClaw without touching your real accounts",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "build:css": "npx tailwindcss -i ./public/input.css -o ./public/styles.css --minify",
+    "build:css": "./node_modules/.bin/tailwindcss -i ./styles/input.css -o ./public/tailwind.css --minify --content \"./views/*.js,./lib/*.js,./server.js\"",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=10000"
   },
   "dependencies": {
@@ -38,5 +38,8 @@
     "ai",
     "gateway"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18"
+  }
 }
