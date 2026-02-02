@@ -1,0 +1,33 @@
+Rewrite the Homepage Hero
+Rewrite the homepage hero section on the landing page. Keep the LobsterSandbox branding, the lobster emoji, and the existing nav bar (Status, Setup, Profile, Kill Switch, Wipe).
+
+Replace the current hero content with this structure:
+
+SECTION 1 — Hero (above the fold):
+- Headline: "Try OpenClaw Without Risking Your Real Accounts"
+- Subheadline: "Your safe playground for AI agents. Use throwaway accounts, set a spending cap, and wipe everything with one click if anything feels off."
+- Three trust icons in a horizontal row:
+  - Icon: 🔒 "Your real accounts stay untouched"
+  - Icon: 💰 "You control your AI spending"
+  - Icon: 🗑️ "One-click wipe, fresh start anytime"
+- Primary CTA button: "🚀 Launch Your Sandbox" → links to /setup
+- Secondary CTA link: "📖 Read the Burner Stack Guide" → links to /guide
+- Below the CTAs, a small text line: "Join 117K+ people exploring OpenClaw — safely."
+
+SECTION 2 — "Why LobsterSandbox?" (3-column cards):
+Card 1: "😰 The Problem"
+"OpenClaw is incredible — it can manage your email, calendar, messages, and more. But it needs access to your real accounts. One wrong move and your AI agent is reading your real Gmail or sending from your real WhatsApp."
+
+Card 2: "🦞 The Solution"  
+"LobsterSandbox guides you through setting up OpenClaw with throwaway accounts only. Your real email, phone, and billing stay completely separate. Nothing is connected to your actual life."
+
+Card 3: "🔄 The Safety Net"
+"Made a mistake? Hit Kill Switch to stop everything instantly. Want to start over? Hit Wipe and get a fresh sandbox in seconds. You're always in control."
+
+SECTION 3 — Keep the existing Safety Checklist but make it collapsible/expandable with a toggle. Default to collapsed. Label it: "🛡️ Technical Safety Details (for the curious)"
+
+SECTION 4 — Keep the existing "What is LobsterSandbox?" description but update the text to:
+"LobsterSandbox is the safe on-ramp for trying OpenClaw. It guides you through setting up throwaway accounts, enforces safe defaults, and gives you a one-click escape hatch if anything goes wrong. You bring a fresh email and an API key — we handle the rest. Perfect for anyone who wants to join the AI agent revolution without risking their real digital life."
+
+Keep Larry the Lobster chatbot in the bottom-right corner exactly as is.
+Keep the footer exactly as is.
