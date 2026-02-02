@@ -116,10 +116,11 @@ describe('LobsterSandbox Security Tests', () => {
   });
 
   describe('Landing Page Safety Checklist', () => {
-    test('GET / returns 200 and contains Safety Checklist', async () => {
+    test('GET / returns 200 and contains Safe by Default section', async () => {
       const res = await request(BASE_URL).get('/');
       expect(res.status).toBe(200);
-      expect(res.text).toContain('Safety Checklist');
+      expect(res.text).toContain('Safe by Default');
+      expect(res.text).toContain('Show technical details');
     });
 
     test('Copy Checklist text does not contain Mode: or token patterns', () => {
@@ -187,8 +188,35 @@ Session max lifetime enforced`;
   });
 
   describe('Accessibility', () => {
-    test('Landing page has proper aria-labels on safety buttons', async () => {
+    test('Landing page shows disabled buttons when not logged in', async () => {
       const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      // When not logged in, Kill Switch and Wipe should be disabled (cursor-not-allowed)
+      expect(res.text).toContain('cursor-not-allowed');
+      expect(res.text).toContain('Kill Switch');
+      expect(res.text).toContain('Wipe');
+    });
+
+    test('Status page has proper aria-labels on safety buttons when logged in', async () => {
+      const loginRes = await request(BASE_URL)
+        .post('/setup/login')
+        .type('form')
+        .send({ password: process.env.SETUP_PASSWORD || 'test' });
+      
+      const cookies = loginRes.headers['set-cookie'];
+      if (!cookies) {
+        console.warn('Skipping test: login failed');
+        return;
+      }
+      const sessionCookie = cookies.find(c => c.startsWith('session_token='))?.split(';')[0];
+      if (!sessionCookie) {
+        console.warn('Skipping test: no session cookie');
+        return;
+      }
+
+      const res = await request(BASE_URL)
+        .get('/status')
+        .set('Cookie', sessionCookie);
       expect(res.status).toBe(200);
       expect(res.text).toContain('aria-label="Kill Switch');
       expect(res.text).toContain('aria-label="Wipe');

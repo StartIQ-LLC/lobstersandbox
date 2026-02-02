@@ -1,5 +1,9 @@
 export function layout(title, content, options = {}) {
-  const { includeTopBar = false, backLink = null, showAssistant = true, profile = null, showSafetyBar = false } = options;
+  // loggedIn defaults to true for protected pages (most pages require auth)
+  // Only the landing page explicitly passes loggedIn: false when user is not logged in
+  const { includeTopBar = false, backLink = null, showAssistant = true, profile = null, showSafetyBar = false, loggedIn = true, gatewayRunning = false } = options;
+  
+  const showActiveButtons = loggedIn;
   
   return `<!DOCTYPE html>
 <html lang="en">
@@ -260,12 +264,21 @@ export function layout(title, content, options = {}) {
       </div>
     </div>
     <div class="flex items-center gap-2">
+      ${showActiveButtons ? `
       <button onclick="killSwitch()" aria-label="Kill Switch - Stop gateway immediately" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
         <span aria-hidden="true">⚡</span><span class="hidden sm:inline">Kill Switch</span>
       </button>
       <button onclick="wipeAll()" aria-label="Wipe - Reset all configuration" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
         <span aria-hidden="true">🗑</span><span class="hidden sm:inline">Wipe</span>
       </button>
+      ` : `
+      <span class="px-3 py-1.5 bg-gray-600 text-gray-400 rounded-lg text-xs font-medium flex items-center gap-1 cursor-not-allowed" title="Login required">
+        <span aria-hidden="true">⚡</span><span class="hidden sm:inline">Kill Switch</span>
+      </span>
+      <span class="px-3 py-1.5 bg-gray-600 text-gray-400 rounded-lg text-xs font-medium flex items-center gap-1 cursor-not-allowed" title="Login required">
+        <span aria-hidden="true">🗑</span><span class="hidden sm:inline">Wipe</span>
+      </span>
+      `}
     </div>
   </div>
   

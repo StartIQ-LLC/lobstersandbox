@@ -244,8 +244,13 @@ app.get('/readyz', async (req, res) => {
 });
 
 app.get('/', async (req, res) => {
-  const profile = await openclaw.getProfile();
-  res.send(landingPage(profile));
+  const [profile, configured] = await Promise.all([
+    openclaw.getProfile(),
+    openclaw.isConfigured()
+  ]);
+  const loggedIn = isAuthenticated(req);
+  const gatewayRunning = openclaw.isGatewayRunning();
+  res.send(landingPage({ profile, configured, loggedIn, gatewayRunning }));
 });
 
 app.get('/setup', (req, res) => {
