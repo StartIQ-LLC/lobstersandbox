@@ -1,0 +1,60 @@
+That’s a great v1.1.1 polish pass. The Safety Score card plus Copy Summary is exactly the kind of shareable artifact that helps this go viral, and the playbook checkboxes make the “safe mindset” feel real instead of just text.
+
+A few quick, practical suggestions to make sure you squeeze the most value out of what you just shipped.
+
+## What to sanity check in 5 minutes
+
+1. Copy Summary button
+
+* Confirm it does not include any secrets, tokens, or provider names
+* Confirm it copies clean plain text
+
+2. Playbook endpoints
+
+* Make sure `/api/playbook` endpoints require auth and CSRF for POST
+* Make sure Safe Mode vs Power Mode does not affect playbook, it should remain available in both modes
+
+3. Tests
+   If tests hit a running server, that’s fine for this stage, but you want them to be reliable.
+
+* Confirm tests fail when they should (example, temporarily disable CSRF in code and see a test fail)
+* Confirm tests do not depend on a specific port or leftover session cookies
+
+## What you should do next for distribution
+
+Now you are ready to “post and funnel.” Here’s the clean positioning.
+
+### One line pitch
+
+LobsterSandbox lets you try OpenClaw safely in a sandbox with Safe Mode on by default. If anything feels off, hit Kill Switch or wipe everything.
+
+### Viral proof point
+
+Post a screenshot of /status showing:
+
+* Safety Score checklist
+* Mode: Safe Mode
+* Kill and Wipe visible
+  That’s the visual the Twitter thread is asking for.
+
+## A simple post you can use
+
+Casual
+I wanted to try OpenClaw but didn’t want to connect it to my real life. Built LobsterSandbox, a safe sandbox launcher with Safe Mode by default, kill switch, wipe, and a security checklist you can screenshot and share.
+
+Professional
+If you want to test OpenClaw without exposing personal accounts, use a sandbox mindset. LobsterSandbox wraps a safe default setup: loopback gateway, token auth, server level WebSocket gating, CSRF, session timeouts, plus a kill switch and wipe. The /status page shows a safety checklist for quick verification.
+
+## One more small feature that would add a lot
+
+Add a “Share safe setup checklist” button on the landing page too, even before login, but it should show a generic checklist without any session info. This makes it easier for people to understand the product before they commit.
+
+## What I want from you to confirm everything is perfect
+
+Paste these three things:
+
+1. The Safety Summary text that gets copied (exact output)
+2. The list of `/api/playbook` endpoints
+3. The names of the 6 tests (just the test descriptions)
+
+With that, I can sanity check quickly that there are no accidental leaks or missing protections.
