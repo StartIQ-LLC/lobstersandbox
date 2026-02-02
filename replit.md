@@ -39,6 +39,7 @@ LobsterSandbox is built with Node.js 22 and Express.js, utilizing server-rendere
 - **Security Tools**: Audit, verify, and fix functionalities.
 - **Data Management**: Wipe and reset functionality with password confirmation.
 - **Budget Tracking**: API cost tracking, pricing configuration, usage estimation, and budget alerts for 9 AI providers.
+- **Operational Dashboard**: Full dashboard with 6 cards (Gateway Status, Budget Tracker, Safety Status, Connected Channels, Recent Activity, Weekly API Usage), 30-second auto-refresh, collapsible Advanced Tools section.
 - **Safety Modes**: "Safe Mode" (default) and "Power Mode" with distinct access levels to sensitive features like channel and tool setup.
 
 ## External Dependencies
