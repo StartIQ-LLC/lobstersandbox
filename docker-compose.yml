@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  lobstersandbox:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SETUP_PASSWORD=${SETUP_PASSWORD}
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
+      - SESSION_SECRET=${SESSION_SECRET}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

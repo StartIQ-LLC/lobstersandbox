@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: lobstersandbox
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: SETUP_PASSWORD
+        sync: false
+      - key: OPENCLAW_GATEWAY_TOKEN
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
