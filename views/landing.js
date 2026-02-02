@@ -6,7 +6,7 @@ export function landingPage(options = {}) {
   const content = `
   <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8">
     <div class="text-center max-w-3xl">
-      <img src="/lobster-hero.png" alt="LobsterSandbox mascot" class="w-32 h-32 mx-auto mb-4" style="image-rendering: pixelated;">
+      <div class="text-7xl mb-4">🦞</div>
       <h1 class="logo-text text-4xl md:text-5xl text-gray-800 mb-3">
         Lobster<span class="text-lobster-600">Sandbox</span>
       </h1>
