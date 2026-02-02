@@ -15,7 +15,7 @@ import { statusPage } from './views/status.js';
 import { channelsPage } from './views/channels.js';
 import { toolsPage } from './views/tools.js';
 import { profilePage } from './views/profile.js';
-import { notFoundPage, serverErrorPage } from './views/error.js';
+import { notFoundPage, serverErrorPage, csrfErrorPage } from './views/error.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -53,14 +53,24 @@ function validateCsrf(req, res, next) {
   const sessionToken = req.cookies?.session_token;
   const csrfToken = req.body?.csrf_token || req.headers['x-csrf-token'];
   
+  const wantsJson = req.headers.accept?.includes('application/json') || 
+                    req.headers['x-requested-with'] === 'XMLHttpRequest' ||
+                    req.headers['x-csrf-token'];
+  
   if (!sessionToken || !csrfTokens.has(sessionToken)) {
     logSecurityEvent('CSRF_INVALID_SESSION', { requestId: req.requestId, path: req.path });
-    return res.status(403).json({ success: false, error: 'Invalid session' });
+    if (wantsJson) {
+      return res.status(403).json({ success: false, error: 'Invalid session' });
+    }
+    return res.status(403).send(csrfErrorPage());
   }
   
   if (csrfTokens.get(sessionToken) !== csrfToken) {
     logSecurityEvent('CSRF_TOKEN_MISMATCH', { requestId: req.requestId, path: req.path });
-    return res.status(403).json({ success: false, error: 'Invalid CSRF token' });
+    if (wantsJson) {
+      return res.status(403).json({ success: false, error: 'Invalid CSRF token' });
+    }
+    return res.status(403).send(csrfErrorPage());
   }
   
   next();
@@ -198,6 +208,34 @@ const apiLimiter = rateLimit({
   message: { error: 'Too many requests. Please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+});
+
+const startTime = Date.now();
+
+app.get('/healthz', (req, res) => {
+  res.json({
+    ok: true,
+    version: '1.2.1',
+    uptimeSeconds: Math.floor((Date.now() - startTime) / 1000)
+  });
+});
+
+app.get('/readyz', async (req, res) => {
+  try {
+    const configured = await openclaw.isConfigured();
+    if (!configured) {
+      return res.status(503).json({ ready: false, reason: 'Setup not complete' });
+    }
+    
+    const gatewayHealthy = await openclaw.checkGatewayConnectivity();
+    if (!gatewayHealthy) {
+      return res.status(503).json({ ready: false, reason: 'Gateway not reachable' });
+    }
+    
+    res.json({ ready: true });
+  } catch (err) {
+    res.status(503).json({ ready: false, reason: 'Health check failed' });
+  }
 });
 
 app.get('/', async (req, res) => {

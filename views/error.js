@@ -37,3 +37,11 @@ export function serverErrorPage(requestId = null) {
     code: 500
   });
 }
+
+export function csrfErrorPage() {
+  return errorPage({
+    title: 'Security Check Failed',
+    message: 'Your session may have expired or the request was invalid. Please go back and try again.',
+    code: 403
+  });
+}

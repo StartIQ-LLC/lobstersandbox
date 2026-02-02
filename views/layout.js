@@ -11,7 +11,7 @@ export function layout(title, content, options = {}) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com?v=3.4.1"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -286,11 +286,11 @@ export function layout(title, content, options = {}) {
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="killSwitch()" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
-        <span>⚡</span><span class="hidden sm:inline">Kill Switch</span>
+      <button onclick="killSwitch()" aria-label="Kill Switch - Stop gateway immediately" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
+        <span aria-hidden="true">⚡</span><span class="hidden sm:inline">Kill Switch</span>
       </button>
-      <button onclick="wipeAll()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
-        <span>🗑</span><span class="hidden sm:inline">Wipe</span>
+      <button onclick="wipeAll()" aria-label="Wipe - Reset all configuration" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
+        <span aria-hidden="true">🗑</span><span class="hidden sm:inline">Wipe</span>
       </button>
     </div>
   </div>
@@ -536,7 +536,7 @@ export function layout(title, content, options = {}) {
     }
   </script>
   ` : ''}
-  <footer class="text-center text-xs text-gray-400 py-4">LobsterSandbox v1.2.0</footer>
+  <footer class="text-center text-xs text-gray-400 py-4">LobsterSandbox v1.2.1</footer>
 </body>
 </html>`;
 }

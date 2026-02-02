@@ -44,6 +44,7 @@ describe('LobsterSandbox Security Tests', () => {
       const res = await request(BASE_URL)
         .post('/api/profile')
         .set('Cookie', sessionCookie)
+        .set('Accept', 'application/json')
         .send({ profile: 'safe' });
       
       expect(res.status).toBe(403);
@@ -149,6 +150,55 @@ Session max lifetime enforced`;
       const res = await request(BASE_URL).get('/this-page-does-not-exist-xyz');
       expect(res.status).toBe(404);
       expect(res.text).toContain('Page Not Found');
+    });
+  });
+
+  describe('Health Endpoints', () => {
+    test('GET /healthz returns 200 with ok and version', async () => {
+      const res = await request(BASE_URL).get('/healthz');
+      expect(res.status).toBe(200);
+      expect(res.body.ok).toBe(true);
+      expect(res.body.version).toBe('1.2.1');
+      expect(typeof res.body.uptimeSeconds).toBe('number');
+    });
+
+    test('GET /readyz returns 200 or 503 with ready status', async () => {
+      const res = await request(BASE_URL).get('/readyz');
+      expect([200, 503]).toContain(res.status);
+      if (res.status === 200) {
+        expect(res.body.ready).toBe(true);
+      } else {
+        expect(res.body.ready).toBe(false);
+        expect(res.body.reason).toBeDefined();
+      }
+    });
+  });
+
+  describe('Secret Masking', () => {
+    test('Landing page does not expose secrets', async () => {
+      const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      expect(res.text).not.toMatch(/sk-[a-zA-Z0-9]{20,}/);
+      expect(res.text).not.toMatch(/sk-ant-[a-zA-Z0-9-]{20,}/);
+      expect(res.text).not.toMatch(/SETUP_PASSWORD/);
+      expect(res.text).not.toMatch(/SESSION_SECRET/);
+      expect(res.text).not.toMatch(/GATEWAY_TOKEN/);
+    });
+  });
+
+  describe('Accessibility', () => {
+    test('Landing page has proper aria-labels on safety buttons', async () => {
+      const res = await request(BASE_URL).get('/');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('aria-label="Kill Switch');
+      expect(res.text).toContain('aria-label="Wipe');
+    });
+
+    test('Setup login page has labeled password input', async () => {
+      const res = await request(BASE_URL).get('/setup');
+      expect(res.status).toBe(200);
+      expect(res.text).toContain('for="password"');
+      expect(res.text).toContain('id="password"');
     });
   });
 });

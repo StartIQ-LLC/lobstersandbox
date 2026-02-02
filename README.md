@@ -1,4 +1,4 @@
-# LobsterSandbox 🦞 v1.2.0
+# LobsterSandbox 🦞 v1.2.1
 
 A safe sandbox launcher for [OpenClaw](https://openclaw.ai/) - try OpenClaw without touching your real accounts.
 
@@ -73,6 +73,8 @@ Open `/openclaw` to access the OpenClaw Control UI through the secure reverse pr
 | `/channels` | Channel setup (Power Mode only) |
 | `/tools` | Web tools setup (Power Mode only) |
 | `/openclaw` | OpenClaw Control UI (reverse proxied) |
+| `/healthz` | Health check endpoint (returns 200 if server is up) |
+| `/readyz` | Readiness check (200 if setup complete and gateway reachable) |
 
 ## What Safe Mode Blocks
 
@@ -96,15 +98,37 @@ Do NOT connect your main accounts on day 1.
 
 ## Security Features
 
-- All routes except landing require authentication
-- CSRF protection on all POST routes
+- All routes except landing and health checks require authentication
+- CSRF protection on all POST routes (returns friendly error page on failure)
 - Origin/Referer validation on POST requests
 - Gateway binds to loopback only (127.0.0.1)
 - Token authentication required for gateway access
 - API keys are never logged or displayed (masked to last 8 chars)
 - Rate limiting on sensitive endpoints (10 per 15 min)
-- Secure session handling with idle timeout
+- Secure session handling with idle timeout (30 min) and max lifetime (12 hours)
 - WebSocket upgrade authentication at HTTP server level
+
+## Health Endpoints
+
+For uptime monitoring and load balancers:
+
+- `GET /healthz` - Returns 200 with `{ ok: true, version, uptimeSeconds }` if server is running
+- `GET /readyz` - Returns 200 if setup is complete AND gateway is reachable, otherwise 503
+
+Example:
+```bash
+curl https://your-app.replit.app/healthz
+# {"ok":true,"version":"1.2.1","uptimeSeconds":3600}
+
+curl https://your-app.replit.app/readyz
+# {"ready":true} or {"ready":false,"reason":"Gateway not reachable"}
+```
+
+## Accessibility
+
+- All form inputs have proper `<label>` elements
+- Icon-only buttons have `aria-label` attributes for screen readers
+- Keyboard navigation supported throughout the app
 
 ## Deployment
 
@@ -148,6 +172,9 @@ Tests cover:
 - Auth redirect for protected routes
 - CSRF 403 for POST without token
 - Power Mode gating for channel/tool APIs
+- Health endpoints (/healthz, /readyz)
+- Secret masking in HTML output
+- Accessibility (aria-labels, labeled inputs)
 
 **Manual WebSocket test**: Open an incognito window and try to connect to `/openclaw`. You should NOT receive `101 Switching Protocols` without a valid session.
 
