@@ -1,0 +1,62 @@
+Based on that summary, yes, you are ready to ship a public beta.
+
+What you have now hits the core promise: safe defaults, reversible, guided, and it actually works end to end.
+
+Here is the only “go live” checklist I would run before you flip the switch.
+
+## Must do before launch
+
+1. HTTPS everywhere
+   Redirect HTTP to HTTPS, enable HSTS, and confirm cookies are marked Secure.
+
+2. Cookie and session hardening
+   HttpOnly, SameSite, short idle timeout, and a firm max lifetime.
+
+3. Security headers
+   CSP, frame protection, referrer policy, and no sniff. Helmet can do most of it, but make sure the proxied Control UI still works.
+
+4. Confirm no auth bypass on /openclaw
+   Double check these paths are protected:
+
+* /openclaw
+* /openclaw/*
+* WebSocket upgrade requests
+
+5. Confirm secrets never touch disk
+   Provider keys should never be written into ./data or logs. If anything must persist, persist only non sensitive config.
+
+6. Rate limits on the scary endpoints
+   You already rate limit login. Also rate limit:
+
+* setup run
+* start gateway
+* wipe
+* security audit
+
+7. Process supervision and log rotation
+   Use a real process manager so the app restarts on crash, and rotate logs so the disk never fills.
+
+8. Health endpoints exposure
+   /healthz is fine public. Consider making /readyz require a simple header token if you do not want the internet to probe gateway readiness.
+
+9. No indexing
+   Add X Robots Tag noindex on everything, especially /openclaw, /status, /setup.
+
+10. Simple legal footer
+    Two lines are enough for v1:
+
+* “Unofficial community tool. Not affiliated with OpenClaw.”
+* “Bring your own API keys. Do not connect sensitive accounts on day one.”
+
+## Nice to have right after launch
+
+1. A tiny “Safety Score” on Status
+   Five checks, green or red. People will screenshot it.
+
+2. Lightweight analytics
+   Setup started, setup completed, gateway started, wipe triggered. No PII, no keys.
+
+3. One shareable page
+   A single page with “What it does, how it stays safe, how to wipe.” This helps virality.
+
+If the items above are already done, you are ready to go now. If you want, paste your current production headers and session cookie config from server.js and I will sanity check the top three risks in one pass.
