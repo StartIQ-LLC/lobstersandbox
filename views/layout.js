@@ -1,7 +1,17 @@
+function renderCostWidget(budgetStatus) {
+  return `
+    <div class="relative" id="cost-widget">
+      <a href="/setup" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs font-medium transition-all flex items-center gap-1 text-gray-400">
+        <span>💰</span><span class="hidden sm:inline">Loading...</span>
+      </a>
+    </div>
+  `;
+}
+
 export function layout(title, content, options = {}) {
   // loggedIn defaults to true for protected pages (most pages require auth)
   // Only the landing page explicitly passes loggedIn: false when user is not logged in
-  const { includeTopBar = false, backLink = null, showAssistant = true, profile = null, showSafetyBar = false, loggedIn = true, gatewayRunning = false } = options;
+  const { includeTopBar = false, backLink = null, showAssistant = true, profile = null, showSafetyBar = false, loggedIn = true, gatewayRunning = false, budgetStatus = null } = options;
   
   const showActiveButtons = loggedIn;
   
@@ -274,6 +284,7 @@ export function layout(title, content, options = {}) {
       </div>
     </div>
     <div class="flex items-center gap-2">
+      ${loggedIn ? renderCostWidget(budgetStatus) : ''}
       ${showActiveButtons ? `
       <button onclick="killSwitch()" aria-label="Kill Switch - Stop gateway immediately" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-medium transition-all flex items-center gap-1">
         <span aria-hidden="true">⚡</span><span class="hidden sm:inline">Kill Switch</span>
@@ -314,6 +325,135 @@ export function layout(title, content, options = {}) {
         return null;
       }
     }
+    
+    function toggleCostDropdown() {
+      const dropdown = document.getElementById('cost-dropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('hidden');
+      }
+    }
+    
+    document.addEventListener('click', function(e) {
+      const widget = document.getElementById('cost-widget');
+      const dropdown = document.getElementById('cost-dropdown');
+      if (widget && dropdown && !widget.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+    
+    async function loadBudgetStatus() {
+      const widget = document.getElementById('cost-widget');
+      if (!widget) return;
+      
+      try {
+        const res = await fetch('/api/budget');
+        if (!res.ok) {
+          widget.innerHTML = '<a href="/setup" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs font-medium transition-all flex items-center gap-1 text-gray-400"><span>💰</span><span class="hidden sm:inline">No budget set</span></a>';
+          return;
+        }
+        const status = await res.json();
+        
+        if (!status.hasBudget) {
+          widget.innerHTML = '<a href="/setup" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs font-medium transition-all flex items-center gap-1 text-gray-400"><span>💰</span><span class="hidden sm:inline">No budget set</span></a>';
+          return;
+        }
+        
+        const { used, limit, percentage, todayCost, model, alertLevel } = status;
+        
+        let barColor = 'bg-green-500';
+        let textColor = 'text-green-400';
+        if (percentage >= 80) {
+          barColor = 'bg-red-500';
+          textColor = 'text-red-400';
+        } else if (percentage >= 50) {
+          barColor = 'bg-yellow-500';
+          textColor = 'text-yellow-400';
+        }
+        
+        const usedFormatted = used.toFixed(2);
+        const limitFormatted = limit.toFixed(0);
+        const todayFormatted = todayCost.toFixed(2);
+        const modelDisplay = model ? model.split('/').pop() : 'Unknown';
+        
+        widget.innerHTML = \`
+          <button onclick="toggleCostDropdown()" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs font-medium transition-all flex flex-col items-start gap-0.5">
+            <span class="\${textColor}">💰 $\${usedFormatted} / $\${limitFormatted}</span>
+            <div class="w-full h-0.5 bg-gray-600 rounded-full overflow-hidden" style="min-width: 60px;">
+              <div class="h-full \${barColor} transition-all duration-500" style="width: \${Math.min(100, percentage)}%"></div>
+            </div>
+          </button>
+          <div id="cost-dropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-4 z-50">
+            <div class="text-sm text-gray-800 space-y-2">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Today:</span>
+                <span class="font-medium">$\${todayFormatted}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Total:</span>
+                <span class="font-medium">$\${usedFormatted} / $\${limitFormatted} limit</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Model:</span>
+                <span class="font-medium">\${modelDisplay}</span>
+              </div>
+              <div class="pt-2 border-t border-gray-100">
+                <a href="/setup" class="text-red-500 hover:text-red-600 text-xs font-medium">Change budget →</a>
+              </div>
+              <div class="bg-amber-50 border border-amber-200 rounded-lg p-2 mt-2">
+                <p class="text-xs text-amber-700">⚠️ <strong>Estimates only.</strong> Check your API provider dashboard for exact billing.</p>
+              </div>
+            </div>
+          </div>
+        \`;
+        
+        if (alertLevel === 'warning') {
+          showToast('You\\'ve used 75% of your sandbox budget.', 'warning');
+        } else if (alertLevel === 'critical') {
+          showToast('⚠️ Approaching budget limit. 90% of your budget used.', 'critical');
+        } else if (alertLevel === 'exceeded') {
+          showBudgetExceededModal(usedFormatted, limitFormatted);
+        }
+      } catch (err) {
+        console.error('Failed to load budget status:', err);
+      }
+    }
+    
+    function showToast(message, level) {
+      const existingToast = document.getElementById('budget-toast');
+      if (existingToast) existingToast.remove();
+      
+      const bgColor = level === 'critical' ? 'bg-orange-500' : 'bg-yellow-500';
+      const toast = document.createElement('div');
+      toast.id = 'budget-toast';
+      toast.className = \`fixed top-16 left-1/2 transform -translate-x-1/2 \${bgColor} text-white px-6 py-3 rounded-xl shadow-lg z-50 text-sm font-medium\`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.remove(), 8000);
+    }
+    
+    function showBudgetExceededModal(used, limit) {
+      const existingModal = document.getElementById('budget-modal');
+      if (existingModal) return;
+      
+      const modal = document.createElement('div');
+      modal.id = 'budget-modal';
+      modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+      modal.innerHTML = \`
+        <div class="bg-white rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
+          <h2 class="text-xl font-bold text-red-600 mb-3">🛑 Budget Limit Reached</h2>
+          <p class="text-gray-600 mb-4">Your sandbox has been paused to prevent unexpected charges. You've used $\${used} of your $\${limit} budget.</p>
+          <div class="flex flex-col gap-2">
+            <a href="/setup" class="w-full px-4 py-2 bg-lobster-600 hover:bg-lobster-700 text-white rounded-xl font-medium text-center transition-all">Increase Budget</a>
+            <button onclick="wipeAll()" class="w-full px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-medium transition-all">Wipe & Start Fresh</button>
+            <button onclick="document.getElementById('budget-modal').remove()" class="w-full px-4 py-2 text-gray-500 hover:text-gray-700 font-medium transition-all">Keep Paused</button>
+          </div>
+        </div>
+      \`;
+      document.body.appendChild(modal);
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadBudgetStatus);
     
     async function killSwitch() {
       if (!confirm('⚡ KILL SWITCH\\n\\nThis will immediately stop the OpenClaw gateway.\\n\\nContinue?')) return;

@@ -120,7 +120,7 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
           <!-- Step 1: Choose Provider -->
           <div id="step-1" class="wizard-step">
             <div class="mb-4">
-              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 1 of 3</span>
+              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 1 of 4</span>
               <h3 class="text-lg font-medium text-gray-800 mt-1">Choose AI Provider</h3>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
@@ -170,7 +170,7 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
           <!-- Step 2: API Key -->
           <div id="step-2" class="wizard-step hidden">
             <div class="mb-4">
-              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 2 of 3</span>
+              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 2 of 4</span>
               <h3 class="text-lg font-medium text-gray-800 mt-1">Enter API Key</h3>
             </div>
             <div class="mb-4">
@@ -190,7 +190,7 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
           <!-- Step 3: Model -->
           <div id="step-3" class="wizard-step hidden">
             <div class="mb-4">
-              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 3 of 3</span>
+              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 3 of 4</span>
               <h3 class="text-lg font-medium text-gray-800 mt-1">Choose Model</h3>
             </div>
             <div class="mb-4">
@@ -206,6 +206,34 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
             </div>
             <div class="flex gap-3">
               <button onclick="goToStep(2)" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">← Back</button>
+              <button onclick="goToStep(4)" class="px-6 py-2 lobster-gradient hover:opacity-90 text-white rounded-xl font-medium shadow-md">Next →</button>
+            </div>
+          </div>
+          
+          <!-- Step 4: Budget -->
+          <div id="step-4" class="wizard-step hidden">
+            <div class="mb-4">
+              <span class="text-xs font-medium text-lobster-600 uppercase tracking-wide">Step 4 of 4</span>
+              <h3 class="text-lg font-medium text-gray-800 mt-1">Monthly Spending Limit</h3>
+            </div>
+            <div class="mb-4">
+              <label for="budget-select" class="block text-sm font-medium text-gray-700 mb-2">Set your safety cap</label>
+              <select id="budget-select" onchange="handleBudgetSelect()"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lobster-500 focus:border-transparent transition-all bg-white">
+                <option value="5">$5 (Tourist Mode)</option>
+                <option value="10" selected>$10 (Recommended)</option>
+                <option value="20">$20 (Power User)</option>
+                <option value="custom">Custom amount...</option>
+              </select>
+            </div>
+            <div id="custom-budget-container" class="mb-4 hidden">
+              <label for="custom-budget" class="block text-sm font-medium text-gray-700 mb-2">Custom Budget ($)</label>
+              <input type="number" id="custom-budget" placeholder="25" min="1" max="500"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lobster-500 focus:border-transparent transition-all">
+            </div>
+            <p class="text-xs text-gray-500 mb-4">💡 We'll warn you as you approach this limit and auto-pause your sandbox if you hit it. You can change this anytime.</p>
+            <div class="flex gap-3">
+              <button onclick="goToStep(3)" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">← Back</button>
               <button onclick="runSetup()" id="run-setup-btn" class="px-6 py-2 lobster-gradient hover:opacity-90 text-white rounded-xl font-medium shadow-md">🚀 Run Setup</button>
             </div>
           </div>
@@ -373,6 +401,25 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
       }
     }
     
+    function handleBudgetSelect() {
+      const select = document.getElementById('budget-select');
+      const customContainer = document.getElementById('custom-budget-container');
+      if (select.value === 'custom') {
+        customContainer.classList.remove('hidden');
+      } else {
+        customContainer.classList.add('hidden');
+      }
+    }
+    
+    function getBudgetValue() {
+      const select = document.getElementById('budget-select');
+      if (select.value === 'custom') {
+        const customInput = document.getElementById('custom-budget');
+        return parseFloat(customInput.value) || 10;
+      }
+      return parseFloat(select.value);
+    }
+    
     function getSelectedModel() {
       const select = document.getElementById('model-select');
       if (select.value === 'custom') {
@@ -384,6 +431,7 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
     async function runSetup() {
       const apiKey = document.getElementById('api-key').value;
       const model = getSelectedModel();
+      const budget = getBudgetValue();
       
       if (!apiKey) {
         showResult('setup-result', 'Please enter an API key', 'error');
@@ -392,6 +440,11 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
       
       if (!model) {
         showResult('setup-result', 'Please select or enter a model', 'error');
+        return;
+      }
+      
+      if (!budget || budget < 1) {
+        showResult('setup-result', 'Please set a valid budget (minimum $1)', 'error');
         return;
       }
       
@@ -404,11 +457,11 @@ export function setupWizardPage(isConfigured = false, gatewayRunning = false, pr
         const res = await fetch('/setup/run', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-          body: JSON.stringify({ provider: selectedProvider, apiKey, model, csrf_token: csrfToken })
+          body: JSON.stringify({ provider: selectedProvider, apiKey, model, budget, csrf_token: csrfToken })
         });
         const data = await res.json();
         if (data.success) {
-          showResult('setup-result', '✅ Setup completed successfully! You can now start the gateway.', 'success');
+          showResult('setup-result', '✅ Setup completed successfully! Budget set to $' + budget + '. You can now start the gateway.', 'success');
         } else {
           showResult('setup-result', '❌ Setup failed: ' + (data.error || data.stderr || 'Unknown error'), 'error');
         }

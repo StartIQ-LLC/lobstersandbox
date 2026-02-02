@@ -236,4 +236,115 @@ Session max lifetime enforced`;
       expect(res.text).toContain('id="password"');
     });
   });
+
+  describe('Budget API', () => {
+    test('GET /api/budget without auth returns 302 redirect', async () => {
+      const res = await request(BASE_URL).get('/api/budget');
+      expect(res.status).toBe(302);
+    });
+
+    test('GET /api/usage without auth returns 302 redirect', async () => {
+      const res = await request(BASE_URL).get('/api/usage');
+      expect(res.status).toBe(302);
+    });
+
+    let sessionCookie;
+    let csrfToken;
+
+    beforeAll(async () => {
+      const loginRes = await request(BASE_URL)
+        .post('/setup/login')
+        .type('form')
+        .send({ password: process.env.SETUP_PASSWORD || 'test' });
+      
+      const cookies = loginRes.headers['set-cookie'];
+      if (cookies) {
+        const sessionMatch = cookies.find(c => c.startsWith('session_token='));
+        if (sessionMatch) {
+          sessionCookie = sessionMatch.split(';')[0];
+        }
+      }
+
+      if (sessionCookie) {
+        const csrfRes = await request(BASE_URL)
+          .get('/api/csrf-token')
+          .set('Cookie', sessionCookie);
+        if (csrfRes.body && csrfRes.body.token) {
+          csrfToken = csrfRes.body.token;
+        }
+      }
+    });
+
+    test('GET /api/budget returns budget status', async () => {
+      if (!sessionCookie) {
+        console.warn('Skipping test: no session cookie');
+        return;
+      }
+      
+      const res = await request(BASE_URL)
+        .get('/api/budget')
+        .set('Cookie', sessionCookie);
+      
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('hasBudget');
+      expect(res.body).toHaveProperty('limit');
+      expect(res.body).toHaveProperty('used');
+      expect(res.body).toHaveProperty('percentage');
+    });
+
+    test('POST /api/budget requires CSRF token', async () => {
+      if (!sessionCookie) {
+        console.warn('Skipping test: no session cookie');
+        return;
+      }
+      
+      const res = await request(BASE_URL)
+        .post('/api/budget')
+        .set('Cookie', sessionCookie)
+        .set('Accept', 'application/json')
+        .send({ limit: 10 });
+      
+      expect(res.status).toBe(403);
+    });
+
+    test('POST /api/budget with valid data sets budget', async () => {
+      if (!sessionCookie || !csrfToken) {
+        console.warn('Skipping test: no session or CSRF token');
+        return;
+      }
+      
+      const res = await request(BASE_URL)
+        .post('/api/budget')
+        .set('Cookie', sessionCookie)
+        .set('X-CSRF-Token', csrfToken)
+        .send({ limit: 15, model: 'test-model' });
+      
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.budget).toHaveProperty('limit', 15);
+    });
+
+    test('Budget alerts are returned at correct thresholds', async () => {
+      if (!sessionCookie) {
+        console.warn('Skipping test: no session cookie');
+        return;
+      }
+      
+      const res = await request(BASE_URL)
+        .get('/api/budget')
+        .set('Cookie', sessionCookie);
+      
+      expect(res.status).toBe(200);
+      const { percentage, alertLevel } = res.body;
+      if (percentage >= 100) {
+        expect(alertLevel).toBe('exceeded');
+      } else if (percentage >= 90) {
+        expect(alertLevel).toBe('critical');
+      } else if (percentage >= 75) {
+        expect(alertLevel).toBe('warning');
+      } else {
+        expect(alertLevel).toBeNull();
+      }
+    });
+  });
 });

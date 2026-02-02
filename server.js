@@ -8,6 +8,7 @@ import crypto from 'crypto';
 
 import * as openclaw from './lib/openclaw.js';
 import * as assistant from './lib/assistant.js';
+import * as budgetModule from './lib/budget.js';
 import logger, { logRequest, logSecurityEvent } from './lib/logger.js';
 import { landingPage } from './views/landing.js';
 import { loginPage, setupWizardPage } from './views/setup.js';
@@ -315,7 +316,7 @@ app.post('/setup/login', setupLimiter, (req, res) => {
 
 app.post('/setup/run', setupLimiter, requireAuth, validateCsrf, async (req, res) => {
   try {
-    const { provider, apiKey, model } = req.body;
+    const { provider, apiKey, model, budget: budgetLimit } = req.body;
     
     if (!provider || !apiKey || !model) {
       return res.status(400).json({ success: false, error: 'Missing required fields' });
@@ -327,6 +328,11 @@ app.post('/setup/run', setupLimiter, requireAuth, validateCsrf, async (req, res)
     }
     
     const result = await openclaw.runOnboard(provider, apiKey, model);
+    
+    if (result.success && budgetLimit) {
+      await budgetModule.setBudget(budgetLimit, model);
+    }
+    
     res.json({ success: result.success, stdout: result.stdout, stderr: result.stderr });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -539,6 +545,7 @@ app.post('/api/wipe-all', apiLimiter, requireAuth, validateCsrf, async (req, res
       return res.status(403).json({ success: false, error: 'Invalid password. Wipe requires password confirmation.' });
     }
     logger.info('Wipe initiated', { requestId: req.requestId, event: 'WIPE_INITIATED' });
+    await budgetModule.clearBudgetData();
     const result = await openclaw.wipeEverything();
     res.json(result);
   } catch (err) {
@@ -685,6 +692,46 @@ app.post('/api/assistant/chat', apiLimiter, requireAuth, validateCsrf, async (re
   }
 });
 
+app.get('/api/budget', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const status = await budgetModule.getBudgetStatus();
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/budget', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+  try {
+    const { limit, model } = req.body;
+    if (!limit || limit < 1) {
+      return res.status(400).json({ success: false, error: 'Invalid budget limit' });
+    }
+    const result = await budgetModule.setBudget(limit, model);
+    res.json({ success: true, budget: result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/usage', apiLimiter, requireAuth, async (req, res) => {
+  try {
+    const usage = await budgetModule.getUsage();
+    res.json(usage);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/usage/reset', apiLimiter, requireAuth, validateCsrf, async (req, res) => {
+  try {
+    const usage = await budgetModule.resetUsage();
+    res.json({ success: true, usage });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 const gatewayProxy = createProxyMiddleware({
   target: `http://127.0.0.1:${OPENCLAW_PORT}`,
   changeOrigin: true,
@@ -697,10 +744,34 @@ const gatewayProxy = createProxyMiddleware({
       if (OPENCLAW_GATEWAY_TOKEN) {
         proxyReq.setHeader('Authorization', `Bearer ${OPENCLAW_GATEWAY_TOKEN}`);
       }
+      req._requestBodySize = 0;
+      if (req.body) {
+        const bodyStr = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+        req._requestBodySize = bodyStr.length;
+      }
     },
-    proxyRes: (proxyRes, req, res) => {
+    proxyRes: async (proxyRes, req, res) => {
       proxyRes.headers['cache-control'] = 'no-store, no-cache, must-revalidate';
       proxyRes.headers['pragma'] = 'no-cache';
+      
+      if (req.path && (req.path.includes('/chat') || req.path.includes('/completion') || req.path.includes('/generate'))) {
+        let responseBody = '';
+        proxyRes.on('data', (chunk) => {
+          responseBody += chunk.toString();
+        });
+        proxyRes.on('end', async () => {
+          try {
+            const inputTokens = budgetModule.estimateTokens(req._requestBodySize || 0);
+            const outputTokens = budgetModule.estimateTokens(responseBody);
+            const budget = await budgetModule.getBudget();
+            const provider = budget?.model?.split('/')[0] || 'default';
+            const model = budget?.model || 'default';
+            await budgetModule.recordUsage(inputTokens, outputTokens, provider, model);
+          } catch (err) {
+            logger.warn('Failed to record usage:', err.message);
+          }
+        });
+      }
     },
     error: (err, req, res) => {
       console.error('Proxy error:', err.message);
