@@ -1,0 +1,106 @@
+Update the existing LobsterSandbox project to v1.1.
+
+CONTEXT
+This project currently wraps OpenClaw with:
+- provider key wizard
+- channel configuration UI
+- mascot guidance
+- OpenClaw Control UI access
+
+GOAL
+Reframe the product from “setup wizard” to “Safe Sandbox playbook” and implement v1.1 UX improvements without breaking existing OpenClaw integration.
+
+HIGH LEVEL CHANGES
+A) Add Safety Profile Selector
+B) Make Kill Switch and Wipe always visible
+C) Add Sandbox Playbook inside the app
+D) Reorder the hero: safety first, channels second
+E) Add Remote Access Hardening guidance section
+
+A) SAFETY PROFILE SELECTOR
+- Add route /profile
+- Two options:
+  1) Safe Mode (default)
+  2) Power Mode
+- Persist selection in ./data/profile.json
+- Add middleware: if setup is complete but profile is not chosen, redirect to /profile
+- Safe Mode behavior:
+  - Control UI is allowed
+  - Channels UI is hidden or disabled by default
+  - Show a button “Enable channels” with a warning and confirmation
+- Power Mode behavior:
+  - Channels UI enabled
+
+B) PERSISTENT SAFETY BAR
+- Add a small top bar visible on every page, including /openclaw wrapper:
+  - Status link
+  - Kill Switch button
+  - Wipe Everything button
+- Kill Switch stops the gateway process and updates status immediately
+- Wipe Everything:
+  - confirmation step
+  - stop gateway
+  - reset OpenClaw state as the project currently supports
+  - delete app state under ./data as appropriate
+  - redirect to /profile when done
+- Ensure secrets are never printed or shown in full
+
+C) SANDBOX PLAYBOOK SECTION
+Add a “Sandbox Playbook” section to /setup and /status with 3 cards and checkboxes:
+1) Email
+   - Use a secondary inbox you control
+   - Or create a new inbox manually
+   - Or use a workspace domain you own
+2) Phone
+   - Use a second number via eSIM or spare device
+   - WhatsApp Business with a separate number
+3) Billing
+   - Use a separate card with a low limit
+   - Set a small monthly budget
+   - Use Kill Switch if anything looks off
+Copy must be plain English, non technical, and emphasize “do not connect your main accounts on day 1”.
+
+D) LANDING PAGE AND FLOW REORDER
+Update home page:
+- Headline: “LobsterSandbox”
+- Subheadline: “Run OpenClaw in a safe sandbox. Safe Mode by default.”
+- 3 bullets:
+  - Safe Mode on by default
+  - Kill switch and wipe
+  - Guided separation playbook
+- Primary buttons:
+  - Start Setup
+  - Open Control UI
+  - View Status
+- De emphasize channels on the landing page
+
+Update setup flow order:
+- Setup wizard
+- Profile selector
+- Status
+- Control UI
+Channels should not be the first thing users see.
+
+E) REMOTE ACCESS HARDENING GUIDANCE
+Add a section called “Remote access (optional)” on /status:
+- Recommended: Tailscale
+- Advanced: Cloudflare Tunnel
+Include warnings:
+- do not open ports directly
+- keep token auth
+- use allowlists
+
+IMPLEMENTATION NOTES
+- Use existing file structure and patterns already in the repo
+- Find current routes and templates and modify them, do not rewrite the whole app
+- Preserve existing OpenClaw start/stop/reset logic and just hook it into the new buttons
+- Add masking for logs and any key display, never show full secrets
+- If the project already has a mascot, update its guidance text to match the new safety first positioning
+
+ACCEPTANCE CHECKLIST
+- After setup completes, user is forced to choose Safe Mode or Power Mode
+- Safe Mode hides or disables channels until user explicitly enables them
+- Kill Switch and Wipe visible on every page and work
+- Sandbox Playbook visible in app, not just README
+- Landing page talks about safety first, not channels
+- Control UI still loads and works as before
