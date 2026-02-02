@@ -1,0 +1,78 @@
+Moving fast. Here's Prompt 9 — Deploy Options Page:
+
+PROMPT 9: Deploy Options Page
+Create a new page at /deploy called "Deploy Your Sandbox."
+
+Add a link to this page from the homepage — in the "What is LobsterSandbox?" section at the bottom, add: "🚀 Deploy your own sandbox" → /deploy. Also add it to the footer navigation.
+
+PAGE HEADER:
+Title: "🚀 Deploy Your Sandbox"
+Subtitle: "Get your own LobsterSandbox instance running in minutes."
+Text: "Pick the option that fits you. LobsterSandbox is the safety and guidance wrapper — you choose where it runs."
+
+DEPLOY OPTION CARDS (stacked vertically, full width):
+
+CARD 1 — "Replit" (PRIMARY — make this the biggest and most visually prominent)
+- Recommended badge: "⭐ Recommended" in green
+- Title: "Deploy on Replit"
+- Subtitle: "One click. Runs in your browser. No local setup needed."
+- Details row: "⏱️ ~2 minutes" · "💰 Free tier available" · "Best for: First-timers, non-technical users"
+- Description: "Click the button, fork the project, and your sandbox starts automatically. Add your API key in the setup wizard and you're chatting in under 5 minutes."
+- CTA: Large button "Deploy to Replit →" (link to your Replit project fork URL, or a placeholder URL for now)
+- This card should be visually dominant — larger, colored border or background accent, more padding than the others
+
+CARD 2 — "Railway"
+- Title: "Deploy on Railway"
+- Subtitle: "One-click cloud deploy. Your own always-on private instance."
+- Details row: "⏱️ ~5 minutes" · "💰 $5/month after free trial" · "Best for: Always-on cloud instance"
+- Description: "Railway handles hosting, SSL, and uptime. Your sandbox runs 24/7 on your own infrastructure."
+- CTA: Button "Deploy to Railway →" (placeholder link for now)
+
+CARD 3 — "Render"
+- Title: "Deploy on Render"
+- Subtitle: "Another solid one-click cloud option."
+- Details row: "⏱️ ~5 minutes" · "💰 Free tier with sleep, $7/month always-on" · "Best for: Budget-conscious users"
+- Description: "Render's free tier works great for testing. Upgrade to always-on when you're ready."
+- CTA: Button "Deploy to Render →" (placeholder link for now)
+
+CARD 4 — "Docker" (collapsible, starts COLLAPSED)
+- Title: "Run Locally with Docker (Advanced)"
+- Subtitle: "Full control on your own machine."
+- Details row: "⏱️ ~15 minutes" · "💰 Free" · "Best for: Developers, privacy-focused users"
+- When expanded, show:
+  - "Requires Docker installed on your machine. Works on macOS, Linux, and Windows (via WSL2)."
+  - Code block:
+    git clone https://github.com/lobstersandbox/lobstersandbox.git
+    cd lobstersandbox
+    docker compose up -d
+  - "Then open http://localhost:3000 in your browser and complete the setup wizard."
+  - Note: "For Docker help, see docs.docker.com/get-docker"
+
+SECTION BELOW THE CARDS:
+Title: "What happens after you deploy?"
+Numbered steps (clean, simple):
+1. Open your new LobsterSandbox instance in your browser
+2. Complete the setup wizard — add your API key, choose a model, set a budget
+3. Read the Burner Stack Guide to set up throwaway accounts
+4. Try your first Sandbox Mission
+5. Explore OpenClaw through the Control UI
+
+Reassurance text: "All safety controls — Kill Switch, Wipe, Safe Mode — are active by default from the moment you start."
+
+DESIGN:
+- Replit card should clearly dominate visually — it's the recommended path
+- Other cards are clean but secondary in visual weight
+- Docker card collapsed by default keeps the page clean for non-technical users
+- Details rows (time, cost, best for) should be compact with subtle icons
+- Consistent with site theme, nav, Larry, footer
+- Mobile responsive — cards stack, all text readable
+- All existing tests should pass. Add test for /deploy route.
+Two prompts left: Prompt 10 (Share/Viral mechanics) and Prompt 11 (Graduate to Production). Want me to queue up 10 now?
+
+
+
+
+
+
+
+Claude is AI and can make mistakes. Please double-check responses.
