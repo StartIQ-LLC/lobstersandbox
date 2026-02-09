@@ -282,7 +282,7 @@ export function layout(title, content, options = {}) {
         <a href="/guide" class="text-gray-300 hover:text-white font-medium">Guide</a>
         <a href="/missions" class="text-gray-300 hover:text-white font-medium">Missions</a>
         <a href="/pricing" class="text-gray-300 hover:text-white font-medium">Pricing</a>
-        <a href="https://lobstersandbox--mlb5asox3so-prod.cloud.modelence.app" class="text-gray-300 hover:text-white font-medium">API</a>
+        <a href="https://api.lobstersandbox.com" class="text-gray-300 hover:text-white font-medium">API</a>
         <a href="/profile" class="text-gray-300 hover:text-white font-medium">Profile</a>
       </div>
     </div>
@@ -755,7 +755,7 @@ export function layout(title, content, options = {}) {
       <a href="/" class="hover:text-gray-600">Home</a>
       <a href="/guide" class="hover:text-gray-600">Burner Stack Guide</a>
       <a href="/deploy" class="hover:text-gray-600">Deploy</a>
-      <a href="https://lobstersandbox--mlb5asox3so-prod.cloud.modelence.app" class="hover:text-gray-600">API Portal</a>
+      <a href="https://api.lobstersandbox.com" class="hover:text-gray-600">API Portal</a>
       <a href="/compare" class="hover:text-gray-600">Why LobsterSandbox?</a>
       <a href="https://docs.openclaw.ai/" target="_blank" class="hover:text-gray-600">OpenClaw Docs</a>
       <span class="mx-1 text-gray-300">|</span>
